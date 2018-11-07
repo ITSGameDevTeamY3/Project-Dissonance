@@ -6,7 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test Scenes/JackScene.unity
+    path: Assets/Scenes/Test Scenes/Adrian Menu.unity
+    guid: 9ef41960ee1348349b2ed7b15b808aa0
+  - enabled: 1
+    path: Assets/Scenes/Test Scenes/Jack.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/Test Scenes/David.unity
