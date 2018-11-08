@@ -11101,10 +11101,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 746231852}
+  - {fileID: 1493073655}
+  - {fileID: 232751699}
+  - {fileID: 1560377389}
 --- !u!108 &1240771443
 Light:
   m_ObjectHideFlags: 0
