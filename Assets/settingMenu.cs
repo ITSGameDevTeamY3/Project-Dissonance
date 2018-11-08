@@ -49,6 +49,12 @@ public class settingMenu : MonoBehaviour {
         resDropDown.value = currentRes;
         resDropDown.RefreshShownValue();
     }
+
+    public void SetResolutions(int res)
+    {
+        Resolution resolution = resolutions[res];
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
     
 
 
