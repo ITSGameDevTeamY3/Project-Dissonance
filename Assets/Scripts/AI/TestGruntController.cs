@@ -3,38 +3,84 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class TestGruntController : MonoBehaviour {
+public class TestGruntController : MonoBehaviour
+{
+
+    // We can assign the camera, the agent and the halt time in the Unity Inspector window.
 
     // This camera is used to determine where the user has clicked on-screen.
-    public Camera cam;
+    public Camera camera;
 
     // Instantiate the agent variable so that we can tell it where to go.
     public NavMeshAgent agent;
 
-    // Update is called once per frame
-	void Update () {
+    // This variable will keep track of the object that you clicked.
+    public RaycastHit hit;
+
+    public float restTime, haltTime;
+
+    public float timeCount = 0.0f;
+
+    public bool halted = false;   
+
+    void Update()
+    {
 
         // https://unity3d.com/learn/tutorials/topics/navigation/basics?playlist=17105
-        // This code was seen in Brackeys' "Unity NavMesh Tutorial - Basics" video.
+        // Some of the basic code for this functionality was seen in Brackeys' "Unity NavMesh Tutorial - Basics" video.
         // I'm just using it as a test for the grunt's AI.
 
+        if(agent.isStopped == true)
+        {
+            Investigate();
+        }
+
+
         // If you click the mouse on-screen.
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             // Send out a ray to the position where you clicked.
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-            // This variable will keep track of the object that you clicked.
-            RaycastHit hit;
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);            
 
             // This if will determine whether or not you clicked an object.
-            if(Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit))
             {
-                // If you clicked an object. The agent should head towards its' position.
-                // TODO: I should work out how to get the enemy to stop a few feet in front of where they're headed.
-                // https://docs.unity3d.com/Manual/DirectionDistanceFromOneObjectToAnother.html
-                agent.SetDestination(hit.point);
+                Halt();                                         
             }
+        }
+    }
+
+    void Halt()
+    {
+        // The enemy stops in his tracks upon hearing a noise.
+        agent.isStopped = true;      
+
+        // I'd really like to get him to face the direction of the noise here. I still have to work it out.
+
+        // We'll hopefully have something like this appear in-game soon.
+        print("What was that?");
+    }
+
+    void Investigate()
+    {   
+        // Time count keeps track of the seconds that have passed.
+        timeCount += Time.deltaTime;
+
+        // If the enemy has been halted for the specified halt time...
+        if (timeCount >= haltTime)
+        {
+            // Reset time counter.
+            timeCount = 0;
+
+            // The agent can now move again.
+            agent.isStopped = false;            
+
+            // If you clicked an object. The agent should head towards its' position.
+            // TODO: I should work out how to get the enemy to stop a few feet in front of where they're headed.
+            // https://docs.unity3d.com/Manual/DirectionDistanceFromOneObjectToAnother.html
+
+            // The agent moves toward the source of the disturbance.
+            agent.SetDestination(hit.point);
         }
     }
 }
