@@ -31,6 +31,8 @@ public class TestGruntController : MonoBehaviour {
             if(Physics.Raycast(ray, out hit))
             {
                 // If you clicked an object. The agent should head towards its' position.
+                // TODO: I should work out how to get the enemy to stop a few feet in front of where they're headed.
+                // https://docs.unity3d.com/Manual/DirectionDistanceFromOneObjectToAnother.html
                 agent.SetDestination(hit.point);
             }
         }
