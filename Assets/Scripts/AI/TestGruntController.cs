@@ -9,7 +9,7 @@ public class TestGruntController : MonoBehaviour
     // We can assign the camera, the agent and the halt time in the Unity Inspector window.
 
     // This camera is used to determine where the user has clicked on-screen.
-    public Camera camera;
+    public Camera cam;
 
     // Instantiate the agent variable so that we can tell it where to go.
     public NavMeshAgent agent;
@@ -19,9 +19,7 @@ public class TestGruntController : MonoBehaviour
 
     public float restTime, haltTime;
 
-    public float timeCount = 0.0f;
-
-    public bool halted = false;   
+    private float timeCount = 0.0f;     
 
     void Update()
     {
@@ -40,7 +38,7 @@ public class TestGruntController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             // Send out a ray to the position where you clicked.
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);            
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);            
 
             // This if will determine whether or not you clicked an object.
             if (Physics.Raycast(ray, out hit))
