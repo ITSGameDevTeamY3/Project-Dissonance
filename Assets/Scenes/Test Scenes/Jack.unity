@@ -353,7 +353,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh16626
+  m_Name: pb_Mesh19726
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
@@ -11084,6 +11084,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 534669904}
   agent: {fileID: 1240771441}
+  stopDistance: 3
   haltTime: 0.7
 --- !u!195 &1240771441
 NavMeshAgent:
@@ -14301,7 +14302,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh16776
+  m_Name: pb_Mesh19876
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
