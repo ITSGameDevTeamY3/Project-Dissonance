@@ -1,11 +1,11 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Managers;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class TestGruntController : MonoBehaviour
 {
-
     // We can assign the camera, the agent and the halt time in the Unity Inspector window.
 
     // This camera is used to determine where the user has clicked on-screen.
@@ -17,10 +17,10 @@ public class TestGruntController : MonoBehaviour
     // This variable will keep track of the object that you clicked.
     public RaycastHit hit;
 
-    public float restTime, haltTime;
+    public float haltTime;
 
-    private float timeCount = 0.0f;     
-
+    TimeManager tm = new TimeManager();
+   
     void Update()
     {
 
@@ -33,8 +33,7 @@ public class TestGruntController : MonoBehaviour
             Investigate();
         }
 
-
-        // If you click the mouse on-screen.
+        // If you click the mouse on-screen. This will be taken out soon, it's only for testing purposes.
         if (Input.GetMouseButtonDown(0))
         {
             // Send out a ray to the position where you clicked.
@@ -53,7 +52,7 @@ public class TestGruntController : MonoBehaviour
         // The enemy stops in his tracks upon hearing a noise.
         agent.isStopped = true;      
 
-        // I'd really like to get him to face the direction of the noise here. I still have to work it out.
+        // I'd really like to get him to face the direction of the disturbance here. I still have to work it out.
 
         // We'll hopefully have something like this appear in-game soon.
         print("What was that?");
@@ -62,14 +61,11 @@ public class TestGruntController : MonoBehaviour
     void Investigate()
     {   
         // Time count keeps track of the seconds that have passed.
-        timeCount += Time.deltaTime;
+        //timeCount += Time.deltaTime;
 
         // If the enemy has been halted for the specified halt time...
-        if (timeCount >= haltTime)
-        {
-            // Reset time counter.
-            timeCount = 0;
-
+        if (tm.TimeCount(haltTime))
+        {                        
             // The agent can now move again.
             agent.isStopped = false;            
 
