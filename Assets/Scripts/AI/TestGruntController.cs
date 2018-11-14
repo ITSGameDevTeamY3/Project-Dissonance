@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Managers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,10 +27,11 @@ public class TestGruntController : MonoBehaviour
 
     TimeManager tm = new TimeManager();
 
-    //void Start()
-    //{
+    //  Rotation experimentation here.
+    float directionOfDisturbance;
+    float rotationSpeed = 10;
 
-    //}
+    bool facingDisturbance;
 
     void Update()
     {
@@ -37,15 +39,20 @@ public class TestGruntController : MonoBehaviour
         // Some of the basic code for this functionality was seen in Brackeys' "Unity NavMesh Tutorial - Basics" video.
         // I'm just using it as a test for the grunt's AI.
 
-        if (halted) Halt();
-
-        if(DestinationReached())
+        if (halted)
         {
-            agent.SetDestination(originalDestination);
-
-            agent.stoppingDistance = 0;
-            agent.isStopped = false;
+            agent.isStopped = true;
+            agent.updateRotation = true;
+            RotateTowards(hit.transform);
         }
+
+        //if (DestinationReached())
+        //{
+        //    agent.SetDestination(originalDestination);
+
+        //    agent.stoppingDistance = 0;
+        //    agent.isStopped = false;
+        //}
 
         // If you click the mouse on-screen. This will be taken out soon, it's only for testing purposes.
         if (Input.GetMouseButtonDown(0))
@@ -76,6 +83,12 @@ public class TestGruntController : MonoBehaviour
         }
 
         // I'd really like to get him to turn and face the direction of the disturbance here. I still have to work it out.    
+        //agent.transform.LookAt(hit.point);
+
+        //directionOfDisturbance = Vector3.Angle(agent.transform.position, hit.point);
+
+        //agent.transform.
+        facingDisturbance = RotateTowards(hit.transform);
 
         // The enemy will then move in to investigate.
         if (tm.TimeCount(haltTime)) Investigate();
@@ -106,11 +119,30 @@ public class TestGruntController : MonoBehaviour
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
             if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-            {               
+            {
                 return true;
             }
             else return false;
         }
+        else return false;
+    }
+
+    // https://answers.unity.com/questions/540120/how-do-you-update-navmesh-rotation-after-stopping.html
+    bool RotateTowards(Transform target)
+    {
+        Vector3 direction =
+            (target.position - transform.position).normalized;
+
+        Quaternion lookRotation = Quaternion.LookRotation(
+            new Vector3(direction.x, 0, direction.z)); // Flattens the Vector3.
+      
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            lookRotation,
+            Time.deltaTime * rotationSpeed);
+
+        if (transform.rotation == lookRotation) return true;
+
         else return false;
     }
 }
