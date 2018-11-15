@@ -1,7 +1,5 @@
 ﻿using Assets.Scripts.Managers;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -31,7 +29,7 @@ public class TestGruntController : MonoBehaviour
     float directionOfDisturbance;
     float rotationSpeed = 10;
 
-    bool facingDisturbance;
+    bool isRotating;
 
     void Update()
     {
@@ -39,20 +37,23 @@ public class TestGruntController : MonoBehaviour
         // Some of the basic code for this functionality was seen in Brackeys' "Unity NavMesh Tutorial - Basics" video.
         // I'm just using it as a test for the grunt's AI.
 
-        if (halted)
-        {
-            agent.isStopped = true;
-            agent.updateRotation = true;
-            RotateTowards(hit.transform);
-        }
-
-        //if (DestinationReached())
+        if (halted) Halt();
         //{
-        //    agent.SetDestination(originalDestination);
+        // TODO: At the minute, I can either have it turn towards the click correctly (while still moving though!) or I can have it stop completely.
+        // If I can get the agent to rotate even though they're stopped, we should be in business.
 
-        //    agent.stoppingDistance = 0;
-        //    agent.isStopped = false;
-        //}
+        //agent.isStopped = true;
+        //agent.updateRotation = false;
+        //RotateTowards(hit.transform);
+        //}              
+
+        if (DestinationReached())
+        {
+            agent.SetDestination(originalDestination);
+
+            agent.stoppingDistance = 0;
+            agent.isStopped = false;
+        }
 
         // If you click the mouse on-screen. This will be taken out soon, it's only for testing purposes.
         if (Input.GetMouseButtonDown(0))
@@ -64,6 +65,10 @@ public class TestGruntController : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 halted = true;
+
+                //agent.ResetPath();
+
+                //StartCoroutine(RotateAgent());
             }
         }
     }
@@ -84,12 +89,7 @@ public class TestGruntController : MonoBehaviour
 
         // I'd really like to get him to turn and face the direction of the disturbance here. I still have to work it out.    
         //agent.transform.LookAt(hit.point);
-
-        //directionOfDisturbance = Vector3.Angle(agent.transform.position, hit.point);
-
-        //agent.transform.
-        facingDisturbance = RotateTowards(hit.transform);
-
+                  
         // The enemy will then move in to investigate.
         if (tm.TimeCount(haltTime)) Investigate();
     }
@@ -101,14 +101,20 @@ public class TestGruntController : MonoBehaviour
         agent.isStopped = false;
 
         // If you clicked an object. The agent should head towards its' position.
-        // TODO: I should work out how to get the enemy to stop a few feet in front of where they're headed.
         // https://docs.unity3d.com/Manual/DirectionDistanceFromOneObjectToAnother.html                     
 
-        // Keep track of where the enemy was orignally headed so that they can resume moving toward it later.
+        // Keep track of where the enemy was originally headed so that they can resume moving toward it later.
         originalDestination = agent.destination;
 
+        print("Checking it out.");
+
+        StartCoroutine(RotateAgent());
+
         // The agent moves toward the source of the disturbance.
-        agent.SetDestination(hit.point);
+        if (isRotating == true)
+        {
+            agent.SetDestination(hit.point);
+        }
     }
 
     bool DestinationReached()
@@ -130,12 +136,16 @@ public class TestGruntController : MonoBehaviour
     // https://answers.unity.com/questions/540120/how-do-you-update-navmesh-rotation-after-stopping.html
     bool RotateTowards(Transform target)
     {
+        // Get the difference in position between the agent and the disturbance.
         Vector3 direction =
             (target.position - transform.position).normalized;
 
+        // Get the rotation the agent needs to have in order to be facing the disturbance.
         Quaternion lookRotation = Quaternion.LookRotation(
-            new Vector3(direction.x, 0, direction.z)); // Flattens the Vector3.
-      
+            new Vector3(direction.x, 0, direction.z)); // We make y = 0 to flatten the position we will rotate to...
+                                                       // ...this means that our agent will only rotate its Y position (As an enemy in a game would).      
+
+        // We use the slerp method to get our enemy to rotate towards the direction of the disturbance.
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             lookRotation,
@@ -144,5 +154,23 @@ public class TestGruntController : MonoBehaviour
         if (transform.rotation == lookRotation) return true;
 
         else return false;
+    }
+
+    // Testing example seen on the web.
+    IEnumerator RotateAgent()
+    {
+        isRotating = true;
+
+        //RotateTowards(hit.transform);
+
+        while (RotateTowards(hit.transform) == false)
+        {            
+            print("Agent rotating: " + isRotating);
+
+            yield return null;
+        }
+        
+        isRotating = false;
+        print("Agent rotating: " + isRotating);
     }
 }
