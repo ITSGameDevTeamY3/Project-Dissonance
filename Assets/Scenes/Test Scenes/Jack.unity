@@ -11085,7 +11085,7 @@ MonoBehaviour:
   cam: {fileID: 534669904}
   agent: {fileID: 1240771441}
   stopDistance: 3
-  haltTime: 0.7
+  haltTime: 2
 --- !u!195 &1240771441
 NavMeshAgent:
   m_ObjectHideFlags: 0

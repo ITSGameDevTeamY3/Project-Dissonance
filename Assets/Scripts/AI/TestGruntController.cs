@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class TestGruntController : MonoBehaviour
 {
     // We can assign the camera, the agent and the halt time in the Unity Inspector window.
-
+    #region Variables
     // This camera is used to determine where the user has clicked on-screen.
     public Camera cam;
 
@@ -30,6 +30,7 @@ public class TestGruntController : MonoBehaviour
     float rotationSpeed = 10;
 
     bool isRotating;
+    #endregion
 
     void Update()
     {
@@ -38,6 +39,7 @@ public class TestGruntController : MonoBehaviour
         // I'm just using it as a test for the grunt's AI.
 
         if (halted) Halt();
+        #region Old code.
         //{
         // TODO: At the minute, I can either have it turn towards the click correctly (while still moving though!) or I can have it stop completely.
         // If I can get the agent to rotate even though they're stopped, we should be in business.
@@ -45,9 +47,10 @@ public class TestGruntController : MonoBehaviour
         //agent.isStopped = true;
         //agent.updateRotation = false;
         //RotateTowards(hit.transform);
-        //}              
+        //}            
+        #endregion
 
-        if (DestinationReached())
+        if (DestinationReached() && !halted)
         {
             agent.SetDestination(originalDestination);
 
@@ -75,10 +78,14 @@ public class TestGruntController : MonoBehaviour
 
     void Halt()
     {
-        if (agent.isStopped == false)
+        // If the agent was already on their way to somewhere...
+        if (agent.hasPath)
         {
-            // The enemy stops in his tracks upon hearing a noise.
-            agent.isStopped = true;
+            // ...Keep track of where the enemy was originally headed so that they can resume moving toward it later.
+            originalDestination = agent.destination;
+
+            // The enemy stops in his tracks upon hearing a noise.           
+            agent.ResetPath();
 
             // We'll hopefully have something like this appear in-game soon.
             print("What was that?");
@@ -87,9 +94,8 @@ public class TestGruntController : MonoBehaviour
             agent.stoppingDistance = stopDistance;
         }
 
-        // I'd really like to get him to turn and face the direction of the disturbance here. I still have to work it out.    
-        //agent.transform.LookAt(hit.point);
-                  
+        RotateTowards(hit.transform);
+
         // The enemy will then move in to investigate.
         if (tm.TimeCount(haltTime)) Investigate();
     }
@@ -101,20 +107,15 @@ public class TestGruntController : MonoBehaviour
         agent.isStopped = false;
 
         // If you clicked an object. The agent should head towards its' position.
-        // https://docs.unity3d.com/Manual/DirectionDistanceFromOneObjectToAnother.html                     
-
-        // Keep track of where the enemy was originally headed so that they can resume moving toward it later.
-        originalDestination = agent.destination;
+        // https://docs.unity3d.com/Manual/DirectionDistanceFromOneObjectToAnother.html                             
 
         print("Checking it out.");
 
-        StartCoroutine(RotateAgent());
-
         // The agent moves toward the source of the disturbance.
-        if (isRotating == true)
-        {
-            agent.SetDestination(hit.point);
-        }
+        //if (isRotating == true)
+        //{
+        agent.SetDestination(hit.point);
+        //}
     }
 
     bool DestinationReached()
@@ -164,12 +165,12 @@ public class TestGruntController : MonoBehaviour
         //RotateTowards(hit.transform);
 
         while (RotateTowards(hit.transform) == false)
-        {            
+        {
             print("Agent rotating: " + isRotating);
 
             yield return null;
         }
-        
+
         isRotating = false;
         print("Agent rotating: " + isRotating);
     }
