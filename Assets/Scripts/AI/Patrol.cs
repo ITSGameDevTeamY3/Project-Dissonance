@@ -7,18 +7,16 @@ using UnityEngine.AI;
 
 // TODO: Get the enemy to pause briefly at each patrol point.
 public class Patrol : MonoBehaviour
-{
+{   
     // You can assign gameobjects to this array of positions in the Unity Inspector.
-    public Transform[] points;
+    public Transform[] PatrolPoints;
+    // How long the enemy waits before proceeding to the next point.
+    public float RestTime;
 
     // This will keep track of which point the enemy is currently heading towards.
     private int destPoint = 0;
-
     // The agent that this script will be assigned to.
     private NavMeshAgent agent;
-
-    // How long the enemy waits before proceeding to the next point.
-    public float restTime;   
 
     // Instantiate time manager so that we can access the countdown method.
     TimeManager tm = new TimeManager();
@@ -49,7 +47,7 @@ public class Patrol : MonoBehaviour
         {
             agent.isStopped = true;
 
-            if (tm.TimeCount(restTime))
+            if (tm.TimeCount(RestTime))
             {
                 agent.isStopped = false;
                 GotoNextPoint();
@@ -60,13 +58,13 @@ public class Patrol : MonoBehaviour
     void GotoNextPoint()
     {
         // U: Returns if no points have been set up
-        if (points.Length == 0) return;
+        if (PatrolPoints.Length == 0) return;
 
         // U: Set the agent to go to the currently selected destination.
-        agent.destination = points[destPoint].position;
+        agent.destination = PatrolPoints[destPoint].position;
 
         // U: Choose the next point in the array as the destination,
         // cycling to the start if necessary.
-        destPoint = (destPoint + 1) % points.Length;
+        destPoint = (destPoint + 1) % PatrolPoints.Length;
     }
 }
