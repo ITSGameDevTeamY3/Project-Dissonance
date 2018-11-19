@@ -6837,6 +6837,7 @@ GameObject:
   - component: {fileID: 534669905}
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
+  - component: {fileID: 534669906}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: Untagged
@@ -6850,7 +6851,7 @@ AudioListener:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &534669904
 Camera:
   m_ObjectHideFlags: 0
@@ -6900,6 +6901,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 23.403002, y: 180.00002, z: 0}
+--- !u!114 &534669906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ListenerNumber: 0
 --- !u!1 &565911678
 GameObject:
   m_ObjectHideFlags: 0
@@ -13741,7 +13754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6629950059a4d51408c9310140b9b01c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputSound: event:/footsteps
+  inputSound: event:/Master/SFX_Events/FootSteps/footsteps
   moveSpeed: 0.6
 --- !u!1 &1240819959
 GameObject:

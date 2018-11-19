@@ -13,11 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: C:\Users\Fearo\Documents\FMOD Studio\footstep sounds\footstep
-    sounds.fspro
-  SourceProjectPathUnformatted: C:\Users\Fearo\Documents\FMOD Studio\footstep sounds\footstep
-    sounds.fspro
-  SourceBankPathUnformatted: C:\Users\Fearo\Documents\FMOD Studio\footstep sounds\Build
+  sourceProjectPath: C:\Users\Fearo\Documents\FMOD Studio\PDFMOD\PDFMOD.fspro
+  SourceProjectPathUnformatted: C:\Users\Fearo\Documents\FMOD Studio\PDFMOD\PDFMOD.fspro
+  SourceBankPathUnformatted: C:\Users\Fearo\Documents\FMOD Studio\PDFMOD\Build
   AutomaticEventLoading: 1
   AutomaticSampleLoading: 0
   ImportType: 0
