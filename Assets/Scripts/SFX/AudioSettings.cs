@@ -19,7 +19,7 @@ public class AudioSettings : MonoBehaviour {
         Music = RuntimeManager.GetBus("bus:/Master/Music");
         SFX = RuntimeManager.GetBus("bus:/Master/SFX");
         Master = RuntimeManager.GetBus("bus:/Master");
-        SFXVolumeEvent = RuntimeManager.CreateInstance("event:/SFX_Events/UI/Nav");
+        SFXVolumeEvent = RuntimeManager.CreateInstance("event:/Master/SFX_Events/UI/Nav");
     }
 
 	// Use this for initialization
