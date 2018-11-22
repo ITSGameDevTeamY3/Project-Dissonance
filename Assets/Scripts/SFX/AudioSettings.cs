@@ -6,6 +6,9 @@ using FMODUnity;
 public class AudioSettings : MonoBehaviour {
 
     EventInstance SFXVolumeEvent;
+    EventInstance playSelectSound;
+    EventInstance backSelectSound;
+    EventInstance startGameSound;
 
     Bus Music;
     Bus SFX;
@@ -20,6 +23,9 @@ public class AudioSettings : MonoBehaviour {
         SFX = RuntimeManager.GetBus("bus:/Master/SFX");
         Master = RuntimeManager.GetBus("bus:/Master");
         SFXVolumeEvent = RuntimeManager.CreateInstance("event:/Master/SFX_Events/UI/Nav");
+        playSelectSound = RuntimeManager.CreateInstance("event:/Master/SFX_Events/UI/Select");
+        backSelectSound = RuntimeManager.CreateInstance("event:/Master/SFX_Events/UI/Back");
+        startGameSound = RuntimeManager.CreateInstance("event:/Master/SFX_Events/UI/startGame");
     }
 
 	// Use this for initialization
@@ -52,6 +58,38 @@ public class AudioSettings : MonoBehaviour {
         if (PbState != PLAYBACK_STATE.PLAYING)
         {
             SFXVolumeEvent.start();
+        }
+    }
+    public void Select()
+    {
+
+        PLAYBACK_STATE PbState;
+        playSelectSound.getPlaybackState(out PbState);
+        if (PbState != PLAYBACK_STATE.PLAYING)
+        {
+            playSelectSound.start();
+        }
+    }
+
+    public void BackSelect()
+    {
+
+        PLAYBACK_STATE PbState;
+        backSelectSound.getPlaybackState(out PbState);
+        if (PbState != PLAYBACK_STATE.PLAYING)
+        {
+            backSelectSound.start();
+        }
+    }
+
+    public void StartGame()
+    {
+
+        PLAYBACK_STATE PbState;
+        startGameSound.getPlaybackState(out PbState);
+        if (PbState != PLAYBACK_STATE.PLAYING)
+        {
+            startGameSound.start();
         }
     }
 }
