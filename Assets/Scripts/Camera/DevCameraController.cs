@@ -17,14 +17,14 @@ public class DevCameraController : MonoBehaviour
     bool cameraFixed = true;
 
     void Start()
-    {   
+    {
         devCamPosition = GetComponent<Transform>();
     }
 
     void Update()
     {
         // Fix and un-fix camera.
-        if (Input.GetKeyUp(KeyCode.F)) cameraFixed = !cameraFixed;                     
+        if (Input.GetKeyUp(KeyCode.F)) cameraFixed = !cameraFixed;
 
         if (!cameraFixed)
         {
@@ -34,7 +34,13 @@ public class DevCameraController : MonoBehaviour
     }
 
     void HandleMovement()
-    {       
+    {
+        // Sprint (Hard-coded for now.)
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            moveSpeed = 40;
+        }
+
         // Forward
         if (Input.GetKey(KeyCode.W))
         {
@@ -69,7 +75,7 @@ public class DevCameraController : MonoBehaviour
         if (Input.GetKey("left ctrl"))
         {
             devCamPosition.position += new Vector3(0, -moveSpeed * Time.deltaTime, 0);
-        }     
+        }
     }
 
     // https://www.youtube.com/watch?v=lYIRm4QEqro
