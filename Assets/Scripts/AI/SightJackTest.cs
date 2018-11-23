@@ -15,7 +15,7 @@ public class SightJackTest : MonoBehaviour {
 	
 	void Update ()
     {
-		if(Input.GetKeyUp("space"))
+		if(Input.GetKeyUp(KeyCode.P))
         {
             GameCam.enabled = !GameCam.enabled;
             POV.enabled = !POV.enabled;
