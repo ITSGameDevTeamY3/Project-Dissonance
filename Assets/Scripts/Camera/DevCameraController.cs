@@ -13,12 +13,17 @@ public class DevCameraController : MonoBehaviour
     private float yaw = 0.0f;
     private float pitch = 0.0f;
 
+    // These properties are set automatically.
     Transform devCamPosition;
     bool cameraFixed = true;
+    int normalSpeed;
+    int sprintSpeed;
 
     void Start()
     {
         devCamPosition = GetComponent<Transform>();
+        normalSpeed = moveSpeed;
+        sprintSpeed = normalSpeed * 2;
     }
 
     void Update()
@@ -29,22 +34,20 @@ public class DevCameraController : MonoBehaviour
         if (!cameraFixed)
         {
             MouseLook();
-            HandleMovement();
+            HandleMovement();            
         }
     }
 
     void HandleMovement()
     {
-        // Sprint (Hard-coded for now.)
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            moveSpeed = 40;
-        }
+        // Sprinting
+        if (Input.GetKey(KeyCode.LeftShift)) moveSpeed = sprintSpeed;
+        else moveSpeed = normalSpeed;
 
         // Forward
         if (Input.GetKey(KeyCode.W))
         {
-            devCamPosition.position += devCamPosition.forward * moveSpeed * Time.deltaTime;
+            devCamPosition.position += devCamPosition.forward * moveSpeed * Time.deltaTime;           
         }
 
         // Backward
@@ -75,7 +78,7 @@ public class DevCameraController : MonoBehaviour
         if (Input.GetKey("left ctrl"))
         {
             devCamPosition.position += new Vector3(0, -moveSpeed * Time.deltaTime, 0);
-        }
+        }               
     }
 
     // https://www.youtube.com/watch?v=lYIRm4QEqro
@@ -85,5 +88,5 @@ public class DevCameraController : MonoBehaviour
         pitch -= lookSpeedV * Input.GetAxis("Mouse Y");
 
         devCamPosition.eulerAngles = new Vector3(pitch, yaw, 0.0f);
-    }
+    }    
 }
