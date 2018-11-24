@@ -8,7 +8,7 @@ using UnityEngine.AI;
 // An enemy controller is needed first in order for this script to work.
 [RequireComponent(typeof(EnemyController))]
 public class Patrol : MonoBehaviour
-{   
+{
     // You can assign gameobjects to this array of positions in the Unity Inspector.
     public Transform[] PatrolPoints;
     // How long the enemy waits before proceeding to the next point.
@@ -22,6 +22,9 @@ public class Patrol : MonoBehaviour
     // Instantiate time manager so that we can access the countdown method.
     TimeManager tm = new TimeManager();
 
+    // This bool will determine whether or not the enemy is currently patrolling.
+    private bool onPatrol;
+
     void Start()
     {
         // This script needs an enemy controller, an enemy controller needs an agent. In short, we're assured that we can acess the agent component here too.
@@ -30,13 +33,24 @@ public class Patrol : MonoBehaviour
         // U: Disabling auto-braking allows for continuous movement
         //    between points (ie, the agent doesn't slow down as it
         //    approaches a destination point).
-        agent.autoBraking = false;
-      
+        agent.autoBraking = false;      
+
         GotoNextPoint();
-    }    
-    
+    }
+
+    void Update()
+    {
+        if (onPatrol)
+        {
+            //print("Patrol route's being updated!");
+            ChooseNextPointAndMove(agent);
+        }
+    }
+
     public void ChooseNextPointAndMove(NavMeshAgent agent)
     {
+        //print("Choosing next point and moving!");
+
         // U: Choose the next destination point when the agent gets
         // close to the current one.
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
@@ -52,7 +66,7 @@ public class Patrol : MonoBehaviour
     }
 
     void GotoNextPoint()
-    {
+    {       
         // U: Returns if no points have been set up
         if (PatrolPoints.Length == 0) return;
 
@@ -62,5 +76,15 @@ public class Patrol : MonoBehaviour
         // U: Choose the next point in the array as the destination,
         // cycling to the start if necessary.
         destPoint = (destPoint + 1) % PatrolPoints.Length;
+    }
+
+    public void StartPatrol()
+    {        
+        onPatrol = true;
+    }
+
+    public void StopPatrol()
+    {        
+        onPatrol = false;
     }
 }

@@ -43,9 +43,10 @@ public class EnemyController : MonoBehaviour
         DECEASED
     }
 
-    private Phase enemyState; 
+    private Phase enemyPhase;
+    private Phase previousPhase;
 
-    void Start ()
+    void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 
@@ -53,31 +54,45 @@ public class EnemyController : MonoBehaviour
         if (GetComponent<Patrol>() != null)
         {
             patrolRoute = GetComponent<Patrol>();
-            enemyState = Phase.PATROL;
+            // NOTE: We can only set enemy phase directly (Like the line below.) in this Start method. Everywhere else, we should use the SetPhase(newPhase) method.
+            enemyPhase = Phase.PATROL;
+            UpdateBehaviour();                  
         }
 
         // If we haven't given them a patrol route, assign their starting location as their post. (An area they've been assigned to keep watch at.)
         else
         {
             post = GetComponent<Transform>().position;
-            enemyState = Phase.VIGIL;
+            // REMINDER: Everywhere else, we use the SetPhase(newPhase) method.
+            enemyPhase = Phase.VIGIL;
+            UpdateBehaviour();           
         }
-	}
-	
-	
-	void Update ()
+    }
+
+    void Update()
     {
-		switch(enemyState)
+        if (enemyPhase != previousPhase)
+        {           
+            UpdateBehaviour();
+        }
+
+        CheckForDisturbances();
+    }
+
+    void UpdateBehaviour()
+    {
+        switch (enemyPhase)
         {
-            case Phase.PATROL:
-                patrolRoute.ChooseNextPointAndMove(agent);
-                CheckForDisturbances();
+            case Phase.PATROL:               
+                patrolRoute.StartPatrol();               
                 break;
 
             case Phase.VIGIL:
                 break;
 
             case Phase.HALT:
+                patrolRoute.StopPatrol();
+                agent.isStopped = true;
                 break;
 
             case Phase.INVESTIGATE:
@@ -89,21 +104,30 @@ public class EnemyController : MonoBehaviour
             case Phase.DECEASED:
                 break;
         }
-	}
+    }
 
-    void CheckForDisturbances()
+    void SetPhase(Phase newPhase)
     {
+        if (newPhase != enemyPhase)
+        {           
+            previousPhase = enemyPhase;
+            enemyPhase = newPhase;
+            UpdateBehaviour();
+        }
+    }
+
+    private void CheckForDisturbances()
+    {        
         if (Input.GetMouseButtonDown(0))
-        {
+        {            
             // Send out a ray to the position where you clicked.
             Ray ray = disturbanceCam.ScreenPointToRay(Input.mousePosition);
 
             // This if will determine whether or not you clicked an object.
             if (Physics.Raycast(ray, out hit))
             {
-                enemyState = Phase.HALT;
+                SetPhase(Phase.HALT);               
             }
-        }
+        }       
     }
-
 }
