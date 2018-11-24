@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Controls for a camera that we can move through the environment. Purely for development testing.
+[RequireComponent(typeof(Light))]
 public class DevCameraController : MonoBehaviour
 {
+    #region Dev Cam Properties.
     public int moveSpeed;
 
     // Mouse Look Properties.
@@ -15,13 +17,17 @@ public class DevCameraController : MonoBehaviour
 
     // These properties are set automatically.
     Transform devCamPosition;
+    Light devCamLight;
     bool cameraFixed = true;
     int normalSpeed;
     int sprintSpeed;
+    #endregion
 
     void Start()
     {
         devCamPosition = GetComponent<Transform>();
+        devCamLight = GetComponent<Light>();
+        devCamLight.enabled = false;
         normalSpeed = moveSpeed;
         sprintSpeed = normalSpeed * 2;
     }
@@ -29,7 +35,10 @@ public class DevCameraController : MonoBehaviour
     void Update()
     {
         // Fix and un-fix camera.
-        if (Input.GetKeyUp(KeyCode.F)) cameraFixed = !cameraFixed;
+        if (Input.GetKeyUp(KeyCode.V)) cameraFixed = !cameraFixed;
+
+        // Toggle dev cam light on and off.
+        if (Input.GetKeyUp(KeyCode.F)) devCamLight.enabled = !devCamLight.enabled;
 
         if (!cameraFixed)
         {

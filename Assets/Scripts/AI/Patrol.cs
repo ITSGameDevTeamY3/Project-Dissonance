@@ -5,7 +5,8 @@ using UnityEngine.AI;
 // This code has been seen in the Unity User Manual, I am using it to test enemy patrol functionality.
 // "U:" In front of a comment means that the comment came from the Unity User Manual.
 
-// TODO: Get the enemy to pause briefly at each patrol point.
+// An enemy controller is needed first in order for this script to work.
+[RequireComponent(typeof(EnemyController))]
 public class Patrol : MonoBehaviour
 {   
     // You can assign gameobjects to this array of positions in the Unity Inspector.
@@ -23,7 +24,7 @@ public class Patrol : MonoBehaviour
 
     void Start()
     {
-        // The agent is automatically assigned when you add this script as a component to it.
+        // This script needs an enemy controller, an enemy controller needs an agent. In short, we're assured that we can acess the agent component here too.
         agent = GetComponent<NavMeshAgent>();
 
         // U: Disabling auto-braking allows for continuous movement
@@ -33,13 +34,8 @@ public class Patrol : MonoBehaviour
       
         GotoNextPoint();
     }    
-
-    void Update()
-    {       
-        ChooseNextPointAndMove(agent);      
-    }
-
-    void ChooseNextPointAndMove(NavMeshAgent agent)
+    
+    public void ChooseNextPointAndMove(NavMeshAgent agent)
     {
         // U: Choose the next destination point when the agent gets
         // close to the current one.

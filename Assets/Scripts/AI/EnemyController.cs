@@ -28,12 +28,15 @@ public class EnemyController : MonoBehaviour
 
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
+    Patrol patrolRoute;
+    Vector3 post;
     TimeManager tm = new TimeManager();
     #endregion
 
     public enum Phase
     {
         PATROL,
+        VIGIL,
         HALT,
         INVESTIGATE,
         ALERT,
@@ -45,6 +48,20 @@ public class EnemyController : MonoBehaviour
     void Start ()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        // Set the enemy's patrol route if we have given them one in the editor.
+        if (GetComponent<Patrol>() != null)
+        {
+            patrolRoute = GetComponent<Patrol>();
+            enemyState = Phase.PATROL;
+        }
+
+        // If we haven't given them a patrol route, assign their starting location as their post. (An area they've been assigned to keep watch at.)
+        else
+        {
+            post = GetComponent<Transform>().position;
+            enemyState = Phase.VIGIL;
+        }
 	}
 	
 	
@@ -53,6 +70,11 @@ public class EnemyController : MonoBehaviour
 		switch(enemyState)
         {
             case Phase.PATROL:
+                patrolRoute.ChooseNextPointAndMove(agent);
+                CheckForDisturbances();
+                break;
+
+            case Phase.VIGIL:
                 break;
 
             case Phase.HALT:
@@ -68,4 +90,20 @@ public class EnemyController : MonoBehaviour
                 break;
         }
 	}
+
+    void CheckForDisturbances()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Send out a ray to the position where you clicked.
+            Ray ray = disturbanceCam.ScreenPointToRay(Input.mousePosition);
+
+            // This if will determine whether or not you clicked an object.
+            if (Physics.Raycast(ray, out hit))
+            {
+                enemyState = Phase.HALT;
+            }
+        }
+    }
+
 }

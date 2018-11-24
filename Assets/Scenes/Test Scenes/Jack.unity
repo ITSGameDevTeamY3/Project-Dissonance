@@ -13678,8 +13678,9 @@ GameObject:
   - component: {fileID: 1240771435}
   - component: {fileID: 1240771439}
   - component: {fileID: 1240771441}
-  - component: {fileID: 1240771440}
+  - component: {fileID: 1240771444}
   - component: {fileID: 1240771442}
+  - component: {fileID: 1240771440}
   - component: {fileID: 1240771443}
   m_Layer: 9
   m_Name: Test Grunt 1
@@ -13779,7 +13780,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1240771434}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f502e38d273f6b64e91a9429642e28df, type: 3}
   m_Name: 
@@ -13839,6 +13840,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputSound: event:/Master/SFX_Events/FootSteps/footsteps
   moveSpeed: 0.6
+--- !u!114 &1240771444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1240771434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9f5c8b9b23acb46987576864281eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 10
+  shootCooldown: 3
+  movementSpeed: 10
+  turningSpeed: 0.8
+  stoppingDistance: 3
+  haltTime: 2
+  disturbanceCam: {fileID: 534669904}
 --- !u!1 &1240819959
 GameObject:
   m_ObjectHideFlags: 0
