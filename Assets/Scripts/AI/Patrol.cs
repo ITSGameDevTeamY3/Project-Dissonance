@@ -81,10 +81,12 @@ public class Patrol : MonoBehaviour
     public void StartPatrol()
     {        
         onPatrol = true;
+        agent.isStopped = false;
     }
 
     public void StopPatrol()
     {        
         onPatrol = false;
+        //agent.isStopped = true;
     }
 }

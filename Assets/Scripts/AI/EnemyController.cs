@@ -11,11 +11,7 @@ public class EnemyController : MonoBehaviour
     #region Enemy Properties
     // Properties that can be altered in the Unity inspector. Some of these might be moved to other scripts for the sake of cleanliness.
     public int Health;
-    public float shootCooldown;
-    public float movementSpeed;
-    public float turningSpeed;
-    public float stoppingDistance;
-    public float haltTime;
+    public float shootCooldown, movementSpeed, turningSpeed, stoppingDistance, haltTime;   
 
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing over.
     public Camera disturbanceCam;
@@ -30,6 +26,7 @@ public class EnemyController : MonoBehaviour
     NavMeshAgent agent;
     Patrol patrolRoute;
     Vector3 post;
+    EnemyMovement movement;
     TimeManager tm = new TimeManager();
     #endregion
 
@@ -43,13 +40,15 @@ public class EnemyController : MonoBehaviour
         DECEASED
     }
 
-    private Phase enemyPhase;
+    public Phase enemyPhase;
     private Phase previousPhase;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        movement = GetComponent<EnemyMovement>();
 
+        #region Set the enemy's patrol route, if we haven't given them one, assign them a post.
         // Set the enemy's patrol route if we have given them one in the editor.
         if (GetComponent<Patrol>() != null)
         {
@@ -67,6 +66,7 @@ public class EnemyController : MonoBehaviour
             enemyPhase = Phase.VIGIL;
             UpdateBehaviour();           
         }
+        #endregion
     }
 
     void Update()
@@ -92,7 +92,8 @@ public class EnemyController : MonoBehaviour
 
             case Phase.HALT:
                 patrolRoute.StopPatrol();
-                agent.isStopped = true;
+                agent.ResetPath();               
+                movement.SetRotationTarget(hit.transform);
                 break;
 
             case Phase.INVESTIGATE:
