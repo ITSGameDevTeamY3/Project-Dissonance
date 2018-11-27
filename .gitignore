@@ -1,4 +1,4 @@
-[Ll]ibrary/
+Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
 [Bb]uild/
@@ -23,6 +23,7 @@ ExportedObj/
 *.svd
 *.pdb
 *.opendb
+*.VC.db
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -35,5 +36,7 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-# ReSharper cache directory
-_ReSharper.Caches
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
