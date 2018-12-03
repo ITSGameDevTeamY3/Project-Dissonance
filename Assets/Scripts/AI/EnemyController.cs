@@ -43,6 +43,8 @@ public class EnemyController : MonoBehaviour
     public Phase enemyPhase;
     private Phase previousPhase;
 
+    // NOTE: RuntimeManager.cs line 986, uncomment this exception later on.
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -50,6 +52,9 @@ public class EnemyController : MonoBehaviour
 
         #region Set the enemy's patrol route, if we haven't given them one, assign them a post.
         // Set the enemy's patrol route if we have given them one in the editor.
+
+        // The following commented if statement is an alternate choice to checking if the component is there. The uncommented one is what we'll use.
+        // if (GetComponent<Patrol>().enabled != false)
         if (GetComponent<Patrol>() != null)
         {
             patrolRoute = GetComponent<Patrol>();
@@ -76,7 +81,18 @@ public class EnemyController : MonoBehaviour
             UpdateBehaviour();
         }
 
+        // The enemy will always check for disturbances regardless of its current phase.
         CheckForDisturbances();
+
+        // Probably best not to have this in the update, but we can leave refactoring to later.
+        if(enemyPhase == Phase.HALT)
+        {
+            // After a brief amount of time has passed, the enemy will move into the INVESTIGATE phase.
+            if (tm.TimeCount(haltTime))
+            {
+                SetPhase(Phase.INVESTIGATE);
+            }
+        }
     }
 
     void UpdateBehaviour()
@@ -87,16 +103,31 @@ public class EnemyController : MonoBehaviour
                 patrolRoute.StartPatrol();               
                 break;
 
-            case Phase.VIGIL:
+            case Phase.VIGIL:               
                 break;
 
             case Phase.HALT:
-                patrolRoute.StopPatrol();
-                agent.ResetPath();               
-                movement.SetRotationTarget(hit.transform);
+                #region If the enemy was on patrol...
+                if (agent.destination != null)
+                {
+                    // ...stop the enemy's patrol.
+                    patrolRoute.StopPatrol();
+
+                    // Keep track of where the enemy was originally headed.
+                    originalDestination = agent.destination;
+
+                    // Clear the agent's path.
+                    agent.ResetPath();
+                }
+                #endregion
+
+                // Turn towards the direction of the disturbance.
+                movement.SetRotationTarget(hit.transform);                              
                 break;
 
             case Phase.INVESTIGATE:
+                // Set the disturbance location as the enemy's destination.                
+                movement.StartWalkingToTarget(hit.point);
                 break;
 
             case Phase.ALERT:
@@ -130,5 +161,5 @@ public class EnemyController : MonoBehaviour
                 SetPhase(Phase.HALT);               
             }
         }       
-    }
+    }   
 }

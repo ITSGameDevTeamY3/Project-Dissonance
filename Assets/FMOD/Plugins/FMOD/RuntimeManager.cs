@@ -982,7 +982,8 @@ retry:
             FMOD.Studio.Bus bus;
             if (StudioSystem.getBus(path, out bus) != FMOD.RESULT.OK)
             {
-                throw new BusNotFoundException(path);
+                // Let's uncomment this later.
+                //throw new BusNotFoundException(path);
             }
             return bus;
         }
