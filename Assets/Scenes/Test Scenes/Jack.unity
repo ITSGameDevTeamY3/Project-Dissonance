@@ -12173,7 +12173,6 @@ MonoBehaviour:
   Health: 10
   shootCooldown: 3
   walkSpeed: 2
-  runSpeed: 2
   turningSpeed: 8
   stoppingDistance: 3
   haltTime: 2
