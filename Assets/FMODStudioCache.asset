@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 114684658842144940}
-  - {fileID: 114662971980435488}
+  - {fileID: 114570992371024644}
+  - {fileID: 114785406082724640}
   EditorEvents:
-  - {fileID: 114071892702127672}
-  - {fileID: 114193881094383858}
-  - {fileID: 114517118227502674}
-  - {fileID: 114656130009089238}
-  - {fileID: 114976122754515772}
-  - {fileID: 114687394552441258}
-  MasterBankRef: {fileID: 114662971980435488}
-  StringsBankRef: {fileID: 114684658842144940}
-  stringsBankWriteTime: 636783433220000000
+  - {fileID: 114465099331027604}
+  - {fileID: 114544084956944508}
+  - {fileID: 114531042134662656}
+  - {fileID: 114571001322907454}
+  - {fileID: 114709799041887410}
+  - {fileID: 114300601710064434}
+  MasterBankRef: {fileID: 114785406082724640}
+  StringsBankRef: {fileID: 114570992371024644}
+  stringsBankWriteTime: 636795145379525542
   cacheVersion: 2
 --- !u!114 &114019628100110712
 MonoBehaviour:
@@ -175,6 +175,28 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 1100
+--- !u!114 &114300601710064434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/SFX_Events/FootSteps/footsteps
+  guid: 950bd1776e5c284c947288d6ec5c0e98
+  Banks:
+  - {fileID: 114785406082724640}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 1100
 --- !u!114 &114320629523423922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,6 +241,28 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 160506
+--- !u!114 &114465099331027604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/SFX_Events/UI/Nav
+  guid: 3bb4de734524824aa5cfe56461eb7824
+  Banks:
+  - {fileID: 114785406082724640}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 200
 --- !u!114 &114517118227502674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,6 +329,90 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 1100
+--- !u!114 &114531042134662656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/SFX_Events/UI/Back
+  guid: 495a593ecc57e549a7f9de7c593bd4c2
+  Banks:
+  - {fileID: 114785406082724640}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 345
+--- !u!114 &114544084956944508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/SFX_Events/UI/startGame
+  guid: 48cb1c4e033e794c998c37038a64f0d8
+  Banks:
+  - {fileID: 114785406082724640}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 4179
+--- !u!114 &114570992371024644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\temp\PDFMOD\Build\Desktop\Master Bank.strings.bank
+  lastModified: 636795145379525542
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 1226
+  Exists: 1
+--- !u!114 &114571001322907454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/Music_Events/introTheme
+  guid: 5614cc142da23a46a2649af247e75ae4
+  Banks:
+  - {fileID: 114785406082724640}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 152428
 --- !u!114 &114656130009089238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,6 +493,28 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 1100
+--- !u!114 &114709799041887410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/SFX_Events/UI/select
+  guid: 7e9a77221a366d4ea54a5f13bce06ffa
+  Banks:
+  - {fileID: 114785406082724640}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 4179
 --- !u!114 &114749195643706638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,6 +537,24 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 155506
+--- !u!114 &114785406082724640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\temp\PDFMOD\Build\Desktop\Master Bank.bank
+  lastModified: 636795145379295463
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 2203680
+  Exists: 1
 --- !u!114 &114789353039634762
 MonoBehaviour:
   m_ObjectHideFlags: 0
