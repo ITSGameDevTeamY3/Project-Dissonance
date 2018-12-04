@@ -74,7 +74,7 @@ public class EnemyMovement : MonoBehaviour
         
         if(DestinationReached())
         {
-            print("Destination reached!");
+            movementPhase = MovementPhase.SURVEY;
         }
     }
 
@@ -86,6 +86,7 @@ public class EnemyMovement : MonoBehaviour
         // Get the difference in position between the agent and the disturbance.
         Vector3 direction =
             (target.position - transform.position).normalized;
+        // Target.position or target.point? Interesting...
         
 
         // Get the rotation the agent needs to have in order to be facing the disturbance.
@@ -97,27 +98,20 @@ public class EnemyMovement : MonoBehaviour
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             lookRotation,
-            Time.deltaTime * turningSpeed);
-
-        //print("My Y: " + transform.rotation.y);
-        //print("My Target Y: " + lookRotation.y);
-
-        //if (Mathf.Approximately(transform.rotation.y, lookRotation.y))
-        //{
-        //if (Vector3.Distance(transform.position, target.position) <= stoppingDistance)
-        //{
-        //    agent.transform.LookAt(direction);
-        //}
-        //return true;
-        //}
-
-        //else return false;
+            Time.deltaTime * turningSpeed);      
     }
 
     public void SetRotationTarget(Transform target)
     {
         rotateTarget = target;
         movementPhase = MovementPhase.ROTATE;
+    }
+
+    // SURVEY
+    // This method will be rather simple for now.
+    public void SurveyArea()
+    {
+
     }
 
     // Check if the agent has reached their destination.
