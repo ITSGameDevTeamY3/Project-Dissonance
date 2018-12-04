@@ -8,12 +8,13 @@ using UnityEngine.AI;
 public class EnemyMovement : MonoBehaviour
 {
     // These 3 properties are set in the enemy controller script.
-    private float movementSpeed, turningSpeed, stoppingDistance;
+    private float walkSpeed, runSpeed, turningSpeed, stoppingDistance;
 
     private EnemyController enemyController;
     private NavMeshAgent agent;
 
-    private Transform rotateTarget;
+
+    private Transform walkTarget, runTarget, rotateTarget;
 
     public enum MovementPhase
     {
@@ -28,7 +29,8 @@ public class EnemyMovement : MonoBehaviour
     {
         enemyController = GetComponent<EnemyController>();
         agent = GetComponent<NavMeshAgent>();
-        movementSpeed = enemyController.movementSpeed;
+        walkSpeed = enemyController.walkSpeed;
+        runSpeed = walkSpeed * 2;
         turningSpeed = enemyController.turningSpeed;
         stoppingDistance = enemyController.stoppingDistance;
     }
@@ -38,6 +40,7 @@ public class EnemyMovement : MonoBehaviour
         switch (movementPhase)
         {
             case MovementPhase.WALK:
+                WalkTowards(walkTarget);
                 break;
 
             case MovementPhase.RUN:
@@ -49,6 +52,24 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    // WALK
+    public void SetWalkTarget(Transform target)
+    {
+        walkTarget = target;
+        agent.speed = walkSpeed;
+        movementPhase = MovementPhase.WALK;
+    }
+
+    public void WalkTowards(Transform target)
+    {
+        agent.SetDestination(target.position);
+
+        //if()
+    }
+
+    // RUN
+
+    // ROTATION
     public void RotateTowards(Transform target)
     {
         // Get the difference in position between the agent and the disturbance.
@@ -87,10 +108,5 @@ public class EnemyMovement : MonoBehaviour
     {
         rotateTarget = target;
         movementPhase = MovementPhase.ROTATE;
-    }
-
-    public void StartWalkingToTarget(Vector3 target)
-    {
-
-    }
+    }   
 }

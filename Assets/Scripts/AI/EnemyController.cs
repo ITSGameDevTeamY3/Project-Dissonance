@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
     #region Enemy Properties
     // Properties that can be altered in the Unity inspector. Some of these might be moved to other scripts for the sake of cleanliness.
     public int Health;
-    public float shootCooldown, movementSpeed, turningSpeed, stoppingDistance, haltTime;   
+    public float shootCooldown, walkSpeed, turningSpeed, stoppingDistance, haltTime;  
 
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing over.
     public Camera disturbanceCam;
@@ -48,6 +48,8 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = walkSpeed;       
+
         movement = GetComponent<EnemyMovement>();
 
         #region Set the enemy's patrol route, if we haven't given them one, assign them a post.
@@ -127,7 +129,7 @@ public class EnemyController : MonoBehaviour
 
             case Phase.INVESTIGATE:
                 // Set the disturbance location as the enemy's destination.                
-                movement.StartWalkingToTarget(hit.point);
+                movement.SetWalkTarget(hit.transform);
                 break;
 
             case Phase.ALERT:
