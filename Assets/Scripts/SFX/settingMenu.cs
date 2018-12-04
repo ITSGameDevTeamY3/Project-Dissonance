@@ -22,7 +22,7 @@ public class settingMenu : MonoBehaviour {
 
     public void ActivateFullScreen(bool fullScreenOn)
     {
-        Screen.fullScreen = fullScreenOn;
+       Screen.fullScreen = fullScreenOn;
     }
 
      void Start()
