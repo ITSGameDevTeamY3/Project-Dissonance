@@ -15,18 +15,20 @@ MonoBehaviour:
   - {fileID: 114642495244556824}
   - {fileID: 114961258771039440}
   EditorEvents:
-  - {fileID: 114401733089572508}
   - {fileID: 114714377209159450}
   - {fileID: 114276001689820902}
   - {fileID: 114759713170945410}
   - {fileID: 114686028927674786}
   - {fileID: 114092781020409444}
   - {fileID: 114608436196605826}
+  - {fileID: 114536036337089688}
+  - {fileID: 114895068496678830}
+  - {fileID: 114537510135965034}
   MasterBanks:
   - {fileID: 114961258771039440}
   StringsBanks:
   - {fileID: 114642495244556824}
-  stringsBankWriteTime: 636795256269269030
+  stringsBankWriteTime: 636795401308084494
   cacheVersion: 3
 --- !u!114 &114092781020409444
 MonoBehaviour:
@@ -94,6 +96,71 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 201265
+--- !u!114 &114406493255762534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/SFX_Events/Foley/New Event
+  guid: 76657b8eb2c8304db67949cf6e12963c
+  Banks: []
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 67088
+--- !u!114 &114536036337089688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/SFX_Events/FootSteps/footsteps3D
+  guid: 409fce64675dde4094f8cc182f0353b4
+  Banks:
+  - {fileID: 114961258771039440}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 500
+--- !u!114 &114537510135965034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/Music_Events/EnemyAltered
+  guid: 8af602c87a2a78458c355e656fe21e18
+  Banks:
+  - {fileID: 114961258771039440}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 41370
 --- !u!114 &114608436196605826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,11 +195,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: F:\Users\Fearon\Documents\PDFMOD\Build\Desktop\Master Bank.strings.bank
-  lastModified: 636795256269269030
+  lastModified: 636795401308084494
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 1276
+    Value: 1376
   Exists: 1
 --- !u!114 &114686028927674786
 MonoBehaviour:
@@ -200,6 +267,28 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 345
+--- !u!114 &114895068496678830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/Master/SFX_Events/Foley/Wind
+  guid: 76657b8eb2c8304db67949cf6e12963c
+  Banks:
+  - {fileID: 114961258771039440}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 67088
 --- !u!114 &114961258771039440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,9 +301,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: F:\Users\Fearon\Documents\PDFMOD\Build\Desktop\Master Bank.bank
-  lastModified: 636795256269239327
+  lastModified: 636795401308054573
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 2935264
+    Value: 3553280
   Exists: 1

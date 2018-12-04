@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using FMOD.Studio;
+using FMODUnity;
 
 [RequireComponent(typeof(EnemyController))]
 public class Footsteps : MonoBehaviour
 {
-    [FMODUnity.EventRef]
+    [EventRef]
 
     public string inputSound;
+    public string AlertTheme;
     bool isMoving;
     public float moveSpeed;
 
@@ -20,8 +23,12 @@ public class Footsteps : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         enemyController = GetComponent<EnemyController>();
         InvokeRepeating("GetFootSteps", 0, moveSpeed);
-    }
 
+        if (enemyController.enemyPhase == EnemyController.Phase.ALERT)
+        {
+            GetAttackingTheme();
+        }
+    }
     void Update()
     {
         //GetFootSteps();
@@ -31,8 +38,19 @@ public class Footsteps : MonoBehaviour
     {
         if (enemyController.enemyPhase != EnemyController.Phase.HALT && !agent.isStopped)
         {
-            FMODUnity.RuntimeManager.PlayOneShot(inputSound);
+            FMODUnity.RuntimeManager.PlayOneShot(inputSound, transform.position);
+            
         }
+    }
+
+    void GetAttackingTheme()
+    {
+       RuntimeManager.PlayOneShot(AlertTheme);
+    }
+
+    void GetPatrolingTheme()
+    {
+        RuntimeManager.PlayOneShot(AlertTheme);
     }
 
     void OnDisable()
