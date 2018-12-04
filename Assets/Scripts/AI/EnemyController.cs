@@ -43,8 +43,6 @@ public class EnemyController : MonoBehaviour
     public Phase enemyPhase;
     private Phase previousPhase;
 
-    // NOTE: RuntimeManager.cs line 986, uncomment this exception later on.
-
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -110,13 +108,13 @@ public class EnemyController : MonoBehaviour
 
             case Phase.HALT:
                 #region If the enemy was on patrol...
-                if (agent.destination != null)
+                if (agent.hasPath)
                 {
-                    // ...stop the enemy's patrol.
-                    patrolRoute.StopPatrol();
-
                     // Keep track of where the enemy was originally headed.
                     originalDestination = agent.destination;
+
+                    // ...stop the enemy's patrol.
+                    patrolRoute.StopPatrol();                    
 
                     // Clear the agent's path.
                     agent.ResetPath();
@@ -129,7 +127,7 @@ public class EnemyController : MonoBehaviour
 
             case Phase.INVESTIGATE:
                 // Set the disturbance location as the enemy's destination.                
-                movement.SetWalkTarget(hit.transform);
+                movement.SetWalkTarget(hit.point);
                 break;
 
             case Phase.ALERT:
