@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
 // This script will only work if our enemy has an Agent component.
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyController : MonoBehaviour
@@ -23,6 +22,9 @@ public class EnemyController : MonoBehaviour
     // This variable stores where the agent was originally headed.
     private Vector3 originalDestination;
 
+    Footsteps footSteps;
+    private bool alerted = false;
+
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
     Patrol patrolRoute;
@@ -41,7 +43,9 @@ public class EnemyController : MonoBehaviour
         DECEASED
     }
 
+    [SerializeField]
     public Phase enemyPhase;
+
     private Phase previousPhase;
 
     void Start()
@@ -49,8 +53,13 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = walkSpeed;
 
+        footSteps = GetComponent<Footsteps>();
+
         movement = GetComponent<EnemyMovement>();
-        movement.enabled = false;
+        if (movement != null)
+        {
+            movement.enabled = false;
+        }
 
         #region Set the enemy's patrol route, if we haven't given them one, assign them a post.
         // Set the enemy's patrol route if we have given them one in the editor.
@@ -96,8 +105,8 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        print("Current phase: " + enemyPhase);
-        print("Previous phase: " + previousPhase);
+        Debug.Log("Current phase: " + enemyPhase);
+        Debug.Log("Previous phase: " + previousPhase);
     }
 
     void UpdateBehaviour()
@@ -105,6 +114,13 @@ public class EnemyController : MonoBehaviour
         switch (enemyPhase)
         {
             case Phase.PATROL:
+                //if (alerted)
+                //{
+                //    alerted = false;
+                //}
+
+                //footSteps.StopPatrolingTheme();
+
                 // Change light colour.
                 Flashlight.color = Color.white;
 
@@ -123,7 +139,6 @@ public class EnemyController : MonoBehaviour
                 {
                     // Keep track of where the enemy was originally headed.
                     originalDestination = agent.destination;
-
 
                     // ...stop the enemy's patrol.
                     patrolRoute.StopPatrol();
@@ -148,6 +163,10 @@ public class EnemyController : MonoBehaviour
             case Phase.ALERT:
                 // Change light colour.
                 Flashlight.color = Color.red;
+
+
+               // footSteps.GetPatrolingTheme();              
+
                 break;
 
             case Phase.DECEASED:
@@ -168,7 +187,7 @@ public class EnemyController : MonoBehaviour
 
     private void CheckForDisturbances()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && disturbanceCam != null)
         {
             // Send out a ray to the position where you clicked.
             Ray ray = disturbanceCam.ScreenPointToRay(Input.mousePosition);

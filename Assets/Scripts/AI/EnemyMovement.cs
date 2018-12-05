@@ -15,7 +15,6 @@ public class EnemyMovement : MonoBehaviour
     private Vector3 walkTarget, runTarget, rotateTarget;
     //private Transform rotateTarget;
 
-
     public enum MovementPhase
     {
         WALK,
@@ -41,8 +40,7 @@ public class EnemyMovement : MonoBehaviour
         switch (movementPhase)
         {
             case MovementPhase.WALK:               
-                WalkTowards(walkTarget);
-                
+                WalkTowards(walkTarget);             
                 break;
 
             case MovementPhase.RUN:
@@ -52,7 +50,8 @@ public class EnemyMovement : MonoBehaviour
                 RotateTowards(rotateTarget);
                 break;
 
-            case MovementPhase.SURVEY:             
+            case MovementPhase.SURVEY:
+                Debug.Log("Surveying.");
                 SurveyArea();
                 break;
         }
@@ -72,7 +71,10 @@ public class EnemyMovement : MonoBehaviour
     public void WalkTowards(Vector3 target)
     {
         // Set the agent's destination.   
-        agent.SetDestination(target);
+        if (agent.destination != null)
+        {
+            agent.SetDestination(target);
+        }
         
         if(DestinationReached())
         {
@@ -115,12 +117,12 @@ public class EnemyMovement : MonoBehaviour
     // This method will be rather simple for now.
     public void SurveyArea()
     {
-        print("Test");
-        print("Agent stopped: " + agent.isStopped);
+        Debug.Log("Test");
+        Debug.Log("Agent stopped: " + agent.isStopped);
 
         agent.isStopped = false;
 
-        print("Agent stopped: " + agent.isStopped);
+        Debug.Log("Agent stopped: " + agent.isStopped);
 
         // Look to the left.
         Quaternion lookRotation = Quaternion.LookRotation(
