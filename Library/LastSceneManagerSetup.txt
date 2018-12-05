@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Test Scenes/Jack.unity
+- path: Assets/Scenes/Test Scenes/Adrian Menu.unity
   isLoaded: 1
   isActive: 1
