@@ -12,8 +12,8 @@ public class EnemyMovement : MonoBehaviour
 
     private EnemyController enemyController;
     private NavMeshAgent agent;
-    private Vector3 walkTarget, runTarget;
-    private Transform rotateTarget;
+    private Vector3 walkTarget, runTarget, rotateTarget;
+    //private Transform rotateTarget;
 
 
     public enum MovementPhase
@@ -24,7 +24,7 @@ public class EnemyMovement : MonoBehaviour
         SURVEY
     }
 
-    private MovementPhase movementPhase;
+    public MovementPhase movementPhase;
 
     void Start()
     {
@@ -40,7 +40,7 @@ public class EnemyMovement : MonoBehaviour
     {
         switch (movementPhase)
         {
-            case MovementPhase.WALK:
+            case MovementPhase.WALK:               
                 WalkTowards(walkTarget);
                 break;
 
@@ -81,11 +81,11 @@ public class EnemyMovement : MonoBehaviour
     // RUN
 
     // ROTATION
-    public void RotateTowards(Transform target)
+    public void RotateTowards(Vector3 target)
     {
         // Get the difference in position between the agent and the disturbance.
         Vector3 direction =
-            (target.position - transform.position).normalized;
+            (target - transform.position).normalized;
         // Target.position or target.point? Interesting...
         
 
@@ -101,7 +101,7 @@ public class EnemyMovement : MonoBehaviour
             Time.deltaTime * turningSpeed);      
     }
 
-    public void SetRotationTarget(Transform target)
+    public void SetRotationTarget(Vector3 target)
     {
         rotateTarget = target;
         movementPhase = MovementPhase.ROTATE;

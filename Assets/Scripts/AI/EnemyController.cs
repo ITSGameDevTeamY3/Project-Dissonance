@@ -49,6 +49,7 @@ public class EnemyController : MonoBehaviour
         agent.speed = walkSpeed;       
 
         movement = GetComponent<EnemyMovement>();
+        movement.enabled = false;
 
         #region Set the enemy's patrol route, if we haven't given them one, assign them a post.
         // Set the enemy's patrol route if we have given them one in the editor.
@@ -117,12 +118,15 @@ public class EnemyController : MonoBehaviour
                     patrolRoute.StopPatrol();                    
 
                     // Clear the agent's path.
-                    agent.ResetPath();
+                    agent.ResetPath();                   
                 }
+
+                // The enemy's movement (independent of any patrol routes) will begin now.
+                movement.enabled = true;
                 #endregion
 
                 // Turn towards the direction of the disturbance.
-                movement.SetRotationTarget(hit.transform);                              
+                movement.SetRotationTarget(hit.point);                              
                 break;
 
             case Phase.INVESTIGATE:
