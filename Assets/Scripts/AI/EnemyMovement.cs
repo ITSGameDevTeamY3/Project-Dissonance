@@ -30,7 +30,7 @@ public class EnemyMovement : MonoBehaviour
     {
         enemyController = GetComponent<EnemyController>();
         agent = GetComponent<NavMeshAgent>();
-        walkSpeed = enemyController.walkSpeed;
+        walkSpeed = agent.speed;
         runSpeed = walkSpeed * 2;
         turningSpeed = enemyController.turningSpeed;
         stoppingDistance = enemyController.stoppingDistance;
@@ -42,6 +42,7 @@ public class EnemyMovement : MonoBehaviour
         {
             case MovementPhase.WALK:               
                 WalkTowards(walkTarget);
+                
                 break;
 
             case MovementPhase.RUN:
@@ -51,25 +52,26 @@ public class EnemyMovement : MonoBehaviour
                 RotateTowards(rotateTarget);
                 break;
 
-            case MovementPhase.SURVEY:
-                
+            case MovementPhase.SURVEY:             
+                SurveyArea();
                 break;
         }
     }
 
-    // WALK
+    #region WALK
     public void SetWalkTarget(Vector3 target)
     {
         walkTarget = target;
         agent.speed = walkSpeed;
         // Set the agent's stopping distance.
         agent.stoppingDistance = stoppingDistance;
+        //print("Set phase to walk.");
         movementPhase = MovementPhase.WALK;
     }
 
     public void WalkTowards(Vector3 target)
     {
-        // Set the agent's destination.
+        // Set the agent's destination.   
         agent.SetDestination(target);
         
         if(DestinationReached())
@@ -77,10 +79,17 @@ public class EnemyMovement : MonoBehaviour
             movementPhase = MovementPhase.SURVEY;
         }
     }
+    #endregion
 
     // RUN
 
-    // ROTATION
+    #region ROTATION
+    public void SetRotationTarget(Vector3 target)
+    {
+        rotateTarget = target;
+        movementPhase = MovementPhase.ROTATE;
+    }
+
     public void RotateTowards(Vector3 target)
     {
         // Get the difference in position between the agent and the disturbance.
@@ -99,19 +108,30 @@ public class EnemyMovement : MonoBehaviour
             transform.rotation,
             lookRotation,
             Time.deltaTime * turningSpeed);      
-    }
-
-    public void SetRotationTarget(Vector3 target)
-    {
-        rotateTarget = target;
-        movementPhase = MovementPhase.ROTATE;
-    }
+    }     
+    #endregion
 
     // SURVEY
     // This method will be rather simple for now.
     public void SurveyArea()
     {
+        print("Test");
+        print("Agent stopped: " + agent.isStopped);
 
+        agent.isStopped = false;
+
+        print("Agent stopped: " + agent.isStopped);
+
+        // Look to the left.
+        Quaternion lookRotation = Quaternion.LookRotation(
+           new Vector3(0, 10, 0));
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            lookRotation,
+            Time.deltaTime * turningSpeed);
+
+        // Look to the right.
     }
 
     // Check if the agent has reached their destination.

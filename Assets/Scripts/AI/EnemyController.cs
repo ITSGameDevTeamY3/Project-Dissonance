@@ -11,7 +11,8 @@ public class EnemyController : MonoBehaviour
     #region Enemy Properties
     // Properties that can be altered in the Unity inspector. Some of these might be moved to other scripts for the sake of cleanliness.
     public int Health;
-    public float shootCooldown, walkSpeed, turningSpeed, stoppingDistance, haltTime;  
+    public float shootCooldown, walkSpeed, turningSpeed, stoppingDistance, haltTime;
+    public Light Flashlight;
 
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing over.
     public Camera disturbanceCam;
@@ -46,7 +47,7 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = walkSpeed;       
+        agent.speed = walkSpeed;
 
         movement = GetComponent<EnemyMovement>();
         movement.enabled = false;
@@ -61,7 +62,7 @@ public class EnemyController : MonoBehaviour
             patrolRoute = GetComponent<Patrol>();
             // NOTE: We can only set enemy phase directly (Like the line below.) in this Start method. Everywhere else, we should use the SetPhase(newPhase) method.
             enemyPhase = Phase.PATROL;
-            UpdateBehaviour();                  
+            UpdateBehaviour();
         }
 
         // If we haven't given them a patrol route, assign their starting location as their post. (An area they've been assigned to keep watch at.)
@@ -70,7 +71,7 @@ public class EnemyController : MonoBehaviour
             post = GetComponent<Transform>().position;
             // REMINDER: Everywhere else, we use the SetPhase(newPhase) method.
             enemyPhase = Phase.VIGIL;
-            UpdateBehaviour();           
+            UpdateBehaviour();
         }
         #endregion
     }
@@ -78,7 +79,7 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         if (enemyPhase != previousPhase)
-        {           
+        {
             UpdateBehaviour();
         }
 
@@ -86,7 +87,7 @@ public class EnemyController : MonoBehaviour
         CheckForDisturbances();
 
         // Probably best not to have this in the update, but we can leave refactoring to later.
-        if(enemyPhase == Phase.HALT)
+        if (enemyPhase == Phase.HALT)
         {
             // After a brief amount of time has passed, the enemy will move into the INVESTIGATE phase.
             if (tm.TimeCount(haltTime))
@@ -94,31 +95,41 @@ public class EnemyController : MonoBehaviour
                 SetPhase(Phase.INVESTIGATE);
             }
         }
+
+        print("Current phase: " + enemyPhase);
+        print("Previous phase: " + previousPhase);
     }
 
     void UpdateBehaviour()
     {
         switch (enemyPhase)
         {
-            case Phase.PATROL:               
-                patrolRoute.StartPatrol();               
+            case Phase.PATROL:
+                // Change light colour.
+                Flashlight.color = Color.white;
+
+                patrolRoute.StartPatrol();
                 break;
 
-            case Phase.VIGIL:               
+            case Phase.VIGIL:
                 break;
 
             case Phase.HALT:
+                // Change light colour.
+                Flashlight.color = Color.yellow;
+
                 #region If the enemy was on patrol...
                 if (agent.hasPath)
                 {
                     // Keep track of where the enemy was originally headed.
                     originalDestination = agent.destination;
 
+
                     // ...stop the enemy's patrol.
-                    patrolRoute.StopPatrol();                    
+                    patrolRoute.StopPatrol();
 
                     // Clear the agent's path.
-                    agent.ResetPath();                   
+                    agent.ResetPath();
                 }
 
                 // The enemy's movement (independent of any patrol routes) will begin now.
@@ -126,7 +137,7 @@ public class EnemyController : MonoBehaviour
                 #endregion
 
                 // Turn towards the direction of the disturbance.
-                movement.SetRotationTarget(hit.point);                              
+                movement.SetRotationTarget(hit.point);
                 break;
 
             case Phase.INVESTIGATE:
@@ -135,9 +146,12 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case Phase.ALERT:
+                // Change light colour.
+                Flashlight.color = Color.red;
                 break;
 
             case Phase.DECEASED:
+                Flashlight.enabled = false;
                 break;
         }
     }
@@ -145,7 +159,7 @@ public class EnemyController : MonoBehaviour
     void SetPhase(Phase newPhase)
     {
         if (newPhase != enemyPhase)
-        {           
+        {
             previousPhase = enemyPhase;
             enemyPhase = newPhase;
             UpdateBehaviour();
@@ -153,17 +167,17 @@ public class EnemyController : MonoBehaviour
     }
 
     private void CheckForDisturbances()
-    {        
+    {
         if (Input.GetMouseButtonDown(0))
-        {            
+        {
             // Send out a ray to the position where you clicked.
             Ray ray = disturbanceCam.ScreenPointToRay(Input.mousePosition);
 
             // This if will determine whether or not you clicked an object.
             if (Physics.Raycast(ray, out hit))
             {
-                SetPhase(Phase.HALT);               
+                SetPhase(Phase.HALT);
             }
-        }       
-    }   
+        }
+    }
 }
