@@ -42,10 +42,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 681, y: 492}
+  m_MinSize: {x: 683, y: 492}
   m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 9
+  controlID: 85
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -207,7 +207,7 @@ MonoBehaviour:
     y: 0
     width: 1531
     height: 947
-  m_MinSize: {x: 404, y: 492}
+  m_MinSize: {x: 406, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
   controlID: 86
@@ -231,8 +231,8 @@ MonoBehaviour:
     y: 0
     width: 1531
     height: 522
-  m_MinSize: {x: 404, y: 221}
-  m_MaxSize: {x: 8004, y: 4021}
+  m_MinSize: {x: 406, y: 221}
+  m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
   controlID: 87
 --- !u!114 &11
@@ -323,20 +323,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets
+    - Assets/Materials/Prototype
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Materials/Prototype
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\Jack\Documents\GitHub\Project-Dissonance
+  m_LastProjectPath: C:\Users\RIG-PC\Documents\Coursework\Project 300\Project-Dissonance
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: e05d0000
-    m_LastClickedID: 24032
-    m_ExpandedIDs: 00000000e05d00009c5f0000a0600000da61000022630000986b00000a9400000c9400000e94000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 44600000
+    m_LastClickedID: 24644
+    m_ExpandedIDs: 000000003c120000ee5a0000865c0000ae5c000044600000fc680000346a0000489400004a9400004c94000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -364,7 +364,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000e05d00009c5f0000a060000022630000986b00000a9400000c9400000e940000
+    m_ExpandedIDs: 000000003c120000ee5a0000ae5c0000b65d000044600000fc680000489400004a9400004c940000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -480,9 +480,9 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
-    m_LastClickedID: 0
-    m_ExpandedIDs: 4ea6feff34a9feff96a9feff0ceafeff00000000e86e0000606f00003672000074720000a6750000ae760000647700001c7a0000327a0000907a0000
+    m_SelectedIDs: d4730000
+    m_LastClickedID: 29652
+    m_ExpandedIDs: 2278faffd8a1fdffe4b3feffe6b3feff5cf7feff000000004c6c0000fe6f0000d473000046740000fa7400000e7700000c780000627800009c780000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -531,15 +531,15 @@ MonoBehaviour:
     width: 1230
     height: 501
   m_PersistentViewDataDictionary: {fileID: 0}
-  m_SceneLighting: 1
+  m_SceneLighting: 0
   lastFramingTime: 5547.695898423966
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -3.3291197, y: 91.58282, z: 55.828964}
+    m_Target: {x: -89.91396, y: 33.390926, z: -13.698015}
     speed: 2
-    m_Value: {x: -3.3291197, y: 91.58282, z: 55.828964}
+    m_Value: {x: -89.91396, y: 33.390926, z: -13.698015}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -567,13 +567,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: -0.04016517, y: 0.927579, z: -0.35646784, w: -0.10451679}
+    m_Target: {x: 0.05852639, y: -0.94146824, z: 0.23280737, w: 0.23667076}
     speed: 2
-    m_Value: {x: -0.04016499, y: 0.9275748, z: -0.35646623, w: -0.10451631}
+    m_Value: {x: 0.05852639, y: -0.94146824, z: 0.23280737, w: 0.23667076}
   m_Size:
-    m_Target: 94.37535
+    m_Target: 121.7329
     speed: 2
-    m_Value: 94.37535
+    m_Value: 121.7329
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -611,7 +611,7 @@ MonoBehaviour:
     height: 501
   m_PersistentViewDataDictionary: {fileID: 0}
   m_MaximizeOnPlay: 0
-  m_Gizmos: 0
+  m_Gizmos: 1
   m_Stats: 0
   m_SelectedSizes: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
   m_TargetDisplay: 0
