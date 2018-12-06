@@ -13,9 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: C:\temp\PDFMOD\PDFMOD.fspro
-  SourceProjectPathUnformatted: C:\temp\PDFMOD\PDFMOD.fspro
-  SourceBankPathUnformatted: C:\temp\PDFMOD\Build
+  sourceProjectPath: C:\Users\RIG-PC\Documents\PDFMOD\PDFMOD.fspro
+  SourceProjectPathUnformatted: C:\Users\RIG-PC\Documents\PDFMOD\PDFMOD.fspro
+  SourceBankPathUnformatted: C:\Users\RIG-PC\Documents\PDFMOD\Build
   AutomaticEventLoading: 1
   AutomaticSampleLoading: 0
   ImportType: 0
