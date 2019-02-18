@@ -1,0 +1,293 @@
+fileFormatVersion: 2
+guid: 4baeff4fac0778346a1d2fb562fe529e
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: back
+    100002: Chest_CTRL
+    100004: front1
+    100006: Head_CTRL
+    100008: Head_J
+    100010: HeadTop_J
+    100012: Hip_CTRL
+    100014: HIp_J
+    100016: L_Arm_CTRL
+    100018: L_Arm_IK
+    100020: L_Clavicle_J
+    100022: L_Elbow_CTRL
+    100024: L_Elbow_J
+    100026: L_Finger_CTRL
+    100028: L_Finger_J
+    100030: L_Foot_J
+    100032: L_Hawk_CTRL
+    100034: L_Hawk_J
+    100036: L_Knee_CTRL
+    100038: L_Knee_J
+    100040: L_Knuckle
+    100042: L_Leg_CTRL
+    100044: L_Leg_IK
+    100046: L_LegTop
+    100048: L_Shoulder
+    100050: L_Thumb_CTRL
+    100052: L_Thumb_J
+    100054: L_ThumbTop_J
+    100056: L_Toe_J
+    100058: L_ToeTip_J
+    100060: L_Wrist_J
+    100062: Master_CTRL
+    100064: Neck_J
+    100066: //RootNode
+    100068: Protagonist2:pCube3
+    100070: Protagonist:front1
+    100072: Protagonist:side1
+    100074: Protagonist:side2
+    100076: R_Arm_CTRL
+    100078: R_Arm_IK
+    100080: R_Clavicle_J
+    100082: R_Elbow_CTRL
+    100084: R_Elbow_J
+    100086: R_Finger_CTRL
+    100088: R_Finger_J
+    100090: R_Foot_J
+    100092: R_Hawk_CTRL
+    100094: R_Hawk_J
+    100096: R_Knee_CTRL
+    100098: R_Knee_J
+    100100: R_Knuckle
+    100102: R_Leg_CTRL
+    100104: R_Leg_IK
+    100106: R_LegTop
+    100108: R_Shoulder
+    100110: R_Thumb_CTRL
+    100112: R_Thumb_J
+    100114: R_ThumbTop_J
+    100116: R_Toe_J
+    100118: R_ToeTip_J
+    100120: R_Wrist_J
+    100122: Spine01_J
+    100124: Spine02_J
+    100126: Spine03_J
+    100128: Spine_Curve
+    100130: Spine_IK
+    400000: back
+    400002: Chest_CTRL
+    400004: front1
+    400006: Head_CTRL
+    400008: Head_J
+    400010: HeadTop_J
+    400012: Hip_CTRL
+    400014: HIp_J
+    400016: L_Arm_CTRL
+    400018: L_Arm_IK
+    400020: L_Clavicle_J
+    400022: L_Elbow_CTRL
+    400024: L_Elbow_J
+    400026: L_Finger_CTRL
+    400028: L_Finger_J
+    400030: L_Foot_J
+    400032: L_Hawk_CTRL
+    400034: L_Hawk_J
+    400036: L_Knee_CTRL
+    400038: L_Knee_J
+    400040: L_Knuckle
+    400042: L_Leg_CTRL
+    400044: L_Leg_IK
+    400046: L_LegTop
+    400048: L_Shoulder
+    400050: L_Thumb_CTRL
+    400052: L_Thumb_J
+    400054: L_ThumbTop_J
+    400056: L_Toe_J
+    400058: L_ToeTip_J
+    400060: L_Wrist_J
+    400062: Master_CTRL
+    400064: Neck_J
+    400066: //RootNode
+    400068: Protagonist2:pCube3
+    400070: Protagonist:front1
+    400072: Protagonist:side1
+    400074: Protagonist:side2
+    400076: R_Arm_CTRL
+    400078: R_Arm_IK
+    400080: R_Clavicle_J
+    400082: R_Elbow_CTRL
+    400084: R_Elbow_J
+    400086: R_Finger_CTRL
+    400088: R_Finger_J
+    400090: R_Foot_J
+    400092: R_Hawk_CTRL
+    400094: R_Hawk_J
+    400096: R_Knee_CTRL
+    400098: R_Knee_J
+    400100: R_Knuckle
+    400102: R_Leg_CTRL
+    400104: R_Leg_IK
+    400106: R_LegTop
+    400108: R_Shoulder
+    400110: R_Thumb_CTRL
+    400112: R_Thumb_J
+    400114: R_ThumbTop_J
+    400116: R_Toe_J
+    400118: R_ToeTip_J
+    400120: R_Wrist_J
+    400122: Spine01_J
+    400124: Spine02_J
+    400126: Spine03_J
+    400128: Spine_Curve
+    400130: Spine_IK
+    2000000: back
+    2000002: front1
+    2000004: Protagonist:front1
+    2000006: Protagonist:side1
+    2000008: Protagonist:side2
+    2100000: Fur
+    2100002: Protagonist2_Eyes
+    2100004: HighlightColor
+    2100006: FurDark
+    2100008: Cloth
+    2100010: Bag
+    2100012: ClothDark
+    2100014: Belt
+    2100016: MetalDark
+    2100018: MetalLight
+    2100020: Rope
+    4300000: Protagonist2:pCube3
+    9500000: //RootNode
+    13700000: Protagonist2:pCube3
+    2186277476908879412: ImportLogs
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bag
+    second: {fileID: 2100000, guid: eab1fb9ae121ada41af6e0fd99ec3adb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Belt
+    second: {fileID: 2100000, guid: af95f13438305374db9558c771b10706, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cloth
+    second: {fileID: 2100000, guid: b882b5742ebce8140a2e0b854dc1173b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ClothDark
+    second: {fileID: 2100000, guid: 311f41049f18bc4459c1101fe62897de, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fur
+    second: {fileID: 2100000, guid: cd3f0d44cc46bbd459af2f50da4db739, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: FurDark
+    second: {fileID: 2100000, guid: fb9a23a96eaef474981b8b76a0b041ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HighlightColor
+    second: {fileID: 2100000, guid: 41145044b238ff149a512ea2da407ea3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MetalDark
+    second: {fileID: 2100000, guid: a48a8335db1cd9f499290e02c5ebd569, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MetalLight
+    second: {fileID: 2100000, guid: 50645821ca5eec241b70282d3bf0f9d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Protagonist2_Eyes
+    second: {fileID: 2100000, guid: dbc7ecdeb65851845a987962f67730d6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rope
+    second: {fileID: 2100000, guid: 17206f805b9fee0469afd4b34a681ea4, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
