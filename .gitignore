@@ -4,9 +4,6 @@
 [Bb]uild/
 [Bb]uilds/
 
-# Never ignore Assets meta data.
-![Aa]ssets/**/*.meta
-
 # Comment the line below if you don't want to ignore the asset store tools plugin.
 Assets/AssetStoreTools*
 
@@ -34,7 +31,6 @@ ExportedObj/
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
-*.mdb.meta
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
