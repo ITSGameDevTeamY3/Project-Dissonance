@@ -50,8 +50,6 @@ crashlytics-build.properties
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
-*.meta
-*.meta
 
 # FMOD
 Assets/FMODStudioCache.asset
