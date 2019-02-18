@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{a6546bc0-20c2-4806-a5f9-576ac18a481f}">
+        <property name="assetPath">
+            <value>SnowFootStepsLoop.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>3.3791156462585032</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{83b02e40-5e69-430d-beb8-e8d2379b1716}</destination>
+        </relationship>
+    </object>
+</objects>
