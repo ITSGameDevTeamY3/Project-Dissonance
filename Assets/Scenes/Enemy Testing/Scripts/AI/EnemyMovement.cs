@@ -8,8 +8,11 @@ using UnityEngine.AI;
 [RequireComponent(typeof(EnemyController))]
 public class EnemyMovement : MonoBehaviour
 {
+    public bool Neutral; // Whether or not the enemy's movement is neutral (i.e. not moving outside of their assigned patrol/post).
+
     // These 4 properties are obtained from the enemy controller script. They are set in the Inspector window.
-    private float walkSpeed, runSpeed, turningSpeed, stoppingDistance;
+    private float walkSpeed, runSpeed, turningSpeed, stoppingDistance, surveyDistance;
+    const float VIEW_DISTANCE = 4; 
 
     private EnemyController enemyController;
     private NavMeshAgent agent;
@@ -20,7 +23,8 @@ public class EnemyMovement : MonoBehaviour
         WALK,   // When the enemy is moving in to investigate a disturbance.
         RUN,    // When the enemy is moving in to investigate a disturbance during the Alert Phase.
         ROTATE, // When the enemy has to turn and face something.
-        SURVEY  // When the enemy is investigating a disturbance zone.
+        SURVEY,  // When the enemy is investigating a disturbance zone.
+        NEUTRAL // When the enemy is to return to their post/patrol.
     }
     public MovementPhase movementPhase;
 
@@ -37,7 +41,10 @@ public class EnemyMovement : MonoBehaviour
         walkSpeed = agent.speed;
         runSpeed = walkSpeed * 2;
         turningSpeed = enemyController.turningSpeed;
-        stoppingDistance = enemyController.stoppingDistance;
+        stoppingDistance = agent.stoppingDistance;
+        surveyDistance = stoppingDistance + VIEW_DISTANCE;
+
+        movementPhase = MovementPhase.NEUTRAL; // Enemies will initially have no independent movement outside their patrol/post.
 
         // Survey Points
         foreach (Transform child in transform)
@@ -65,6 +72,10 @@ public class EnemyMovement : MonoBehaviour
             case MovementPhase.SURVEY:
                 SurveyArea();
                 break;
+
+            case MovementPhase.NEUTRAL:
+                if (!Neutral) Neutral = true;
+                break;
         }
     }
 
@@ -72,9 +83,10 @@ public class EnemyMovement : MonoBehaviour
     {
         walkTarget = target;
         agent.speed = walkSpeed;
-        agent.stoppingDistance = stoppingDistance;
+        agent.stoppingDistance = surveyDistance;
         agent.SetDestination(target); // Set the walk target as our NavMesh Agent's target, this will have the agent moving of its own accord.
         movementPhase = MovementPhase.WALK;
+        if (Neutral) Neutral = false;
     }
 
     // RUN
@@ -84,18 +96,18 @@ public class EnemyMovement : MonoBehaviour
     {
         rotateTarget = target;
         movementPhase = MovementPhase.ROTATE;
+        if (Neutral) Neutral = false;
     }
 
-    public void RotateTowards(string observer, Vector3 target)
+    private void RotateTowards(string observer, Vector3 target)
     {
         if (observer == "Enemy") rotater = transform;
-        else if (observer == "POV") rotater = povDirection;
+        else if (observer == "EnemyPOV") rotater = povDirection;
 
         // Get the difference in position between the agent and the disturbance.
         Vector3 direction =
             (target - rotater.position).normalized;
         // Target.position or target.point? Interesting...
-
 
         // Get the rotation the agent needs to have in order to be facing the disturbance.
         Quaternion lookRotation = Quaternion.LookRotation(
@@ -112,18 +124,21 @@ public class EnemyMovement : MonoBehaviour
 
     // SURVEY
     // This method will be rather simple for now.
-    public void SurveyArea()
+    private void SurveyArea()
     {
         if (agent.hasPath) agent.ResetPath();
 
-        // NOTE: Code below is super hard-coded on purpose for testing and showcase purposes. I'll have a much better implementation in soon.
-        if (!leftTest) RotateTowards("POV", surveyPoints[0].position);
-        else RotateTowards("POV", surveyPoints[1].position);
+        #region  NOTE: Code here is super hard-coded on purpose for testing and showcase purposes. I'll have a much better implementation in soon. (Commented out for now.)
+        //if (!leftTest) RotateTowards("EnemyPOV", surveyPoints[0].position);
+        //else RotateTowards("EnemyPOV", surveyPoints[1].position);
+        //if (tm.TimeCount(2) && !leftTest) leftTest = true;
+        #endregion
 
-        if (tm.TimeCount(2) && !leftTest) leftTest = true;
+        // If the enemy sees nothing of interest in the disturbance zone, his movement will return to neutral after 3 seconds.
+        if (tm.TimeCount(3)) movementPhase = MovementPhase.NEUTRAL;
     }
 
-    bool DestinationReached() // Check if the agent has reached their destination.
+    private bool DestinationReached() // Check if the agent has reached their destination.
     {
         // https://answers.unity.com/questions/324589/how-can-i-tell-when-a-navmesh-has-reached-its-dest.html?childToView=746157#answer-746157 Answer #2 from here used as a reference. 
 

@@ -14,6 +14,7 @@ public class Patrol : MonoBehaviour
     public Transform[] PatrolPoints;
     // How long the enemy waits before proceeding to the next point.
     public float RestTime;
+    //public float RestDistance;
 
     // This will keep track of which point the enemy is currently heading towards.
     private int destPoint = 0;
@@ -24,13 +25,12 @@ public class Patrol : MonoBehaviour
     TimeManager tm = new TimeManager();
 
     // This bool will determine whether or not the enemy is currently patrolling.
-    private bool onPatrol;
-    const float REST_DISTANCE = 1;
+    private bool onPatrol;   
     #endregion
 
     void Start()
     {
-        // This script needs an enemy controller, an enemy controller needs an agent. In short, we're assured that we can acess the agent component here too.
+        // This script needs an enemy controller, an enemy controller needs an agent. In short, we're assured that we can access the agent component here too.
         agent = GetComponent<NavMeshAgent>();
 
         // U: Disabling auto-braking allows for continuous movement
@@ -56,7 +56,7 @@ public class Patrol : MonoBehaviour
 
         // U: Choose the next destination point when the agent gets
         // close to the current one.
-        if (!agent.pathPending && agent.remainingDistance < REST_DISTANCE)
+        if (!agent.pathPending && agent.remainingDistance < agent.stoppingDistance)
         {
             agent.isStopped = true;
 
