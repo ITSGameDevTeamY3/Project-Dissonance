@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     public int Health;
     public float shootCooldown, walkSpeed, turningSpeed, haltTime;
     public Light Flashlight;
+    public GameObject Player;
 
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing is over.
     public Camera disturbanceCam;   
@@ -27,7 +28,11 @@ public class EnemyController : MonoBehaviour
     Patrol patrolRoute;
     Vector3 post;
     EnemyMovement movement;
-    TimeManager tm = new TimeManager();
+    TimeManager tm = new TimeManager();    
+
+    // Constants
+    const float ALERT_DISTANCE = 6;
+    const float SUSPICION_DISTANCE = 12;
 
     //Footsteps footSteps; We can add FMOD SFX later.
     #endregion
@@ -49,8 +54,7 @@ public class EnemyController : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = walkSpeed;
-        defaultStoppingDistance = agent.stoppingDistance;
-
+        defaultStoppingDistance = agent.stoppingDistance;        
         //footSteps = GetComponent<Footsteps>();
 
         movement = GetComponent<EnemyMovement>();
@@ -81,7 +85,7 @@ public class EnemyController : MonoBehaviour
             vigil = true;
             UpdateBehaviour();
         }
-        #endregion
+        #endregion        
     }
 
     void Update()
@@ -96,11 +100,18 @@ public class EnemyController : MonoBehaviour
             movement.enabled = false;
             agent.destination = originalDestination;
             agent.stoppingDistance = defaultStoppingDistance; // Reset stopping distance.
-            if(!vigil) SetPhase(Phase.PATROL);
+            if (!vigil)
+            {
+                SetPhase(Phase.PATROL);
+            }
+
+            else SetPhase(Phase.VIGIL);
         }
 
         // The enemy will always check for disturbances regardless of its current phase. (Unless it knows where the player is).
         CheckForDisturbances();       
+
+        // The enemy will of course constantly look for the player regardless of its phase.
     }
 
     void UpdateBehaviour()
@@ -163,6 +174,15 @@ public class EnemyController : MonoBehaviour
             {
                 SetPhase(Phase.HALT);
             }
+        }
+    }
+
+    private void CheckForIntruder()
+    {
+        if (Vector3.Distance(transform.position, Player.transform.position) <= ALERT_DISTANCE) // Alert distance check.
+        {
+            // Here's where we detect whether or not the player is within the enemy's camera.
+
         }
     }
 
