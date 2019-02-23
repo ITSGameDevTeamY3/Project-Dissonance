@@ -6,8 +6,10 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(EnemyController))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class EnemyMovement : MonoBehaviour
 {
+    #region Movement Properties
     public bool Neutral; // Whether or not the enemy's movement is neutral (i.e. not moving outside of their assigned patrol/post).
 
     // These 4 properties are obtained from the enemy controller script. They are set in the Inspector window.
@@ -16,42 +18,41 @@ public class EnemyMovement : MonoBehaviour
 
     private EnemyController enemyController;
     private NavMeshAgent agent;
+    private Transform rotater;
+    private GameObject POV_GO;
+    private List<Transform> surveyPoints;
     private Vector3 walkTarget, runTarget, rotateTarget;
 
     public enum MovementPhase
     {
-        WALK,   // When the enemy is moving in to investigate a disturbance.
-        RUN,    // When the enemy is moving in to investigate a disturbance during the Alert Phase.
-        ROTATE, // When the enemy has to turn and face something.
+        WALK,    // When the enemy is moving in to investigate a disturbance.
+        RUN,     // When the enemy is moving in to investigate a disturbance during the Alert Phase.
+        ROTATE,  // When the enemy has to turn and face something.
         SURVEY,  // When the enemy is investigating a disturbance zone.
-        NEUTRAL // When the enemy is to return to their post/patrol.
+        NEUTRAL  // When the enemy is to return to their post/patrol.
     }
     public MovementPhase movementPhase;
-
-    List<Transform> surveyPoints = new List<Transform>();
-    Transform povDirection, rotater;
+        
     int spCounter = 0;
     TimeManager tm = new TimeManager();
     bool leftTest; // Gonna remove.
+    #endregion
 
     void Start()
     {
-        enemyController = GetComponent<EnemyController>();
-        agent = GetComponent<NavMeshAgent>();
+        #region Obtain variables from the scripts we require.
+        enemyController = GetComponent<EnemyController>(); // Get our EC script and the variables we need.
+        POV_GO = enemyController.POV_GO;        
+        surveyPoints = enemyController.surveyPoints;
+        turningSpeed = enemyController.TurningSpeed;
+        agent = GetComponent<NavMeshAgent>(); // Get our NavMesh Agent script and the variables we need.
         walkSpeed = agent.speed;
         runSpeed = walkSpeed * 2;
-        turningSpeed = enemyController.turningSpeed;
         stoppingDistance = agent.stoppingDistance;
         surveyDistance = stoppingDistance + VIEW_DISTANCE;
+        #endregion
 
-        movementPhase = MovementPhase.NEUTRAL; // Enemies will initially have no independent movement outside their patrol/post.
-
-        // Survey Points
-        foreach (Transform child in transform)
-        {
-            if (child.tag == "POV" && povDirection == null) povDirection = child; // Get access to the enemy's POV.
-            if (child.tag == "SurveyPoint") surveyPoints.Add(child); // Get the enemy's survey points.          
-        }
+        movementPhase = MovementPhase.NEUTRAL; // Enemies will initially have no independent movement outside their patrol/post.       
     }
 
     void Update()
@@ -90,7 +91,6 @@ public class EnemyMovement : MonoBehaviour
     }
 
     // RUN
-
     #region ROTATION
     public void SetRotationTarget(Vector3 target)
     {
@@ -102,7 +102,7 @@ public class EnemyMovement : MonoBehaviour
     private void RotateTowards(string observer, Vector3 target)
     {
         if (observer == "Enemy") rotater = transform;
-        else if (observer == "EnemyPOV") rotater = povDirection;
+        else if (observer == "EnemyPOV") rotater = POV_GO.transform;
 
         // Get the difference in position between the agent and the disturbance.
         Vector3 direction =
@@ -122,8 +122,7 @@ public class EnemyMovement : MonoBehaviour
     }
     #endregion
 
-    // SURVEY
-    // This method will be rather simple for now.
+    // SURVEY - This method will be rather simple for now.
     private void SurveyArea()
     {
         if (agent.hasPath) agent.ResetPath();
