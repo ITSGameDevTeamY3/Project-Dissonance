@@ -10,6 +10,7 @@ TagManager:
   - SurveyPoint
   - POV
   - PlayerTracker
+  - Canvas
   layers:
   - Default
   - TransparentFX
