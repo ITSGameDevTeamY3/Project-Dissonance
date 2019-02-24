@@ -32,10 +32,8 @@ public class EnemyMovement : MonoBehaviour
         NEUTRAL  // When the enemy is to return to their post/patrol.
     }
     public MovementPhase movementPhase;
-        
-    int spCounter = 0;
-    TimeManager tm = new TimeManager();
-    bool leftTest; // Gonna remove.
+           
+    TimeManager tm = new TimeManager();   
     #endregion
 
     void Start()
@@ -80,17 +78,6 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    public void SetWalkTarget(Vector3 target)
-    {
-        walkTarget = target;
-        agent.speed = walkSpeed;
-        agent.stoppingDistance = surveyDistance;
-        agent.SetDestination(target); // Set the walk target as our NavMesh Agent's target, this will have the agent moving of its own accord.
-        movementPhase = MovementPhase.WALK;
-        if (Neutral) Neutral = false;
-    }
-
-    // RUN
     #region ROTATION
     public void SetRotationTarget(Vector3 target)
     {
@@ -122,16 +109,24 @@ public class EnemyMovement : MonoBehaviour
     }
     #endregion
 
+    #region WALK
+    public void SetWalkTarget(Vector3 target)
+    {
+        walkTarget = target;
+        agent.speed = walkSpeed;
+        agent.stoppingDistance = surveyDistance;
+        agent.SetDestination(target); // Set the walk target as our NavMesh Agent's target, this will have the agent moving of its own accord.
+        movementPhase = MovementPhase.WALK;
+        if (Neutral) Neutral = false;
+    }
+    #endregion
+
+    // RUN.
+
     // SURVEY - This method will be rather simple for now.
     private void SurveyArea()
     {
-        if (agent.hasPath) agent.ResetPath();
-
-        #region  NOTE: Code here is super hard-coded on purpose for testing and showcase purposes. I'll have a much better implementation in soon. (Commented out for now.)
-        //if (!leftTest) RotateTowards("EnemyPOV", surveyPoints[0].position);
-        //else RotateTowards("EnemyPOV", surveyPoints[1].position);
-        //if (tm.TimeCount(2) && !leftTest) leftTest = true;
-        #endregion
+        if (agent.hasPath) agent.ResetPath();       
 
         // If the enemy sees nothing of interest in the disturbance zone, his movement will return to neutral after 3 seconds.
         if (tm.TimeCount(3)) movementPhase = MovementPhase.NEUTRAL;

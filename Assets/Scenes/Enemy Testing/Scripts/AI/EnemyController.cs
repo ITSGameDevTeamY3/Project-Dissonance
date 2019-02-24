@@ -22,25 +22,27 @@ public class EnemyController : MonoBehaviour
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing is over.
     public Camera disturbanceCam;
     public RaycastHit hit; // This variable will keep track of the object that you clicked.
+    private Vector3 originalDestination; // This variable stores where the agent was originally headed.   
 
-    private Vector3 originalDestination; // This variable stores where the agent was originally headed.  
-    private float defaultStoppingDistance;
+    // Bools.
     private bool alerted = false;
     private bool vigil;
-    private Renderer playerRenderer;
 
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
     Patrol patrolRoute;
-    Vector3 post;
+    Vector3 post, disturbanceZone;
     EnemyMovement movement;
     TimeManager tm = new TimeManager();
     Camera POV;
     PlayerTracker playerTracker;
+    Renderer playerRenderer;
+    float defaultStoppingDistance;
 
     //Footsteps footSteps; We can add FMOD SFX later.
     #endregion
 
+    #region Phases
     public enum Phase
     {
         PATROL,
@@ -50,9 +52,9 @@ public class EnemyController : MonoBehaviour
         ALERT,
         DECEASED
     }
-
-    [SerializeField]
+    //[SerializeField]
     public Phase enemyPhase, previousPhase;
+    #endregion
 
     void Start()
     {
@@ -66,7 +68,7 @@ public class EnemyController : MonoBehaviour
         {
             if (child.tag == "POV" && POV_GO == null) POV_GO = child.gameObject; // Get access to the enemy's POV.
             if (child.tag == "SurveyPoint") surveyPoints.Add(child); // Get the enemy's survey points.
-            if (child.tag == "PlayerTracker") playerTracker = child.GetComponent<PlayerTracker>(); // Get the enemy's player tracker script.
+            if (child.tag == "PlayerTracker" && playerTracker == null) playerTracker = child.GetComponent<PlayerTracker>(); // Get the enemy's player tracker script.
         }
 
         POV = POV_GO.GetComponent<Camera>();
@@ -118,12 +120,12 @@ public class EnemyController : MonoBehaviour
             movement.enabled = false;
             agent.destination = originalDestination;
             agent.stoppingDistance = defaultStoppingDistance; // Reset stopping distance.
-            if (!vigil) SetPhase(Phase.PATROL); // Set the enmy back to their PATROL/VIGIL phase.
+            if (!vigil) SetPhase(Phase.PATROL); // Set the enemy back to their PATROL/VIGIL phase.
             else SetPhase(Phase.VIGIL);
         }
 
         // The enemy will always check for disturbances regardless of its current phase. (Unless it knows where the player is).
-        CheckForDisturbances();
+        if (enemyPhase != Phase.ALERT) CheckForDisturbances();
 
         // The enemy will of course constantly look for the player regardless of its phase.
         CheckForIntruder();
@@ -151,7 +153,7 @@ public class EnemyController : MonoBehaviour
                 StopCoroutine("Halt");
 
                 // Set the disturbance location as the enemy's destination.
-                if(!playerTracker.PlayerGlimpsed) movement.SetWalkTarget(hit.point);
+                if (!playerTracker.PlayerGlimpsed) movement.SetWalkTarget(hit.point);
                 else movement.SetWalkTarget(playerTracker.PlayerGlimpsedPosition);
                 break;
 
@@ -169,8 +171,8 @@ public class EnemyController : MonoBehaviour
     {
         if (newPhase != enemyPhase)
         {
-            previousPhase = enemyPhase;            
-            enemyPhase = newPhase;                       
+            previousPhase = enemyPhase;
+            enemyPhase = newPhase;
         }
     }
 
@@ -184,13 +186,15 @@ public class EnemyController : MonoBehaviour
             // This if will determine whether or not you clicked an object.
             if (Physics.Raycast(ray, out hit))
             {
+                disturbanceZone = hit.point;
                 SetPhase(Phase.HALT);
             }
         }
 
         else if (playerTracker.PlayerGlimpsed && enemyPhase != Phase.HALT)
-        {            
-            SetPhase(Phase.HALT);
+        {           
+            disturbanceZone = playerTracker.PlayerGlimpsedPosition; // PlayerHit or PlayerGlimpsedPosition? Another conundrum to solve.
+            SetPhase(Phase.HALT); // Pressing issue here: This phase keeps getting set, which is why the enemy never moves closer to investigate the glimpsed player. It's what I must fix next.
         }
     }
 
@@ -205,11 +209,11 @@ public class EnemyController : MonoBehaviour
             }
 
             else if (playerTracker.PlayerWithinView) playerTracker.PlayerWithinView = false;
-        }
 
-        if (playerTracker.PlayerFound == true)
-        {
-            SetPhase(Phase.ALERT);
+            if (playerTracker.PlayerFound == true)
+            {
+                SetPhase(Phase.ALERT);
+            }
         }
     }
 
@@ -233,14 +237,13 @@ public class EnemyController : MonoBehaviour
         movement.enabled = true;
         #endregion
 
-        // Turn towards the direction of the disturbance.
-        if (!playerTracker.PlayerGlimpsed) movement.SetRotationTarget(hit.point);
-        else movement.SetRotationTarget(playerTracker.PlayerHit.point); // PlayerHit or PlayerGlimpsedPosition? Another conundrum to solve.
+        // Turn towards the direction of the disturbance.        
+        movement.SetRotationTarget(disturbanceZone); 
 
         // Wait for the specified halt time before investigating.
-        yield return new WaitForSeconds(HaltTime);
+        if(playerTracker.PlayerGlimpsedPosition == null) yield return new WaitForSeconds(HaltTime);
 
-        playerTracker.PlayerGlimpsed = false;
+        //playerTracker.PlayerGlimpsed = false;
 
         SetPhase(Phase.INVESTIGATE);
     }
