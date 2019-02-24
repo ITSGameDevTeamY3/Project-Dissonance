@@ -19,27 +19,27 @@ public class DummyPlayerC : MonoBehaviour {
     void HandleMovement()
     {
         // Up
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.UpArrow))
         {
             transform.position += new Vector3(moveSpeed * Time.deltaTime, 0, 0);
 
         }
 
         // Down
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.DownArrow))
         {
             transform.position += new Vector3(-moveSpeed * Time.deltaTime, 0, 0);
             
         }
 
         // Left
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             transform.position += new Vector3(0, 0, moveSpeed * Time.deltaTime);
         }
 
         // Left
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             transform.position += new Vector3(0, 0, -moveSpeed * Time.deltaTime);
         }

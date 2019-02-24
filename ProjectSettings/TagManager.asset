@@ -7,6 +7,9 @@ TagManager:
   - Tip
   - EnemyCamera
   - Enemy
+  - SurveyPoint
+  - POV
+  - PlayerTracker
   - Canvas
   layers:
   - Default
