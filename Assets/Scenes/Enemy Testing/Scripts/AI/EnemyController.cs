@@ -153,7 +153,7 @@ public class EnemyController : MonoBehaviour
                 StopCoroutine("Halt");
 
                 // Set the disturbance location as the enemy's destination.
-                if (!playerTracker.PlayerGlimpsed) movement.SetWalkTarget(hit.point);
+                if (!playerTracker.PlayerGlimpsed && !disturbanceInvestigated) movement.SetWalkTarget(hit.point); // I'll experiment with the "disturbanceInvestigated" here.
                 else movement.SetWalkTarget(playerTracker.PlayerGlimpsedPosition);
                 break;
 
