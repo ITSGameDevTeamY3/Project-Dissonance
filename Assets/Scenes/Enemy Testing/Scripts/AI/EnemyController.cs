@@ -39,7 +39,7 @@ public class EnemyController : MonoBehaviour
     Renderer playerRenderer;
     float defaultStoppingDistance;
 
-    //Footsteps footSteps; We can add FMOD SFX later.
+    //Footsteps footSteps; For Adrian - SFX variable for enemy can be added here.
     #endregion
 
     #region Phases
@@ -138,7 +138,7 @@ public class EnemyController : MonoBehaviour
         switch (enemyPhase)
         {
             case Phase.PATROL: // TO FIX: Enemy speed issue here. Movement speed above 4 causes enemy to stop. Tweak REST_DISTANCE on the Patrol script.                             
-                Flashlight.color = Color.white;
+                Flashlight.color = Color.white; // For Adrian - Whenever the enemy toggles their flashlight/changes light color, we could have a little "click" sound.
                 patrolRoute.StartPatrol();
                 break;
 
@@ -162,19 +162,13 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case Phase.DECEASED:
+
+                // For Adrian - I still have to implement the enemy's death, but a "death" sound would be used somewhere here.
+
                 Flashlight.enabled = false;
                 break;
         }
-    }
-
-    private void SetPhase(Phase newPhase)
-    {
-        if (newPhase != enemyPhase)
-        {
-            previousPhase = enemyPhase;
-            enemyPhase = newPhase;
-        }
-    }
+    }   
 
     private void CheckForDisturbances()
     {             
@@ -220,6 +214,8 @@ public class EnemyController : MonoBehaviour
     #region COROUTINES
     IEnumerator Halt()
     {
+        // For Adrian - A "Hm? What was that?" sound effect or something like that could be played here.
+
         Flashlight.color = Color.yellow;
 
         //if (playerTracker.PlayerGlimpsed) disturbanceZone = playerTracker.PlayerGlimpsedPosition;
@@ -236,7 +232,7 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator Alert()
     {
-        print("Who's that?");
+        // For Adrian - A "Who's that?" or something similar could be played here.
         Flashlight.color = Color.red;
 
         StorePatrolEnableMovement();
@@ -247,9 +243,18 @@ public class EnemyController : MonoBehaviour
         // Wait for the specified halt time before investigating.
         yield return new WaitForSeconds(HaltTime / 2);
 
-        print("The enemy will likely shoot at this point!");
+        print("The enemy will likely shoot at this point!"); // For Adrian - It'll have to wait until I have the enemy shooting the player, but definitely load up some shoot sounds into the project. :)
     }
     #endregion
+
+    private void SetPhase(Phase newPhase)
+    {
+        if (newPhase != enemyPhase)
+        {
+            previousPhase = enemyPhase;
+            enemyPhase = newPhase;
+        }
+    }
 
     private void StorePatrolEnableMovement()
     {
@@ -263,5 +268,5 @@ public class EnemyController : MonoBehaviour
             agent.ResetPath();
         }
         movement.enabled = true; // The enemy's movement (independent of any patrol routes) will begin now.
-    }    
+    }
 }
