@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour
 
     // Bools.
     private bool alerted = false;
-    private bool vigil;
+    private bool vigil, disturbanceInvestigated;
 
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
@@ -177,7 +177,7 @@ public class EnemyController : MonoBehaviour
     }
 
     private void CheckForDisturbances()
-    {
+    {             
         if (Input.GetMouseButtonDown(0) && disturbanceCam != null)
         {
             // Send out a ray to the position where you clicked.
@@ -191,9 +191,9 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        else if (playerTracker.PlayerGlimpsed && enemyPhase != Phase.HALT)
-        {           
-            disturbanceZone = playerTracker.PlayerGlimpsedPosition; // PlayerHit or PlayerGlimpsedPosition? Another conundrum to solve.
+        else if (playerTracker.PlayerGlimpsed && enemyPhase != Phase.INVESTIGATE)
+        {
+            disturbanceZone = playerTracker.PlayerGlimpsedPosition;
             SetPhase(Phase.HALT); // Pressing issue here: This phase keeps getting set, which is why the enemy never moves closer to investigate the glimpsed player. It's what I must fix next.
         }
     }
@@ -222,29 +222,15 @@ public class EnemyController : MonoBehaviour
     {
         Flashlight.color = Color.yellow;
 
-        #region If the enemy was on patrol...
-        if (agent.hasPath)
-        {
-            // Keep track of where the enemy was originally headed.
-            originalDestination = agent.destination;
-            // ...stop the enemy's patrol.
-            patrolRoute.StopPatrol();
-            // Clear the agent's path.
-            agent.ResetPath();
-        }
-
-        // The enemy's movement (independent of any patrol routes) will begin now.
-        movement.enabled = true;
-        #endregion
+        //if (playerTracker.PlayerGlimpsed) disturbanceZone = playerTracker.PlayerGlimpsedPosition;
+        StorePatrolEnableMovement();
 
         // Turn towards the direction of the disturbance.        
-        movement.SetRotationTarget(disturbanceZone); 
+        movement.SetRotationTarget(disturbanceZone);
 
         // Wait for the specified halt time before investigating.
-        if(playerTracker.PlayerGlimpsedPosition == null) yield return new WaitForSeconds(HaltTime);
-
-        //playerTracker.PlayerGlimpsed = false;
-
+        if (!playerTracker.PlayerGlimpsed) yield return new WaitForSeconds(HaltTime);      
+        else yield return new WaitForSeconds(HaltTime/2);
         SetPhase(Phase.INVESTIGATE);
     }
 
@@ -253,20 +239,7 @@ public class EnemyController : MonoBehaviour
         print("Who's that?");
         Flashlight.color = Color.red;
 
-        #region If the enemy was on patrol...
-        if (agent.hasPath)
-        {
-            // Keep track of where the enemy was originally headed.
-            originalDestination = agent.destination;
-            // ...stop the enemy's patrol.
-            patrolRoute.StopPatrol();
-            // Clear the agent's path.
-            agent.ResetPath();
-        }
-
-        // The enemy's movement (independent of any patrol routes) will begin now.
-        movement.enabled = true;
-        #endregion
+        StorePatrolEnableMovement();
 
         // Turn towards the direction of the disturbance.
         movement.SetRotationTarget(Player.transform.position);
@@ -277,4 +250,18 @@ public class EnemyController : MonoBehaviour
         print("The enemy will likely shoot at this point!");
     }
     #endregion
+
+    private void StorePatrolEnableMovement()
+    {
+        if (agent.hasPath)
+        {
+            // Keep track of where the enemy was originally headed.
+            originalDestination = agent.destination;
+            // ...stop the enemy's patrol.
+            patrolRoute.StopPatrol();
+            // Clear the agent's path.
+            agent.ResetPath();
+        }
+        movement.enabled = true; // The enemy's movement (independent of any patrol routes) will begin now.
+    }    
 }
