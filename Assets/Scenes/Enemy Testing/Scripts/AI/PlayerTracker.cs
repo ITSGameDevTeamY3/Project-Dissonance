@@ -9,8 +9,7 @@ public class PlayerTracker : MonoBehaviour
     // Public properties set in the inspector.
     public bool DrawLine;
     public float Distance = 100;
-    public bool UseTrackingDistance = false;
-    public Camera mainCamera;
+    public bool UseTrackingDistance = false;   
 
     // Public properties set automatically.
     public bool PlayerGlimpsed = false;
@@ -41,7 +40,7 @@ public class PlayerTracker : MonoBehaviour
     {
         CheckPlayerRanges();
 
-        if (PlayerInSuspicionRange && PlayerWithinView) // ISSUE HERE: Player can be seen through walls, the LineOfSight needs to be taken into account.
+        if (PlayerInSuspicionRange && PlayerWithinView) 
         {
             // Transform
             transform.LookAt(trackablePlayerTransform); // The enemy's eye will always look at the player if they are within the enemy's tracking distance and view.

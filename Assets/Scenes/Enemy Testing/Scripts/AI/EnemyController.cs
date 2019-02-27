@@ -18,6 +18,7 @@ public class EnemyController : MonoBehaviour
     // The following public properties are visible in the Inspector but they are set automatically.
     public GameObject POV_GO;
     public List<Transform> surveyPoints = new List<Transform>();
+    public PlayerTracker playerTracker;
 
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing is over.
     public Camera disturbanceCam;
@@ -34,8 +35,7 @@ public class EnemyController : MonoBehaviour
     Vector3 post, disturbanceZone;
     EnemyMovement movement;
     TimeManager tm = new TimeManager();
-    Camera POV;
-    PlayerTracker playerTracker;
+    Camera POV;   
     Renderer playerRenderer;
     float defaultStoppingDistance;
 
@@ -66,7 +66,7 @@ public class EnemyController : MonoBehaviour
         // Get access to the enemy object's children.
         foreach (Transform child in transform)
         {
-            if (child.tag == "POV" && POV_GO == null) POV_GO = child.gameObject; // Get access to the enemy's POV.
+            if (child.tag == "EnemyPOV" && POV_GO == null) POV_GO = child.gameObject; // Get access to the enemy's POV.
             if (child.tag == "SurveyPoint") surveyPoints.Add(child); // Get the enemy's survey points.
             if (child.tag == "PlayerTracker" && playerTracker == null) playerTracker = child.GetComponent<PlayerTracker>(); // Get the enemy's player tracker script.
         }
