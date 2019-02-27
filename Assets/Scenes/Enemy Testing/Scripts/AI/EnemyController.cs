@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour
 
     // Bools.
     private bool alerted = false;
-    private bool vigil, disturbanceInvestigated;
+    private bool vigil, disturbanceEncounteredPreviously, disturbanceInvestigated;
 
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
@@ -110,25 +110,13 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        if (enemyPhase != previousPhase)
-        {
-            UpdateBehaviour();
-        }
-
-        if (movement.enabled && movement.Neutral)
-        {
-            movement.enabled = false;
-            agent.destination = originalDestination;
-            agent.stoppingDistance = defaultStoppingDistance; // Reset stopping distance.
-            if (!vigil) SetPhase(Phase.PATROL); // Set the enemy back to their PATROL/VIGIL phase.
-            else SetPhase(Phase.VIGIL);
-        }
-
+        PhaseCheck();
+        NeutralMovementCheck();
         // The enemy will always check for disturbances regardless of its current phase. (Unless it knows where the player is).
-        if (enemyPhase != Phase.ALERT) CheckForDisturbances();
-
+        if (enemyPhase != Phase.ALERT || enemyPhase == Phase.ALERT && !playerTracker.PlayerWithinView) CheckForDisturbances();
         // The enemy will of course constantly look for the player regardless of its phase.
         CheckForIntruder();
+        if(movement.enabled) PursueGlimpsedPlayer();
     }
 
     void UpdateBehaviour()
@@ -150,11 +138,8 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case Phase.INVESTIGATE:
-                StopCoroutine("Halt");
-
-                // Set the disturbance location as the enemy's destination.
-                if (!playerTracker.PlayerGlimpsed && !disturbanceInvestigated) movement.SetWalkTarget(hit.point); // I'll experiment with the "disturbanceInvestigated" here.
-                else movement.SetWalkTarget(playerTracker.PlayerGlimpsedPosition);
+                StopCoroutine("Halt");                
+                movement.SetWalkTarget(disturbanceZone);
                 break;
 
             case Phase.ALERT:
@@ -162,7 +147,6 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case Phase.DECEASED:
-
                 // For Adrian - I still have to implement the enemy's death, but a "death" sound would be used somewhere here.
 
                 Flashlight.enabled = false;
@@ -172,7 +156,7 @@ public class EnemyController : MonoBehaviour
 
     private void CheckForDisturbances()
     {             
-        if (Input.GetMouseButtonDown(0) && disturbanceCam != null)
+        if (Input.GetMouseButtonDown(0) && disturbanceCam != null) // If a disturbance was heard...
         {
             // Send out a ray to the position where you clicked.
             Ray ray = disturbanceCam.ScreenPointToRay(Input.mousePosition);
@@ -185,10 +169,10 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        else if (playerTracker.PlayerGlimpsed && enemyPhase != Phase.INVESTIGATE)
+        else if (playerTracker.PlayerGlimpsed && enemyPhase != Phase.INVESTIGATE) // If a disturbance was seen...
         {
             disturbanceZone = playerTracker.PlayerGlimpsedPosition;
-            SetPhase(Phase.HALT); // Pressing issue here: This phase keeps getting set, which is why the enemy never moves closer to investigate the glimpsed player. It's what I must fix next.
+            SetPhase(Phase.HALT); 
         }
     }
 
@@ -211,22 +195,30 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void PursueGlimpsedPlayer() // I'll need to keep an eye on this method.
+    {
+        if (playerTracker.PlayerWithinView && playerTracker.PlayerInRange && enemyPhase == Phase.INVESTIGATE)
+        {
+            movement.SetWalkTarget(Player.transform.position);
+        }
+    }
+
     #region COROUTINES
     IEnumerator Halt()
     {
         // For Adrian - A "Hm? What was that?" sound effect or something like that could be played here.
 
         Flashlight.color = Color.yellow;
-
-        //if (playerTracker.PlayerGlimpsed) disturbanceZone = playerTracker.PlayerGlimpsedPosition;
+        
         StorePatrolEnableMovement();
 
         // Turn towards the direction of the disturbance.        
         movement.SetRotationTarget(disturbanceZone);
 
         // Wait for the specified halt time before investigating.
-        if (!playerTracker.PlayerGlimpsed) yield return new WaitForSeconds(HaltTime);      
-        else yield return new WaitForSeconds(HaltTime/2);
+        if(!disturbanceEncounteredPreviously) yield return new WaitForSeconds(HaltTime);
+
+        disturbanceEncounteredPreviously = true;
         SetPhase(Phase.INVESTIGATE);
     }
 
@@ -246,6 +238,14 @@ public class EnemyController : MonoBehaviour
         print("The enemy will likely shoot at this point!"); // For Adrian - It'll have to wait until I have the enemy shooting the player, but definitely load up some shoot sounds into the project. :)
     }
     #endregion
+
+    private void PhaseCheck() // Check if current phase and previous phase are in sync. If not, update enemy behaviour.
+    {
+        if (enemyPhase != previousPhase)
+        {
+            UpdateBehaviour();
+        }
+    }
 
     private void SetPhase(Phase newPhase)
     {
@@ -268,5 +268,18 @@ public class EnemyController : MonoBehaviour
             agent.ResetPath();
         }
         movement.enabled = true; // The enemy's movement (independent of any patrol routes) will begin now.
+    }
+
+    private void NeutralMovementCheck() // If the movement is enabled and neutral, it will be disabled here.
+    {
+        if (movement.enabled && movement.Neutral)
+        {
+            movement.enabled = false;
+            agent.destination = originalDestination;
+            agent.stoppingDistance = defaultStoppingDistance; // Reset stopping distance.
+            disturbanceEncounteredPreviously = false;
+            if (!vigil) SetPhase(Phase.PATROL); // Set the enemy back to their PATROL/VIGIL phase.
+            else SetPhase(Phase.VIGIL);
+        }
     }
 }

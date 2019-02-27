@@ -3413,6 +3413,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 55
       objectReference: {fileID: 0}
+    - target: {fileID: 1729823776425282, guid: d650aa515b73d6b4a8bde67746bd3c7f, type: 2}
+      propertyPath: m_Name
+      value: Window
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d650aa515b73d6b4a8bde67746bd3c7f, type: 2}
   m_IsPrefabParent: 0
@@ -3467,8 +3471,9 @@ MonoBehaviour:
   PlayerGlimpsed: 0
   PlayerFound: 0
   PlayerWithinView: 0
-  PlayerPositionCaptured: 0
+  PlayerInRange: 0
   PlayerGlimpsedPosition: {x: 0, y: 0, z: 0}
+  LineOfSight: {fileID: 0}
 --- !u!120 &1125147215
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -4666,7 +4671,7 @@ Transform:
   - {fileID: 730054201}
   - {fileID: 1052548540}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1550708208
 GameObject:
