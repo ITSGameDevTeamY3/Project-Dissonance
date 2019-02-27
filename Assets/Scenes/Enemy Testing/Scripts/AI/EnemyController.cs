@@ -197,7 +197,7 @@ public class EnemyController : MonoBehaviour
 
     private void PursueGlimpsedPlayer() // I'll need to keep an eye on this method.
     {
-        if (playerTracker.PlayerWithinView && playerTracker.PlayerInRange && enemyPhase == Phase.INVESTIGATE)
+        if (playerTracker.PlayerWithinView && playerTracker.PlayerInSuspicionRange && enemyPhase == Phase.INVESTIGATE)
         {
             movement.SetWalkTarget(Player.transform.position);
         }

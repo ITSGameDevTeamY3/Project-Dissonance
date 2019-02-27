@@ -16,7 +16,8 @@ public class PlayerTracker : MonoBehaviour
     public bool PlayerGlimpsed = false;
     public bool PlayerFound = false;
     public bool PlayerWithinView = false;
-    public bool PlayerInRange = false;
+    public bool PlayerInSuspicionRange = false;
+    public bool PlayerInAlertRange = false;
     public RaycastHit result, PlayerHit;
     public Vector3 PlayerGlimpsedPosition;
 
@@ -38,9 +39,9 @@ public class PlayerTracker : MonoBehaviour
 
     void Update()
     {
-        CheckPlayerRange();
+        CheckPlayerRanges();
 
-        if (PlayerInRange && PlayerWithinView) // ISSUE HERE: Player can be seen through walls, the LineOfSight needs to be taken into account.
+        if (PlayerInSuspicionRange && PlayerWithinView) // ISSUE HERE: Player can be seen through walls, the LineOfSight needs to be taken into account.
         {
             // Transform
             transform.LookAt(trackablePlayerTransform); // The enemy's eye will always look at the player if they are within the enemy's tracking distance and view.
@@ -80,17 +81,19 @@ public class PlayerTracker : MonoBehaviour
             LineOfSight.enabled = false; // Disable the line.
         }
 
-
-        if (Vector3.Distance(transform.position, trackablePlayerTransform.position) <= alertDistance && PlayerWithinView)
+        if (PlayerInAlertRange && PlayerWithinView && LineOfSight.enabled)
         {
             PlayerFound = true;
         }
     }
 
-    private void CheckPlayerRange()
+    private void CheckPlayerRanges()
     {
-        if (Vector3.Distance(transform.position, trackablePlayerTransform.position) <= trackingDistance) PlayerInRange = true;
-        else PlayerInRange = false;
+        if (Vector3.Distance(transform.position, trackablePlayerTransform.position) <= trackingDistance) PlayerInSuspicionRange = true;
+        else PlayerInSuspicionRange = false;
+
+        if (Vector3.Distance(transform.position, trackablePlayerTransform.position) <= alertDistance) PlayerInAlertRange = true;
+        else PlayerInAlertRange = false;
     }
 
     private void OnDrawGizmos()
