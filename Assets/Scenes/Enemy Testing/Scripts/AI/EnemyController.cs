@@ -18,29 +18,31 @@ public class EnemyController : MonoBehaviour
     // The following public properties are visible in the Inspector but they are set automatically.
     public GameObject POV_GO;
     public List<Transform> surveyPoints = new List<Transform>();
+    public PlayerTracker playerTracker;
 
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing is over.
     public Camera disturbanceCam;
     public RaycastHit hit; // This variable will keep track of the object that you clicked.
+    private Vector3 originalDestination; // This variable stores where the agent was originally headed.   
 
-    private Vector3 originalDestination; // This variable stores where the agent was originally headed.  
-    private float defaultStoppingDistance;
+    // Bools.
     private bool alerted = false;
-    private bool vigil;
-    private Renderer playerRenderer;
+    private bool vigil, disturbanceEncounteredPreviously, disturbanceInvestigated;
 
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
     Patrol patrolRoute;
-    Vector3 post;
+    Vector3 post, disturbanceZone;
     EnemyMovement movement;
     TimeManager tm = new TimeManager();
-    Camera POV;
-    PlayerTracker playerTracker;
+    Camera POV;   
+    Renderer playerRenderer;
+    float defaultStoppingDistance;
 
-    //Footsteps footSteps; We can add FMOD SFX later.
+    //Footsteps footSteps; For Adrian - SFX variable for enemy can be added here.
     #endregion
 
+    #region Phases
     public enum Phase
     {
         PATROL,
@@ -50,9 +52,9 @@ public class EnemyController : MonoBehaviour
         ALERT,
         DECEASED
     }
-
-    [SerializeField]
+    //[SerializeField]
     public Phase enemyPhase, previousPhase;
+    #endregion
 
     void Start()
     {
@@ -64,9 +66,9 @@ public class EnemyController : MonoBehaviour
         // Get access to the enemy object's children.
         foreach (Transform child in transform)
         {
-            if (child.tag == "POV" && POV_GO == null) POV_GO = child.gameObject; // Get access to the enemy's POV.
+            if (child.tag == "EnemyPOV" && POV_GO == null) POV_GO = child.gameObject; // Get access to the enemy's POV.
             if (child.tag == "SurveyPoint") surveyPoints.Add(child); // Get the enemy's survey points.
-            if (child.tag == "PlayerTracker") playerTracker = child.GetComponent<PlayerTracker>(); // Get the enemy's player tracker script.
+            if (child.tag == "PlayerTracker" && playerTracker == null) playerTracker = child.GetComponent<PlayerTracker>(); // Get the enemy's player tracker script.
         }
 
         POV = POV_GO.GetComponent<Camera>();
@@ -108,25 +110,13 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        if (enemyPhase != previousPhase)
-        {
-            UpdateBehaviour();
-        }
-
-        if (movement.enabled && movement.Neutral)
-        {
-            movement.enabled = false;
-            agent.destination = originalDestination;
-            agent.stoppingDistance = defaultStoppingDistance; // Reset stopping distance.
-            if (!vigil) SetPhase(Phase.PATROL); // Set the enmy back to their PATROL/VIGIL phase.
-            else SetPhase(Phase.VIGIL);
-        }
-
+        PhaseCheck();
+        NeutralMovementCheck();
         // The enemy will always check for disturbances regardless of its current phase. (Unless it knows where the player is).
-        CheckForDisturbances();
-
+        if (enemyPhase != Phase.ALERT || enemyPhase == Phase.ALERT && !playerTracker.PlayerWithinView) CheckForDisturbances();
         // The enemy will of course constantly look for the player regardless of its phase.
         CheckForIntruder();
+        if(movement.enabled) PursueGlimpsedPlayer();
     }
 
     void UpdateBehaviour()
@@ -136,7 +126,7 @@ public class EnemyController : MonoBehaviour
         switch (enemyPhase)
         {
             case Phase.PATROL: // TO FIX: Enemy speed issue here. Movement speed above 4 causes enemy to stop. Tweak REST_DISTANCE on the Patrol script.                             
-                Flashlight.color = Color.white;
+                Flashlight.color = Color.white; // For Adrian - Whenever the enemy toggles their flashlight/changes light color, we could have a little "click" sound.
                 patrolRoute.StartPatrol();
                 break;
 
@@ -148,11 +138,8 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case Phase.INVESTIGATE:
-                StopCoroutine("Halt");
-
-                // Set the disturbance location as the enemy's destination.
-                if(!playerTracker.PlayerGlimpsed) movement.SetWalkTarget(hit.point);
-                else movement.SetWalkTarget(playerTracker.PlayerGlimpsedPosition);
+                StopCoroutine("Halt");                
+                movement.SetWalkTarget(disturbanceZone);
                 break;
 
             case Phase.ALERT:
@@ -160,23 +147,16 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case Phase.DECEASED:
+                // For Adrian - I still have to implement the enemy's death, but a "death" sound would be used somewhere here.
+
                 Flashlight.enabled = false;
                 break;
         }
-    }
-
-    private void SetPhase(Phase newPhase)
-    {
-        if (newPhase != enemyPhase)
-        {
-            previousPhase = enemyPhase;            
-            enemyPhase = newPhase;                       
-        }
-    }
+    }   
 
     private void CheckForDisturbances()
-    {
-        if (Input.GetMouseButtonDown(0) && disturbanceCam != null)
+    {             
+        if (Input.GetMouseButtonDown(0) && disturbanceCam != null) // If a disturbance was heard...
         {
             // Send out a ray to the position where you clicked.
             Ray ray = disturbanceCam.ScreenPointToRay(Input.mousePosition);
@@ -184,13 +164,15 @@ public class EnemyController : MonoBehaviour
             // This if will determine whether or not you clicked an object.
             if (Physics.Raycast(ray, out hit))
             {
+                disturbanceZone = hit.point;
                 SetPhase(Phase.HALT);
             }
         }
 
-        else if (playerTracker.PlayerGlimpsed && enemyPhase != Phase.HALT)
-        {            
-            SetPhase(Phase.HALT);
+        else if (playerTracker.PlayerGlimpsed && enemyPhase != Phase.INVESTIGATE) // If a disturbance was seen...
+        {
+            disturbanceZone = playerTracker.PlayerGlimpsedPosition;
+            SetPhase(Phase.HALT); 
         }
     }
 
@@ -205,65 +187,47 @@ public class EnemyController : MonoBehaviour
             }
 
             else if (playerTracker.PlayerWithinView) playerTracker.PlayerWithinView = false;
-        }
 
-        if (playerTracker.PlayerFound == true)
+            if (playerTracker.PlayerFound == true)
+            {
+                SetPhase(Phase.ALERT);
+            }
+        }
+    }
+
+    private void PursueGlimpsedPlayer() // I'll need to keep an eye on this method.
+    {
+        if (playerTracker.PlayerWithinView && playerTracker.PlayerInSuspicionRange && enemyPhase == Phase.INVESTIGATE)
         {
-            SetPhase(Phase.ALERT);
+            movement.SetWalkTarget(Player.transform.position);
         }
     }
 
     #region COROUTINES
     IEnumerator Halt()
     {
+        // For Adrian - A "Hm? What was that?" sound effect or something like that could be played here.
+
         Flashlight.color = Color.yellow;
+        
+        StorePatrolEnableMovement();
 
-        #region If the enemy was on patrol...
-        if (agent.hasPath)
-        {
-            // Keep track of where the enemy was originally headed.
-            originalDestination = agent.destination;
-            // ...stop the enemy's patrol.
-            patrolRoute.StopPatrol();
-            // Clear the agent's path.
-            agent.ResetPath();
-        }
-
-        // The enemy's movement (independent of any patrol routes) will begin now.
-        movement.enabled = true;
-        #endregion
-
-        // Turn towards the direction of the disturbance.
-        if (!playerTracker.PlayerGlimpsed) movement.SetRotationTarget(hit.point);
-        else movement.SetRotationTarget(playerTracker.PlayerHit.point); // PlayerHit or PlayerGlimpsedPosition? Another conundrum to solve.
+        // Turn towards the direction of the disturbance.        
+        movement.SetRotationTarget(disturbanceZone);
 
         // Wait for the specified halt time before investigating.
-        yield return new WaitForSeconds(HaltTime);
+        if(!disturbanceEncounteredPreviously) yield return new WaitForSeconds(HaltTime);
 
-        playerTracker.PlayerGlimpsed = false;
-
+        disturbanceEncounteredPreviously = true;
         SetPhase(Phase.INVESTIGATE);
     }
 
     IEnumerator Alert()
     {
-        print("Who's that?");
+        // For Adrian - A "Who's that?" or something similar could be played here.
         Flashlight.color = Color.red;
 
-        #region If the enemy was on patrol...
-        if (agent.hasPath)
-        {
-            // Keep track of where the enemy was originally headed.
-            originalDestination = agent.destination;
-            // ...stop the enemy's patrol.
-            patrolRoute.StopPatrol();
-            // Clear the agent's path.
-            agent.ResetPath();
-        }
-
-        // The enemy's movement (independent of any patrol routes) will begin now.
-        movement.enabled = true;
-        #endregion
+        StorePatrolEnableMovement();
 
         // Turn towards the direction of the disturbance.
         movement.SetRotationTarget(Player.transform.position);
@@ -271,7 +235,51 @@ public class EnemyController : MonoBehaviour
         // Wait for the specified halt time before investigating.
         yield return new WaitForSeconds(HaltTime / 2);
 
-        print("The enemy will likely shoot at this point!");
+        print("The enemy will likely shoot at this point!"); // For Adrian - It'll have to wait until I have the enemy shooting the player, but definitely load up some shoot sounds into the project. :)
     }
     #endregion
+
+    private void PhaseCheck() // Check if current phase and previous phase are in sync. If not, update enemy behaviour.
+    {
+        if (enemyPhase != previousPhase)
+        {
+            UpdateBehaviour();
+        }
+    }
+
+    private void SetPhase(Phase newPhase)
+    {
+        if (newPhase != enemyPhase)
+        {
+            previousPhase = enemyPhase;
+            enemyPhase = newPhase;
+        }
+    }
+
+    private void StorePatrolEnableMovement()
+    {
+        if (agent.hasPath)
+        {
+            // Keep track of where the enemy was originally headed.
+            originalDestination = agent.destination;
+            // ...stop the enemy's patrol.
+            patrolRoute.StopPatrol();
+            // Clear the agent's path.
+            agent.ResetPath();
+        }
+        movement.enabled = true; // The enemy's movement (independent of any patrol routes) will begin now.
+    }
+
+    private void NeutralMovementCheck() // If the movement is enabled and neutral, it will be disabled here.
+    {
+        if (movement.enabled && movement.Neutral)
+        {
+            movement.enabled = false;
+            agent.destination = originalDestination;
+            agent.stoppingDistance = defaultStoppingDistance; // Reset stopping distance.
+            disturbanceEncounteredPreviously = false;
+            if (!vigil) SetPhase(Phase.PATROL); // Set the enemy back to their PATROL/VIGIL phase.
+            else SetPhase(Phase.VIGIL);
+        }
+    }
 }

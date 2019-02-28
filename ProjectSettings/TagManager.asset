@@ -5,12 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Tip
-  - EnemyCamera
   - Enemy
   - SurveyPoint
-  - POV
   - PlayerTracker
   - Canvas
+  - EnemyPOV
   layers:
   - Default
   - TransparentFX
