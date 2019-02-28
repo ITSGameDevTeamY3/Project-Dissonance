@@ -46,30 +46,23 @@ public class PlayerTracker : MonoBehaviour
         {
             // Transform
             transform.LookAt(trackablePlayerTransform); // The enemy's eye will always look at the player if they are within the enemy's tracking distance and view.           
-
-            //if (!AI.DebugMode) LineOfSight.positionCount = 0;
-            //else LineOfSight.positionCount = 1;
-
-            //if (DrawLine)
-            //{
-            LineOfSight.SetPosition(0, transform.position); // Send out a LineOfSight from the enemy's eye.
+           
+            DrawSightLineInDebug(0, transform.position); // Send out a LineOfSight from the enemy's eye.
 
             if (Physics.Raycast(transform.position, transform.forward, out result, Distance)) // If the LineOfSight hit something...
             {
                 if (result.collider.tag != "Player") // If the LineOfSight doesn't hit the player...
                 {
-                    LineOfSight.SetPosition(1, result.point); // Let the LineOfSight land on the collider that's been hit.
+                    DrawSightLineInDebug(1, result.point); // Let the LineOfSight land on the collider that's been hit.
                     LineOfSight.enabled = false;
-                    //PlayerGlimpsed = false;
+                    PlayerGlimpsed = false;
                 }
 
                 else // If the ray does hit the player...
                 {
-                    LineOfSight.SetPosition(1, trackablePlayerTransform.position);
-                    //if(AI.DebugMode) LineOfSight.SetPosition(1, trackablePlayerTransform.position); // Let the LineOfSight land on the player.
-                    //else LineOfSight.SetPosition(0, transform.position);
+                    DrawSightLineInDebug(1, trackablePlayerTransform.position); // Let the LineOfSight land on the player.                   
                     LineOfSight.enabled = true; // Enable the LineOfSight once it has hit the player.
-                    //if (AI.DebugMode) Debug.DrawRay(transform.position, trackablePlayerTransform.position);
+                                     
                     PlayerGlimpsed = true;
 
                     if (PlayerGlimpsed) // If the player has been glimpsed and we haven't captured the position the player was at...
@@ -77,7 +70,6 @@ public class PlayerTracker : MonoBehaviour
                         PlayerGlimpsedPosition = trackablePlayerTransform.position; // Capture the player's position at that moment.                            
                     }
                 }
-                //}
             }
         }
 
@@ -101,6 +93,11 @@ public class PlayerTracker : MonoBehaviour
 
         if (Vector3.Distance(transform.position, trackablePlayerTransform.position) <= alertDistance) PlayerInAlertRange = true;
         else PlayerInAlertRange = false;
+    }
+
+    private void DrawSightLineInDebug(int indexIn, Vector3 positionIn)
+    {
+        if (AI.DebugMode) LineOfSight.SetPosition(indexIn, positionIn); 
     }
 
     private void OnDrawGizmos()
