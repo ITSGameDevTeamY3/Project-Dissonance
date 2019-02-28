@@ -4,14 +4,22 @@ using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityStandardAssets.CrossPlatformInput;
 
-[RequireComponent(typeof(ThirdPersonCharacter))]
 public class SightJackController : MonoBehaviour
 {
-    private SightJackRays _sightJackVision;
+    public int Range = 10;
+    public int FieldOfView = 15;
+    public int Height = 100;
+    public Material Frustum;
+    public Material Center;
+
+    [Header("Debug Options")]
+    public bool IsDebug;
+    public bool Scale;
+
+    private SightJackView _sightJackView;
     private ThirdPersonUserControl _thirdPersonUserControl;
 
-	// Update is called once per frame
-	void Update ()
+	void Update()
 	{
 	    Listen();
 	}
@@ -20,7 +28,9 @@ public class SightJackController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) || CrossPlatformInputManager.GetButtonDown("XBOX_LEFT_BUMPER"))
         {
-            _thirdPersonUserControl = GetComponent<ThirdPersonUserControl>();
+            _thirdPersonUserControl = GetComponentInParent<ThirdPersonUserControl>();
+
+            if (_thirdPersonUserControl == null) return;
 
             if (!_thirdPersonUserControl.m_Disabled)
             {
@@ -38,12 +48,12 @@ public class SightJackController : MonoBehaviour
     private void Activate()
     {
         _thirdPersonUserControl.m_Disabled = true;
-        _sightJackVision = gameObject.AddComponent<SightJackRays>();
+        _sightJackView = gameObject.AddComponent<SightJackView>();
     }
 
     public void Deactivate()
     {
-        Destroy(_sightJackVision);
+        Destroy(_sightJackView);
         _thirdPersonUserControl.m_Disabled = false;
     }
 }

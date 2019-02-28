@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
-using GLTF.Schema;
-using TMPro;
 using UnityEngine;
 using UnityEditor;
 using Camera = UnityEngine.Camera;
