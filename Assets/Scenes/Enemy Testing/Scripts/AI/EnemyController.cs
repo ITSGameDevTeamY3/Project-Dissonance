@@ -11,6 +11,7 @@ public class EnemyController : MonoBehaviour
 
     #region Enemy Properties
     // Properties that can be altered in the Unity inspector. Some of these might be moved to other scripts for the sake of cleanliness.
+    public bool DebugMode = false;
     public int Health;
     public float ShootCooldown, WalkSpeed, TurningSpeed, HaltTime, SuspicionDistance, AlertDistance;
     public Light Flashlight;
@@ -126,7 +127,7 @@ public class EnemyController : MonoBehaviour
         switch (enemyPhase)
         {
             case Phase.PATROL: // TO FIX: Enemy speed issue here. Movement speed above 4 causes enemy to stop. Tweak REST_DISTANCE on the Patrol script.                             
-                Flashlight.color = Color.white; // For Adrian - Whenever the enemy toggles their flashlight/changes light color, we could have a little "click" sound.
+                AlterFlashlightColour(Color.white); 
                 patrolRoute.StartPatrol();
                 break;
 
@@ -149,7 +150,7 @@ public class EnemyController : MonoBehaviour
             case Phase.DECEASED:
                 // For Adrian - I still have to implement the enemy's death, but a "death" sound would be used somewhere here.
 
-                Flashlight.enabled = false;
+                Flashlight.enabled = false; // For Adrian - Whenever the enemy's flashlight is switched on or off, we could play a little "click" sound.
                 break;
         }
     }   
@@ -207,8 +208,7 @@ public class EnemyController : MonoBehaviour
     IEnumerator Halt()
     {
         // For Adrian - A "Hm? What was that?" sound effect or something like that could be played here.
-
-        Flashlight.color = Color.yellow;
+        AlterFlashlightColour(Color.yellow);
         
         StorePatrolEnableMovement();
 
@@ -225,7 +225,7 @@ public class EnemyController : MonoBehaviour
     IEnumerator Alert()
     {
         // For Adrian - A "Who's that?" or something similar could be played here.
-        Flashlight.color = Color.red;
+        AlterFlashlightColour(Color.red);
 
         StorePatrolEnableMovement();
 
@@ -281,5 +281,11 @@ public class EnemyController : MonoBehaviour
             if (!vigil) SetPhase(Phase.PATROL); // Set the enemy back to their PATROL/VIGIL phase.
             else SetPhase(Phase.VIGIL);
         }
+    }
+
+    // Debug Methods
+    private void AlterFlashlightColour(Color newColor)
+    {
+        if (DebugMode && Flashlight != null) Flashlight.color = newColor;
     }
 }

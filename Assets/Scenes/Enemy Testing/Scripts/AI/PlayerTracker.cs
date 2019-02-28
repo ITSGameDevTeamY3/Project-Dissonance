@@ -8,8 +8,9 @@ public class PlayerTracker : MonoBehaviour
     #region Tracker Properties.
     // Public properties set in the inspector.
     public bool DrawLine;
+    public Material DebugMaterial;
     public float Distance = 100;
-    public bool UseTrackingDistance = false;   
+    public bool UseTrackingDistance = false;
 
     // Public properties set automatically.
     public bool PlayerGlimpsed = false;
@@ -25,6 +26,7 @@ public class PlayerTracker : MonoBehaviour
     Transform trackablePlayerTransform; // This transform will be obtained from the enemy controller script.
     float trackingDistance, alertDistance;
     public LineRenderer LineOfSight;
+    private Material[] debugLineMaterials;
     #endregion
 
     void Start()
@@ -40,37 +42,43 @@ public class PlayerTracker : MonoBehaviour
     {
         CheckPlayerRanges();
 
-        if (PlayerInSuspicionRange && PlayerWithinView) 
+        if (PlayerInSuspicionRange && PlayerWithinView)
         {
             // Transform
-            transform.LookAt(trackablePlayerTransform); // The enemy's eye will always look at the player if they are within the enemy's tracking distance and view.
+            transform.LookAt(trackablePlayerTransform); // The enemy's eye will always look at the player if they are within the enemy's tracking distance and view.           
 
-            if (DrawLine)
+            //if (!AI.DebugMode) LineOfSight.positionCount = 0;
+            //else LineOfSight.positionCount = 1;
+
+            //if (DrawLine)
+            //{
+            LineOfSight.SetPosition(0, transform.position); // Send out a LineOfSight from the enemy's eye.
+
+            if (Physics.Raycast(transform.position, transform.forward, out result, Distance)) // If the LineOfSight hit something...
             {
-                LineOfSight.SetPosition(0, transform.position); // Send out a LineOfSight from the enemy's eye.
-
-                if (Physics.Raycast(transform.position, transform.forward, out result, Distance)) // If the LineOfSight hit something...
+                if (result.collider.tag != "Player") // If the LineOfSight doesn't hit the player...
                 {
-                    if (result.collider.tag != "Player") // If the LineOfSight doesn't hit the player...
-                    {
-                        LineOfSight.SetPosition(1, result.point); // Let the LineOfSight land on the collider that's been hit.
-                        LineOfSight.enabled = false;
-                        //PlayerGlimpsed = false;
-                    }
+                    LineOfSight.SetPosition(1, result.point); // Let the LineOfSight land on the collider that's been hit.
+                    LineOfSight.enabled = false;
+                    //PlayerGlimpsed = false;
+                }
 
-                    else // If the ray does hit the player...
-                    {
-                        LineOfSight.SetPosition(1, trackablePlayerTransform.position); // Let the LineOfSight land on the player.
-                        LineOfSight.enabled = true; // Enable the LineOfSight once it has hit the player.
-                        PlayerGlimpsed = true;
+                else // If the ray does hit the player...
+                {
+                    LineOfSight.SetPosition(1, trackablePlayerTransform.position);
+                    //if(AI.DebugMode) LineOfSight.SetPosition(1, trackablePlayerTransform.position); // Let the LineOfSight land on the player.
+                    //else LineOfSight.SetPosition(0, transform.position);
+                    LineOfSight.enabled = true; // Enable the LineOfSight once it has hit the player.
+                    //if (AI.DebugMode) Debug.DrawRay(transform.position, trackablePlayerTransform.position);
+                    PlayerGlimpsed = true;
 
-                        if (PlayerGlimpsed) // If the player has been glimpsed and we haven't captured the position the player was at...
-                        {                           
-                            PlayerGlimpsedPosition = trackablePlayerTransform.position; // Capture the player's position at that moment.                            
-                        }
+                    if (PlayerGlimpsed) // If the player has been glimpsed and we haven't captured the position the player was at...
+                    {
+                        PlayerGlimpsedPosition = trackablePlayerTransform.position; // Capture the player's position at that moment.                            
                     }
                 }
-            }                      
+                //}
+            }
         }
 
         else // If the player is out of the enemy's tracking range.
