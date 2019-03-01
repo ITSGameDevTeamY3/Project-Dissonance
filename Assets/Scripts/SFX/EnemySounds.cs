@@ -6,7 +6,7 @@ using FMOD.Studio;
 using FMODUnity;
 
 [RequireComponent(typeof(EnemyController))]
-public class Footsteps : MonoBehaviour
+public class EnemySounds : MonoBehaviour
 {
     [EventRef]
 
