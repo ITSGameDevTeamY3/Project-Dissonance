@@ -127,7 +127,7 @@ public class EnemyController : MonoBehaviour
         switch (enemyPhase)
         {
             case Phase.PATROL: // TO FIX: Enemy speed issue here. Movement speed above 4 causes enemy to stop. Tweak REST_DISTANCE on the Patrol script.                             
-                AlterFlashlightColour(Color.white); 
+                AlterFlashlightColourDebug(Color.white); 
                 patrolRoute.StartPatrol();
                 break;
 
@@ -208,24 +208,23 @@ public class EnemyController : MonoBehaviour
     IEnumerator Halt()
     {
         // For Adrian - A "Hm? What was that?" sound effect or something like that could be played here.
-        AlterFlashlightColour(Color.yellow);
+        AlterFlashlightColourDebug(Color.yellow);
         
         StorePatrolEnableMovement();
 
         // Turn towards the direction of the disturbance.        
         movement.SetRotationTarget(disturbanceZone);
 
-        // Wait for the specified halt time before investigating.
-        if(!disturbanceEncounteredPreviously) yield return new WaitForSeconds(HaltTime);
-
-        disturbanceEncounteredPreviously = true;
+        // Wait for the specified halt time before investigating.       
+        yield return new WaitForSeconds(HaltTime);
+       
         SetPhase(Phase.INVESTIGATE);
     }
 
     IEnumerator Alert()
     {
         // For Adrian - A "Who's that?" or something similar could be played here.
-        AlterFlashlightColour(Color.red);
+        AlterFlashlightColourDebug(Color.red);
 
         StorePatrolEnableMovement();
 
@@ -277,14 +276,14 @@ public class EnemyController : MonoBehaviour
             movement.enabled = false;
             agent.destination = originalDestination;
             agent.stoppingDistance = defaultStoppingDistance; // Reset stopping distance.
-            disturbanceEncounteredPreviously = false;
+            //disturbanceEncounteredPreviously = false;
             if (!vigil) SetPhase(Phase.PATROL); // Set the enemy back to their PATROL/VIGIL phase.
             else SetPhase(Phase.VIGIL);
         }
     }
 
     // Debug Methods
-    private void AlterFlashlightColour(Color newColor)
+    private void AlterFlashlightColourDebug(Color newColor)
     {
         if (DebugMode && Flashlight != null) Flashlight.color = newColor;
     }
