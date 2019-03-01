@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using FMOD.Studio;
+using FMODUnity;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Rendering;
@@ -35,6 +37,8 @@ public class SightJackView : MonoBehaviour
     public bool IsDebug = false;
     public bool Scale = false;
 
+    private EventInstance _noiseEvent;
+
     private void Start()
     {
         _enemies = new List<GameObject>();
@@ -56,6 +60,9 @@ public class SightJackView : MonoBehaviour
         // Get white noise from canvas
         _noise = _canvas.transform.Find("Noise").gameObject;
         _noise.SetActive(true);
+
+        _noiseEvent = RuntimeManager.CreateInstance("");
+        _noiseEvent.start();
     }
 
     private void Update()
@@ -63,6 +70,7 @@ public class SightJackView : MonoBehaviour
         HandleInputRotation();
         HandleMultipleEnemies();
         BalanceNoise();
+        //AutomateSounds();
 
         if (IsDebug)
             _meshRenderer.enabled = true;
@@ -225,7 +233,7 @@ public class SightJackView : MonoBehaviour
     {
         if (camera != null && camera.activeInHierarchy)
         {
-            camera.GetComponent<AudioListener>().enabled = false;
+            camera.GetComponent<StudioListener>().enabled = false;
             camera.SetActive(false);
         }
         else if (!camera.activeInHierarchy && camera == null)
@@ -236,7 +244,7 @@ public class SightJackView : MonoBehaviour
         else
         {            
             camera.SetActive(true);
-            camera.GetComponent<AudioListener>().enabled = true;
+            camera.GetComponent<StudioListener>().enabled = true;
         }
     }
 
@@ -249,22 +257,33 @@ public class SightJackView : MonoBehaviour
             // Multiple enemies = _targetEnemy
             float enemyDistance = CalculateClosestPosition(_targetEnemy.transform.position);
 
-            _noise.GetComponent<Image>().material.SetFloat("_Strength", 0 + enemyDistance * 80);
-            _noise.GetComponent<Image>().material.SetFloat("_Alpha", Mathf.Clamp(0 + enemyDistance * 4, 0, 1));
+            SetNoise(0 + enemyDistance * 80, 0 + enemyDistance * 4);
         }
         else if (_currentEnemy != null)
         {
             // Single enemy = _currentEnemy
             float enemyDistance = CalculateClosestPosition(_currentEnemy.transform.position);
 
-            _noise.GetComponent<Image>().material.SetFloat("_Strength", 0 + enemyDistance * 80);
-            _noise.GetComponent<Image>().material.SetFloat("_Alpha", Mathf.Clamp(0 + enemyDistance * 4, 0, 1));
+            SetNoise(0 + enemyDistance * 80, 0 + enemyDistance * 4);
         }
         else
         {
             // Default values = NULL
-            _noise.GetComponent<Image>().material.SetFloat("_Strength", 20);
-            _noise.GetComponent<Image>().material.SetFloat("_Alpha", 1);
+            SetNoise(20, 1);
         }
+    }
+
+    private void SetNoise(float strength, float alpha)
+    {
+        _noise.GetComponent<Image>().material.SetFloat("_Strength", strength);
+        _noise.GetComponent<Image>().material.SetFloat("_Alpha", Mathf.Clamp(alpha, 0, 1));
+    }
+
+    private void AutomateSounds()
+    {
+        //var controllerAxis = Mathf.Abs(Input.GetAxis("Horizontal") + Input.GetAxis("Vertical"));
+        var alpha = _noise.GetComponent<Image>().material.GetFloat("_Alpha");
+
+        _noiseEvent.setParameterValue("", alpha);
     }
 }

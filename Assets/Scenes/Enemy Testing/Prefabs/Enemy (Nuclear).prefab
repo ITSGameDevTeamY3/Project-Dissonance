@@ -1190,7 +1190,7 @@ GameObject:
   - component: {fileID: 23508270876984594}
   - component: {fileID: 136458126645389232}
   m_Layer: 9
-  m_Name: Test Grunt 1
+  m_Name: Enemy (Nuclear)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4492,7 +4492,9 @@ MonoBehaviour:
   Player: {fileID: 0}
   POV_GO: {fileID: 0}
   surveyPoints: []
-  playerTracker: {fileID: 0}
+  PlayerTracker: {fileID: 0}
+  HitScanner: {fileID: 0}
+  PlayerInSights: 0
   disturbanceCam: {fileID: 0}
   enemyPhase: 0
   previousPhase: 0
