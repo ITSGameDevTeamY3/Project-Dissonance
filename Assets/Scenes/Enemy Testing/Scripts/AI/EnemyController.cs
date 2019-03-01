@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 // This script will only work if our enemy has an Agent component.
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyController : MonoBehaviour
@@ -247,6 +248,7 @@ public class EnemyController : MonoBehaviour
         yield return new WaitForSeconds(HaltTime / 2);
 
         print("The enemy will likely shoot at this point!"); // For Adrian - It'll have to wait until I have the enemy shooting the player, but definitely load up some shoot sounds into the project. :)
+        SceneManager.LoadScene("MissionFailed");
     }
     #endregion
 

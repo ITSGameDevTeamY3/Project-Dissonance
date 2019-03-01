@@ -21,11 +21,11 @@ public class PointOfViewController : MonoBehaviour { // This was the "SightJackT
 	
 	void Update ()
     {
-		if(Input.GetKeyUp(KeyCode.P) && AI.DebugMode) // NOTE: Remove this when we start to use David's sight-jacking instead. Also, this shouldn't be used when there's more than one enemy in the scene.
-        {
-            GameCam.enabled = !GameCam.enabled;
-            POV.enabled = !POV.enabled;
-        }
+		//if(Input.GetKeyUp(KeyCode.P) && AI.DebugMode) // NOTE: Remove this when we start to use David's sight-jacking instead. Also, this shouldn't be used when there's more than one enemy in the scene.
+  //      {
+  //          GameCam.enabled = !GameCam.enabled;
+  //          POV.enabled = !POV.enabled;
+  //      }
 
         //if(playerTracker.PlayerFound && playerTracker.PlayerWithinView && playerTracker.PlayerInSuspicionRange)
         //{
