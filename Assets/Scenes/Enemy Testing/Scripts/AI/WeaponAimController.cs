@@ -20,7 +20,7 @@ public class WeaponAimController : MonoBehaviour // Not working at the minute, a
 
     void Update()
     {
-        if (playerTracker.PlayerFound && playerTracker.PlayerWithinView && playerTracker.PlayerInSuspicionRange)
+        if (playerTracker.PlayerWithinView && playerTracker.PlayerInSuspicionRange)
         {
             transform.LookAt(playerTransform);
         }

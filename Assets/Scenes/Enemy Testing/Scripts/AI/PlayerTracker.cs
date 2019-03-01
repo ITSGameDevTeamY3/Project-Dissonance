@@ -6,10 +6,9 @@ using UnityEngine;
 public class PlayerTracker : MonoBehaviour
 {
     #region Tracker Properties.
-    // Public properties set in the inspector.
-    public bool DrawLine;
-    public float Distance = 100;
-    public bool UseTrackingDistance = false;   
+    // Public properties set in the inspector.   
+    public float LineDistance = 100;
+    public bool UseTrackingDistance = false;
 
     // Public properties set automatically.
     public bool PlayerGlimpsed = false;
@@ -38,44 +37,46 @@ public class PlayerTracker : MonoBehaviour
 
     void Update()
     {
-        CheckPlayerRanges();
+        CheckPlayerRanges();       
 
-        if (PlayerInSuspicionRange && PlayerWithinView) 
+        if (PlayerInSuspicionRange && PlayerWithinView)
         {
             // Transform
-            transform.LookAt(trackablePlayerTransform); // The enemy's eye will always look at the player if they are within the enemy's tracking distance and view.
+            transform.LookAt(trackablePlayerTransform); // The enemy's eye will always look at the player if they are within the enemy's tracking distance and view.           
 
-            if (DrawLine)
+            DrawSightLineInDebug(0, transform.position); // Send out a LineOfSight from the enemy's eye.
+
+            if (Physics.Raycast(transform.position, transform.forward, out result, LineDistance)) // If the LineOfSight hit something...
             {
-                LineOfSight.SetPosition(0, transform.position); // Send out a LineOfSight from the enemy's eye.
-
-                if (Physics.Raycast(transform.position, transform.forward, out result, Distance)) // If the LineOfSight hit something...
+                if (result.collider.tag != "Player") // If the LineOfSight doesn't hit the player...
                 {
-                    if (result.collider.tag != "Player") // If the LineOfSight doesn't hit the player...
-                    {
-                        LineOfSight.SetPosition(1, result.point); // Let the LineOfSight land on the collider that's been hit.
-                        LineOfSight.enabled = false;
-                        //PlayerGlimpsed = false;
-                    }
+                    // Discovered something here - raycast was hitting an SFX trigger it seems.  https://answers.unity.com/questions/279514/raycast-ignore-trigger-colliders.html Should we ignore triggers?
+                    DrawSightLineInDebug(1, result.point); // Let the LineOfSight land on the collider that's been hit.
+                    LineOfSight.enabled = false;                   
+                    PlayerGlimpsed = false;
+                }
 
-                    else // If the ray does hit the player...
-                    {
-                        LineOfSight.SetPosition(1, trackablePlayerTransform.position); // Let the LineOfSight land on the player.
-                        LineOfSight.enabled = true; // Enable the LineOfSight once it has hit the player.
-                        PlayerGlimpsed = true;
+                else // If the ray does hit the player...
+                {
+                    DrawSightLineInDebug(1, trackablePlayerTransform.position); // Let the LineOfSight land on the player.                   
+                    LineOfSight.enabled = true; // Enable the LineOfSight once it has hit the player.
 
-                        if (PlayerGlimpsed) // If the player has been glimpsed and we haven't captured the position the player was at...
-                        {                           
-                            PlayerGlimpsedPosition = trackablePlayerTransform.position; // Capture the player's position at that moment.                            
-                        }
+                    PlayerGlimpsed = true;
+
+                    if (PlayerGlimpsed) // If the player has been glimpsed and we haven't captured the position the player was at...
+                    {
+                        PlayerGlimpsedPosition = trackablePlayerTransform.position; // Capture the player's position at that moment.                            
                     }
                 }
-            }                      
+            }
         }
 
         else // If the player is out of the enemy's tracking range.
         {
-            if (PlayerGlimpsed) PlayerGlimpsed = false; // Reset this bool so the player's position can be recaptured if the enemy glimpses them again.
+            if (PlayerGlimpsed)
+            {                
+                PlayerGlimpsed = false; // Reset this bool so the player's position can be recaptured if the enemy glimpses them again.
+            }
 
             LineOfSight.enabled = false; // Disable the line.
         }
@@ -93,6 +94,11 @@ public class PlayerTracker : MonoBehaviour
 
         if (Vector3.Distance(transform.position, trackablePlayerTransform.position) <= alertDistance) PlayerInAlertRange = true;
         else PlayerInAlertRange = false;
+    }
+
+    private void DrawSightLineInDebug(int indexIn, Vector3 positionIn)
+    {
+        if (AI.DebugMode) LineOfSight.SetPosition(indexIn, positionIn);
     }
 
     private void OnDrawGizmos()
