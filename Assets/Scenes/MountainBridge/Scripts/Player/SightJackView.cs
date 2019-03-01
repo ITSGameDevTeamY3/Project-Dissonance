@@ -61,7 +61,7 @@ public class SightJackView : MonoBehaviour
         _noise = _canvas.transform.Find("Noise").gameObject;
         _noise.SetActive(true);
 
-        _noiseEvent = RuntimeManager.CreateInstance("");
+        _noiseEvent = RuntimeManager.CreateInstance("event:/Master/SFX_Events/SightJacking/WhiteNoise");
         _noiseEvent.start();
     }
 
@@ -70,7 +70,7 @@ public class SightJackView : MonoBehaviour
         HandleInputRotation();
         HandleMultipleEnemies();
         BalanceNoise();
-        //AutomateSounds();
+        AutomateSounds();
 
         if (IsDebug)
             _meshRenderer.enabled = true;
@@ -281,9 +281,10 @@ public class SightJackView : MonoBehaviour
 
     private void AutomateSounds()
     {
-        //var controllerAxis = Mathf.Abs(Input.GetAxis("Horizontal") + Input.GetAxis("Vertical"));
+        var controllerAxis = Mathf.Abs(Input.GetAxis("Horizontal") + Input.GetAxis("Vertical"));
         var alpha = _noise.GetComponent<Image>().material.GetFloat("_Alpha");
 
-        _noiseEvent.setParameterValue("", alpha);
+        _noiseEvent.setParameterValue("SearchingForJacking", alpha);
+        _noiseEvent.setParameterValue("radioNoise", controllerAxis);
     }
 }
