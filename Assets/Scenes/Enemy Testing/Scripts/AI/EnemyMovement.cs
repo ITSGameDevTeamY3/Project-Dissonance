@@ -16,7 +16,7 @@ public class EnemyMovement : MonoBehaviour
     private float walkSpeed, runSpeed, turningSpeed, stoppingDistance, surveyDistance;
     const float VIEW_DISTANCE = 4; 
 
-    private EnemyController enemyController;
+    private EnemyController AI;
     private NavMeshAgent agent;
     private Transform rotater;
     private GameObject POV_GO;
@@ -29,6 +29,7 @@ public class EnemyMovement : MonoBehaviour
         RUN,     // When the enemy is moving in to investigate a disturbance during the Alert Phase.
         ROTATE,  // When the enemy has to turn and face something.
         SURVEY,  // When the enemy is investigating a disturbance zone.
+        ATTACK,  // When the enemy's got the player in their sights.
         NEUTRAL  // When the enemy is to return to their post/patrol.
     }
     public MovementPhase movementPhase;
@@ -39,13 +40,13 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         #region Obtain variables from the scripts we require.
-        enemyController = GetComponent<EnemyController>(); // Get our EC script and the variables we need.
-        POV_GO = enemyController.POV_GO;        
-        surveyPoints = enemyController.surveyPoints;
-        turningSpeed = enemyController.TurningSpeed;
+        AI = GetComponent<EnemyController>(); // Get our EC script and the variables we need.
+        POV_GO = AI.POV_GO;        
+        surveyPoints = AI.surveyPoints;
+        turningSpeed = AI.TurningSpeed;
         agent = GetComponent<NavMeshAgent>(); // Get our NavMesh Agent script and the variables we need.
         walkSpeed = agent.speed;
-        runSpeed = walkSpeed * 2;
+        runSpeed = walkSpeed * 1.2f;
         stoppingDistance = agent.stoppingDistance;
         surveyDistance = stoppingDistance + VIEW_DISTANCE;
         #endregion
@@ -62,6 +63,7 @@ public class EnemyMovement : MonoBehaviour
                 break;
 
             case MovementPhase.RUN:
+                if (DestinationReached()) movementPhase = MovementPhase.ATTACK;               
                 break;
 
             case MovementPhase.ROTATE:
@@ -70,6 +72,10 @@ public class EnemyMovement : MonoBehaviour
 
             case MovementPhase.SURVEY:
                 SurveyArea();
+                break;
+
+            case MovementPhase.ATTACK:
+                if(tm.TimeCount(AI.ShootCooldown)) AI.HitScanner.Active = true;
                 break;
 
             case MovementPhase.NEUTRAL:
@@ -121,7 +127,17 @@ public class EnemyMovement : MonoBehaviour
     }
     #endregion
 
-    // RUN.
+    #region RUN
+    public void SetRunTarget(Vector3 target)
+    {
+        runTarget = target;
+        agent.speed = runSpeed;
+        agent.stoppingDistance = surveyDistance;
+        agent.SetDestination(target); // Set the walk target as our NavMesh Agent's target, this will have the agent moving of its own accord.
+        movementPhase = MovementPhase.RUN;
+        if (Neutral) Neutral = false;
+    }
+    #endregion
 
     // SURVEY - This method will be rather simple for now.
     private void SurveyArea()

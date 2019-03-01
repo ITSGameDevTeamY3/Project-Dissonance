@@ -14,7 +14,7 @@ public class PointOfViewController : MonoBehaviour { // This was the "SightJackT
         POV = GetComponent<Camera>();
         POV.enabled = false;
         AI = transform.parent.gameObject.GetComponent<EnemyController>();
-        playerTracker = AI.playerTracker;
+        playerTracker = AI.PlayerTracker;
         playerTransform = AI.Player.transform;
         GameCam = AI.disturbanceCam;
     }
