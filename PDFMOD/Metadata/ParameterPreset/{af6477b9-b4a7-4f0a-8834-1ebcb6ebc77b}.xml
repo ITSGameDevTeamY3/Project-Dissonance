@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{af6477b9-b4a7-4f0a-8834-1ebcb6ebc77b}">
+        <property name="name">
+            <value>Entering Jacking</value>
+        </property>
+        <relationship name="folder">
+            <destination>{5b9bb7d0-0256-427d-8437-1507426ecbf2}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{c950bf69-aa4a-4955-9d95-20823f461a37}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{c950bf69-aa4a-4955-9d95-20823f461a37}">
+        <property name="initialValue">
+            <value>0</value>
+        </property>
+    </object>
+</objects>

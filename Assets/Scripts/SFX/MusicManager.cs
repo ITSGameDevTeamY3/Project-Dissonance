@@ -27,17 +27,17 @@ public class MusicManager : MonoBehaviour {
         {
             case Conditions.Normal:
                 musicEvnt.setParameterValue("alerted", 1f);
-                musicEvnt.setParameterValue("Spotted", 0f);
+                musicEvnt.setParameterValue("Caught", 0f);
                 musicEvnt.setParameterValue("Normal", 0f);
                 break;
             case Conditions.Alerted:
                 musicEvnt.setParameterValue("alerted", 0f);
-                musicEvnt.setParameterValue("Spotted", 0f);
+                musicEvnt.setParameterValue("Caught", 0f);
                 musicEvnt.setParameterValue("Normal", 1f);
                 break;
             case Conditions.Spotted:
                 musicEvnt.setParameterValue("alerted", 0f);
-                musicEvnt.setParameterValue("Spotted", 1f);
+                musicEvnt.setParameterValue("Cuaght", 1f);
                 musicEvnt.setParameterValue("Normal", 0f);
                 break;
             default:
