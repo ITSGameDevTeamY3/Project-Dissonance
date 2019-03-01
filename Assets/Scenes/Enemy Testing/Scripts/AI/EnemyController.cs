@@ -15,8 +15,8 @@ public class EnemyController : MonoBehaviour
     public int Health;
     public float ShootCooldown, WalkSpeed, TurningSpeed, HaltTime, SuspicionDistance, AlertDistance;
     public Light Flashlight;
-    public GameObject Player;
     // The following public properties are visible in the Inspector but they are set automatically.
+    public GameObject Player;
     public GameObject POV_GO;
     public List<Transform> surveyPoints = new List<Transform>();
     public PlayerTracker playerTracker;
@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
 
     // Bools.
     private bool alerted = false;
-    private bool vigil, disturbanceEncounteredPreviously, disturbanceInvestigated;
+    private bool vigil; 
 
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
@@ -39,6 +39,7 @@ public class EnemyController : MonoBehaviour
     Camera POV;   
     Renderer playerRenderer;
     float defaultStoppingDistance;
+    HitScanner hitScanner;
 
     //Footsteps footSteps; For Adrian - SFX variable for enemy can be added here.
     #endregion
@@ -62,6 +63,8 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = WalkSpeed;
         defaultStoppingDistance = agent.stoppingDistance;
+        Player = GameObject.Find("Player"); // The player is found in the scene automatically and set here.
+        disturbanceCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the main camera and set it here. NOTE: This will be removed soon.
         //footSteps = GetComponent<Footsteps>();
 
         // Get access to the enemy object's children.
@@ -70,6 +73,7 @@ public class EnemyController : MonoBehaviour
             if (child.tag == "EnemyPOV" && POV_GO == null) POV_GO = child.gameObject; // Get access to the enemy's POV.
             if (child.tag == "SurveyPoint") surveyPoints.Add(child); // Get the enemy's survey points.
             if (child.tag == "PlayerTracker" && playerTracker == null) playerTracker = child.GetComponent<PlayerTracker>(); // Get the enemy's player tracker script.
+            if (child.tag == "HitScanner") hitScanner = child.GetComponent<HitScanner>();
         }
 
         POV = POV_GO.GetComponent<Camera>();
@@ -230,6 +234,8 @@ public class EnemyController : MonoBehaviour
 
         // Turn towards the direction of the disturbance.
         movement.SetRotationTarget(Player.transform.position);
+
+        hitScanner.Active = true;
 
         // Wait for the specified halt time before investigating.
         yield return new WaitForSeconds(HaltTime / 2);

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DummyPlayerC : MonoBehaviour {
 
+    public int Health;
     public int moveSpeed;
 
     // Use this for initialization
