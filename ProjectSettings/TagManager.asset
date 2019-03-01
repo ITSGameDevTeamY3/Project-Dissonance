@@ -10,6 +10,8 @@ TagManager:
   - PlayerTracker
   - Canvas
   - EnemyPOV
+  - EnemyCamera
+  - UICamera
   layers:
   - Default
   - TransparentFX

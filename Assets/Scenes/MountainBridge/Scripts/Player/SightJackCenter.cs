@@ -7,7 +7,7 @@ public class SightJackCenter : MonoBehaviour
 {
     private MeshRenderer _meshRenderer;
     private MeshFilter _meshFilter;
-    private MeshCollider _meshCollider;
+    public MeshCollider MeshCollider;
     private Mesh _view;
 
     private SightJackView _parent;
@@ -31,10 +31,10 @@ public class SightJackCenter : MonoBehaviour
         _meshFilter = gameObject.AddComponent<MeshFilter>();
         _meshFilter.mesh = _view;
 
-        _meshCollider = gameObject.AddComponent<MeshCollider>();
-        _meshCollider.sharedMesh = _view;
-        _meshCollider.convex = true;
-        _meshCollider.isTrigger = true;
+        MeshCollider = gameObject.AddComponent<MeshCollider>();
+        MeshCollider.sharedMesh = _view;
+        MeshCollider.convex = true;
+        MeshCollider.isTrigger = true;
 
         transform.localScale = new Vector3(0, 1, 1);
     }

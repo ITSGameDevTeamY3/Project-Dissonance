@@ -10,7 +10,10 @@
 
 	SubShader
 	{
-		Tags { "RenderType"="Opaque" }
+		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
+
+		ZWrite Off
+		Blend SrcAlpha OneMinusSrcAlpha
 
 		Pass
 		{
@@ -58,8 +61,9 @@
 
 			    // Assign a random value based on the integer coord
 			    float rand = random(ipos);
-			    fixed4 col = fixed4(rand * _Alpha, rand * _Alpha, rand * _Alpha, _Alpha);
+				fixed4 col = fixed4(rand,rand,rand, 1.0);
 			    col = lerp(tex2D(_MainTex,i.uv), col, _Strength);
+				col.a = _Alpha;
 			    return col;
 			}
 
