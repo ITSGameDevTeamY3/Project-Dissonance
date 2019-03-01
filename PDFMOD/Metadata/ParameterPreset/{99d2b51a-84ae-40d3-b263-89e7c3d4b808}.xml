@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{99d2b51a-84ae-40d3-b263-89e7c3d4b808}">
+        <property name="name">
+            <value>Suspision</value>
+        </property>
+        <relationship name="folder">
+            <destination>{5b9bb7d0-0256-427d-8437-1507426ecbf2}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{9c7ebec8-aef4-46c1-a524-30a51288aa35}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{9c7ebec8-aef4-46c1-a524-30a51288aa35}">
+        <property name="initialValue">
+            <value>1</value>
+        </property>
+    </object>
+</objects>
