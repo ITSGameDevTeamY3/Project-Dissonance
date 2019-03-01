@@ -9,6 +9,12 @@ public class EnemyController : MonoBehaviour
 {
     // https://forum.unity.com/threads/rigidbody-keeps-sliding.32965/ Something to keep an eye on.
 
+//3. Get enemy shooting player.
+//4. Test out interaction between two enemies. - MISSING: Player & Patrol Points.
+//5. Get enemy to chase player.
+//6. Tweak enemy suspicion distance and alert distance.
+
+
     #region Enemy Properties
     // Properties that can be altered in the Unity inspector. Some of these might be moved to other scripts for the sake of cleanliness.
     public bool DebugMode = false;
