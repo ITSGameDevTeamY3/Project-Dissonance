@@ -26,7 +26,9 @@ public class EnemyController : MonoBehaviour
     public GameObject Player;
     public GameObject POV_GO;
     public List<Transform> surveyPoints = new List<Transform>();
-    public PlayerTracker playerTracker;
+    public PlayerTracker PlayerTracker;
+    public HitScanner HitScanner;
+    public bool PlayerInSights = false;
 
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing is over.
     public Camera disturbanceCam;
@@ -46,7 +48,7 @@ public class EnemyController : MonoBehaviour
     Camera POV;   
     Renderer playerRenderer;
     float defaultStoppingDistance;
-    HitScanner hitScanner;
+    
 
     //Footsteps footSteps; For Adrian - SFX variable for enemy can be added here.
     #endregion
@@ -59,6 +61,7 @@ public class EnemyController : MonoBehaviour
         HALT,
         INVESTIGATE,
         ALERT,
+        PURSUIT,
         DECEASED
     }
     //[SerializeField]
@@ -79,8 +82,8 @@ public class EnemyController : MonoBehaviour
         {
             if (child.tag == "EnemyPOV" && POV_GO == null) POV_GO = child.gameObject; // Get access to the enemy's POV.
             if (child.tag == "SurveyPoint") surveyPoints.Add(child); // Get the enemy's survey points.
-            if (child.tag == "PlayerTracker" && playerTracker == null) playerTracker = child.GetComponent<PlayerTracker>(); // Get the enemy's player tracker script.
-            if (child.tag == "HitScanner") hitScanner = child.GetComponent<HitScanner>();
+            if (child.tag == "PlayerTracker" && PlayerTracker == null) PlayerTracker = child.GetComponent<PlayerTracker>(); // Get the enemy's player tracker script.
+            if (child.tag == "HitScanner") HitScanner = child.GetComponent<HitScanner>();
         }
 
         POV = POV_GO.GetComponent<Camera>();
@@ -125,7 +128,7 @@ public class EnemyController : MonoBehaviour
         PhaseCheck();
         NeutralMovementCheck();
         // The enemy will always check for disturbances regardless of its current phase. (Unless it knows where the player is).
-        if (enemyPhase != Phase.ALERT || enemyPhase == Phase.ALERT && !playerTracker.PlayerWithinView) CheckForDisturbances();
+        if (enemyPhase != Phase.ALERT || enemyPhase == Phase.ALERT && !PlayerTracker.PlayerWithinView) CheckForDisturbances();
         // The enemy will of course constantly look for the player regardless of its phase.
         CheckForIntruder();
         if(movement.enabled) PursueGlimpsedPlayer();
@@ -158,6 +161,11 @@ public class EnemyController : MonoBehaviour
                 StartCoroutine("Alert");
                 break;
 
+            case Phase.PURSUIT:
+                StopCoroutine("Alert");
+                movement.SetRunTarget(Player.transform.position);
+                break;
+
             case Phase.DECEASED:
                 // For Adrian - I still have to implement the enemy's death, but a "death" sound would be used somewhere here.
 
@@ -181,26 +189,26 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        else if (playerTracker.PlayerGlimpsed && enemyPhase != Phase.INVESTIGATE) // If a disturbance was seen...
+        else if (PlayerTracker.PlayerGlimpsed && enemyPhase != Phase.INVESTIGATE) // If a disturbance was seen...
         {
-            disturbanceZone = playerTracker.PlayerGlimpsedPosition;
+            disturbanceZone = PlayerTracker.PlayerGlimpsedPosition;
             SetPhase(Phase.HALT); 
         }
     }
 
     private void CheckForIntruder()
     {
-        if (playerTracker != null)
+        if (PlayerTracker != null)
         {
             // Here's where we detect whether or not the player is within the enemy's camera. https://answers.unity.com/questions/8003/how-can-i-know-if-a-gameobject-is-seen-by-a-partic.html
             if (playerRenderer.IsVisibleFrom(POV))
             {
-                playerTracker.PlayerWithinView = true;
+                PlayerTracker.PlayerWithinView = true;
             }
 
-            else if (playerTracker.PlayerWithinView) playerTracker.PlayerWithinView = false;
+            else if (PlayerTracker.PlayerWithinView) PlayerTracker.PlayerWithinView = false;
 
-            if (playerTracker.PlayerFound == true)
+            if (PlayerTracker.PlayerFound == true)
             {
                 SetPhase(Phase.ALERT);
             }
@@ -209,7 +217,7 @@ public class EnemyController : MonoBehaviour
 
     private void PursueGlimpsedPlayer() // I'll need to keep an eye on this method.
     {
-        if (playerTracker.PlayerWithinView && playerTracker.PlayerInSuspicionRange && enemyPhase == Phase.INVESTIGATE)
+        if (PlayerTracker.PlayerWithinView && PlayerTracker.PlayerInSuspicionRange && enemyPhase == Phase.INVESTIGATE)
         {
             movement.SetWalkTarget(Player.transform.position);
         }
@@ -242,14 +250,15 @@ public class EnemyController : MonoBehaviour
         // Turn towards the direction of the disturbance.
         movement.SetRotationTarget(Player.transform.position);
 
-        hitScanner.Active = true;
+        HitScanner.Active = true;
 
         // Wait for the specified halt time before investigating.
         yield return new WaitForSeconds(HaltTime / 2);
 
         print("The enemy will likely shoot at this point!"); // For Adrian - It'll have to wait until I have the enemy shooting the player, but definitely load up some shoot sounds into the project. :)
-        SceneManager.LoadScene("MissionFailed");
-    }
+        SetPhase(Phase.PURSUIT);
+        //SceneManager.LoadScene("MissionFailed");
+    }    
     #endregion
 
     private void PhaseCheck() // Check if current phase and previous phase are in sync. If not, update enemy behaviour.

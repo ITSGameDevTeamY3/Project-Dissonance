@@ -29,7 +29,6 @@ public class HitScanner : MonoBehaviour
             player = AI.Player.GetComponent<DummyPlayerC>();
         }
         HitLine = GetComponent<LineRenderer>();
-
     }
 
     void Update()
@@ -66,11 +65,10 @@ public class HitScanner : MonoBehaviour
     IEnumerator HitPlayer()
     {
         HitLine.SetPosition(1, trackablePlayerTransform.position); // Let the HitLine land on the player.
-        HitLine.enabled = true; // Enable the HitLine once it has hit the player.  
+        HitLine.enabled = true; // Enable the HitLine once it has hit the player.         
 
+        yield return new WaitForSeconds(0.05f); // The HitLine will appear for a twentieth of a second, simulating a bullet trace. 
         player.Health = player.Health - 1; // Take some health from the player.
-
-        yield return new WaitForSeconds(0.05f); // The HitLine will appear for a twentieth of a second, simulating a bullet trace.      
         Active = false;
     }
 }

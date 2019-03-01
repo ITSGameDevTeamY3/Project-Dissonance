@@ -13,7 +13,7 @@ public class WeaponAimController : MonoBehaviour // Not working at the minute, a
     {
         if (enemyAI != null)
         {
-            playerTracker = enemyAI.playerTracker;
+            playerTracker = enemyAI.PlayerTracker;
             playerTransform = enemyAI.Player.transform;
         }
     }
