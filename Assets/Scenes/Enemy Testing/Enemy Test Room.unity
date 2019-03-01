@@ -512,6 +512,11 @@ Prefab:
       propertyPath: Health
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 114334528124310266, guid: 2f3561c00d9086c49a4e79bde2f59455,
+        type: 2}
+      propertyPath: moveSpeed
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2f3561c00d9086c49a4e79bde2f59455, type: 2}
   m_IsPrefabParent: 0
@@ -874,7 +879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c59af751ccf51547a27c4f26de49438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 0
 --- !u!108 &994171264
 Light:
   m_ObjectHideFlags: 0
@@ -1300,6 +1305,15 @@ Prefab:
       propertyPath: m_Name
       value: Test Grunt
       objectReference: {fileID: 0}
+    - target: {fileID: 1519956973227462, guid: 4747662640e095742a76f99b3c9b1a26, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114731665339353548, guid: 4747662640e095742a76f99b3c9b1a26,
+        type: 2}
+      propertyPath: DebugMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4747662640e095742a76f99b3c9b1a26, type: 2}
   m_IsPrefabParent: 0
@@ -1326,7 +1340,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1271233942}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.71, y: 24.821999, z: 1.4535289}
+  m_LocalPosition: {x: 8.4, y: 24.821999, z: 1.4535289}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1378,7 +1392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 5
-  moveSpeed: 8
+  moveSpeed: 5
 --- !u!54 &1311956957
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1837,7 +1851,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.06666667
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: 4bacfd13ee1f1ef429f4c42873717374, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 2c152622f5e8a6f4ca78f1fea3b9b578, type: 2}
 --- !u!114 &2028930903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1849,9 +1863,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eeb5dc026fdf4b488bc7ae0138ab719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AgentTypeID: -1372625422
-  m_StartPoint: {x: -13, y: 0, z: -14}
-  m_EndPoint: {x: -4, y: 5.8, z: -14}
+  m_AgentTypeID: 0
+  m_StartPoint: {x: 0, y: 0, z: -2.5}
+  m_EndPoint: {x: 0, y: 0, z: 2.5}
   m_Width: 0
   m_CostModifier: -1
   m_Bidirectional: 1

@@ -36,28 +36,30 @@ public class HitScanner : MonoBehaviour
     {
         if (Active)
         {
-            StopCoroutine("HitPlayer");
+            // Transform
+            transform.LookAt(trackablePlayerTransform); // The enemy's will always aim at the player if they are within the enemy's tracking distance and view.
+
+            HitLine.SetPosition(0, transform.position); // Send out a HitLine from the enemy's eye.
+
+            if (Physics.Raycast(transform.position, transform.forward, out result, Distance)) // If the HitLine hit something...
+            {
+                if (result.collider.tag != "Player") // If the HitLine doesn't hit the player...
+                {
+                    HitLine.SetPosition(1, result.point); // Let the HitLine land on the collider that's been hit.
+                    HitLine.enabled = false;
+                }
+
+                else // If the ray does hit the player...
+                {
+                    StartCoroutine("HitPlayer");
+                }
+            }
         }
 
-        print(Active);
-
-        // Transform
-        transform.LookAt(trackablePlayerTransform); // The enemy's will always aim at the player if they are within the enemy's tracking distance and view.
-
-        HitLine.SetPosition(0, transform.position); // Send out a HitLine from the enemy's eye.
-
-        if (Physics.Raycast(transform.position, transform.forward, out result, Distance)) // If the HitLine hit something...
+        else
         {
-            if (result.collider.tag != "Player") // If the HitLine doesn't hit the player...
-            {
-                HitLine.SetPosition(1, result.point); // Let the HitLine land on the collider that's been hit.
-                HitLine.enabled = false;
-            }
-
-            else // If the ray does hit the player...
-            {
-                StartCoroutine("HitPlayer");
-            }
+            StopCoroutine("HitPlayer");
+            HitLine.enabled = false;
         }
     }
 
@@ -66,9 +68,9 @@ public class HitScanner : MonoBehaviour
         HitLine.SetPosition(1, trackablePlayerTransform.position); // Let the HitLine land on the player.
         HitLine.enabled = true; // Enable the HitLine once it has hit the player.  
 
-        player.Health -= 1; // Take some health from the player.
+        player.Health = player.Health - 1; // Take some health from the player.
 
-        yield return new WaitForSeconds(0.5f); // The HitLine will appear for half a second, simulating a bullet trace.
+        yield return new WaitForSeconds(0.05f); // The HitLine will appear for a twentieth of a second, simulating a bullet trace.      
         Active = false;
     }
 }
