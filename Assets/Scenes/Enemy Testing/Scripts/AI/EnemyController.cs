@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
     // Properties that can be altered in the Unity inspector. Some of these might be moved to other scripts for the sake of cleanliness.
     public bool DebugMode = false;
     public int Health;
-    public float ShootCooldown, WalkSpeed, TurningSpeed, HaltTime, SuspicionDistance, AlertDistance;
+    public float ShootCooldown, WalkSpeed, TurningSpeed, HaltTime, SuspicionDistance, AlertDistance, AlertDuration;
     public Light Flashlight;
     // The following public properties are visible in the Inspector but they are set automatically.
     public GameObject Player;
@@ -131,7 +131,7 @@ public class EnemyController : MonoBehaviour
         if (enemyPhase != Phase.ALERT || enemyPhase == Phase.ALERT && !PlayerTracker.PlayerWithinView) CheckForDisturbances();
         // The enemy will of course constantly look for the player regardless of its phase.
         CheckForIntruder();
-        if(movement.enabled) PursueGlimpsedPlayer();
+        if(movement.enabled) PursueGlimpsedPlayer();        
     }
 
     void UpdateBehaviour()
@@ -256,7 +256,7 @@ public class EnemyController : MonoBehaviour
         yield return new WaitForSeconds(HaltTime / 2);
 
         print("The enemy will likely shoot at this point!"); // For Adrian - It'll have to wait until I have the enemy shooting the player, but definitely load up some shoot sounds into the project. :)
-        SetPhase(Phase.PURSUIT);
+        movement.SetRunTarget(Player.transform.position);
         //SceneManager.LoadScene("MissionFailed");
     }    
     #endregion
@@ -299,7 +299,7 @@ public class EnemyController : MonoBehaviour
             movement.enabled = false;
             agent.destination = originalDestination;
             agent.stoppingDistance = defaultStoppingDistance; // Reset stopping distance.
-            //disturbanceEncounteredPreviously = false;
+            if (PlayerTracker.PlayerFound) PlayerTracker.PlayerFound = false;
             if (!vigil) SetPhase(Phase.PATROL); // Set the enemy back to their PATROL/VIGIL phase.
             else SetPhase(Phase.VIGIL);
         }
