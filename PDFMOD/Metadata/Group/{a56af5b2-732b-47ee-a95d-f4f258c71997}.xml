@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="MixerGroup" id="{a56af5b2-732b-47ee-a95d-f4f258c71997}">
+        <property name="name">
+            <value>SightJackingNoise</value>
+        </property>
+        <relationship name="effectChain">
+            <destination>{e3f419c7-b061-4efb-aa0f-cee56711bae0}</destination>
+        </relationship>
+        <relationship name="panner">
+            <destination>{d2dfa229-49a8-45bf-9ead-c9b6a35da1a0}</destination>
+        </relationship>
+        <relationship name="output">
+            <destination>{cad1dd6e-b668-440f-ab87-61f27f4b795b}</destination>
+        </relationship>
+    </object>
+    <object class="MixerBusEffectChain" id="{e3f419c7-b061-4efb-aa0f-cee56711bae0}">
+        <relationship name="effects">
+            <destination>{2601e45f-352c-40bc-bc38-25ef3e9b8bb2}</destination>
+        </relationship>
+    </object>
+    <object class="MixerBusPanner" id="{d2dfa229-49a8-45bf-9ead-c9b6a35da1a0}"/>
+    <object class="MixerBusFader" id="{2601e45f-352c-40bc-bc38-25ef3e9b8bb2}"/>
+</objects>

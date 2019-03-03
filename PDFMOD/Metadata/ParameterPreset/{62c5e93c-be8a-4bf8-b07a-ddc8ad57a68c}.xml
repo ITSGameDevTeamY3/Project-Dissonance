@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{62c5e93c-be8a-4bf8-b07a-ddc8ad57a68c}">
+        <property name="name">
+            <value>SpottedDrumLoop</value>
+        </property>
+        <relationship name="folder">
+            <destination>{5b9bb7d0-0256-427d-8437-1507426ecbf2}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{3cecb52f-0712-4f2c-b7d7-056fcd197e63}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{3cecb52f-0712-4f2c-b7d7-056fcd197e63}">
+        <property name="initialValue">
+            <value>0</value>
+        </property>
+    </object>
+</objects>

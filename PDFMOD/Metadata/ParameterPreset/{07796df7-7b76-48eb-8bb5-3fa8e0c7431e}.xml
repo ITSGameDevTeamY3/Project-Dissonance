@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{07796df7-7b76-48eb-8bb5-3fa8e0c7431e}">
+        <property name="name">
+            <value>MusicWhenSightJacking</value>
+        </property>
+        <relationship name="folder">
+            <destination>{5b9bb7d0-0256-427d-8437-1507426ecbf2}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{5dd46278-ded3-4e79-b7db-d835f6274e48}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{5dd46278-ded3-4e79-b7db-d835f6274e48}">
+        <property name="initialValue">
+            <value>0</value>
+        </property>
+    </object>
+</objects>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{950267be-c480-4b6f-9364-5acb127439d2}">
+        <property name="name">
+            <value>DrumsAlert</value>
+        </property>
+        <relationship name="folder">
+            <destination>{071234b0-31b4-46e2-9182-2b7689dc5253}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{cc721c52-c4f0-4eaf-a1ac-5b5ec80f3647}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{cc721c52-c4f0-4eaf-a1ac-5b5ec80f3647}">
+        <property name="initialValue">
+            <value>0</value>
+        </property>
+    </object>
+</objects>
