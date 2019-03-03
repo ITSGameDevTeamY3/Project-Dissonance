@@ -29,6 +29,7 @@ public class EnemyController : MonoBehaviour
     public List<Transform> surveyPoints = new List<Transform>();
     public PlayerTracker PlayerTracker;
     public HitScanner HitScanner;
+    public Renderer playerRenderer;
     public bool PlayerInSights = false;
 
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing is over.
@@ -46,8 +47,7 @@ public class EnemyController : MonoBehaviour
     Vector3 post, disturbanceZone;
     EnemyMovement movement;
     TimeManager tm = new TimeManager();
-    Camera POV;   
-    Renderer playerRenderer;
+    Camera POV;     
     float defaultStoppingDistance;
     
 
@@ -159,7 +159,8 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case Phase.ALERT:
-                StartCoroutine("Alert");
+                if (NuclearMode) SceneManager.LoadScene("MissionFailed");
+                else StartCoroutine("Alert");
                 break;
 
             case Phase.PURSUIT:

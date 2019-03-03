@@ -14,7 +14,7 @@ public class EnemyMovement : MonoBehaviour
 
     // These 4 properties are obtained from the enemy controller script. They are set in the Inspector window.
     private float walkSpeed, runSpeed, turningSpeed, stoppingDistance, surveyDistance, attackDistance, alertDuration;
-    const float VIEW_DISTANCE = 4; 
+    const float VIEW_DISTANCE = 1; 
 
     private EnemyController AI;
     private NavMeshAgent agent;

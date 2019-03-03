@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 [RequireComponent(typeof(LineRenderer))]
 public class HitScanner : MonoBehaviour
@@ -17,7 +18,7 @@ public class HitScanner : MonoBehaviour
 
     // Private properties set automatically.
     Transform trackablePlayerTransform; // This transform will be obtained from the enemy controller script.   
-    DummyPlayerC player;
+    ThirdPersonCharacter player;
     public LineRenderer HitLine;
     #endregion
 
@@ -26,7 +27,7 @@ public class HitScanner : MonoBehaviour
         if (AI != null)
         {
             trackablePlayerTransform = AI.Player.transform;
-            player = AI.Player.GetComponent<DummyPlayerC>();
+            player = AI.Player.GetComponent<ThirdPersonCharacter>();
         }
         HitLine = GetComponent<LineRenderer>();
     }
