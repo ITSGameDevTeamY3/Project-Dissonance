@@ -66,8 +66,8 @@ public class SightJackRays : MonoBehaviour {
 
     private void OnDrawGizmosSelected()
     {
-        Handles.color = Color.green;
-        Handles.DrawWireDisc(transform.position, Vector3.up, Range);
+        //Handles.color = Color.green;
+        //Handles.DrawWireDisc(transform.position, Vector3.up, Range);
     }
 
     private void OnDestroy()

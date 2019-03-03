@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/MainMenu/Adrian Menu.unity
+    guid: 9ef41960ee1348349b2ed7b15b808aa0
+  - enabled: 1
+    path: Assets/Scenes/MountainBridge/SightJackTest.unity
+    guid: ed3c48aa77f48d743ad7a7b2aef0b198
+  - enabled: 1
+    path: Assets/Scenes/MissionFailed/MissionFailed.unity
+    guid: a1c8ec7e32022174aa9bc5e2edc7e7b4
+  - enabled: 1
     path: Assets/Scenes/MountainBridge/MountainBridge.unity
     guid: 6f9c5284102a697428183b90dfa83698
   m_configObjects: {}

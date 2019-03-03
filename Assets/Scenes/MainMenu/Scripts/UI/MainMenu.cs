@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour {
 
     public void Playgame()
     {
-        SceneManager.LoadScene("Donnacha");
+        SceneManager.LoadScene("SightJackTest");
     }
 
     public void QuitGame()

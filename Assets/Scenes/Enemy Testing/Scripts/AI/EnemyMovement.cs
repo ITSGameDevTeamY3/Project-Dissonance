@@ -13,8 +13,8 @@ public class EnemyMovement : MonoBehaviour
     public bool Neutral; // Whether or not the enemy's movement is neutral (i.e. not moving outside of their assigned patrol/post).
 
     // These 4 properties are obtained from the enemy controller script. They are set in the Inspector window.
-    private float walkSpeed, runSpeed, turningSpeed, stoppingDistance, surveyDistance;
-    const float VIEW_DISTANCE = 4; 
+    private float walkSpeed, runSpeed, turningSpeed, stoppingDistance, surveyDistance, attackDistance, alertDuration;
+    const float VIEW_DISTANCE = 1; 
 
     private EnemyController AI;
     private NavMeshAgent agent;
@@ -22,6 +22,7 @@ public class EnemyMovement : MonoBehaviour
     private GameObject POV_GO;
     private List<Transform> surveyPoints;
     private Vector3 walkTarget, runTarget, rotateTarget;
+    private bool alerted, coroutineStarted;
 
     public enum MovementPhase
     {
@@ -49,6 +50,9 @@ public class EnemyMovement : MonoBehaviour
         runSpeed = walkSpeed * 1.2f;
         stoppingDistance = agent.stoppingDistance;
         surveyDistance = stoppingDistance + VIEW_DISTANCE;
+        attackDistance = AI.AlertDistance;
+        alertDuration = AI.AlertDuration;
+        alerted = false;
         #endregion
 
         movementPhase = MovementPhase.NEUTRAL; // Enemies will initially have no independent movement outside their patrol/post.       
@@ -56,14 +60,24 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
+        if (alerted && !AI.PlayerTracker.LineOfSight.enabled && !coroutineStarted)
+        {
+            StartCoroutine("CallOffSearch");
+        }
+
+        else if (alerted && coroutineStarted)
+        {
+            StopCoroutine("CallOffSearch");
+        }
+
         switch (movementPhase)
         {
             case MovementPhase.WALK:
                 if (DestinationReached()) movementPhase = MovementPhase.SURVEY;
                 break;
 
-            case MovementPhase.RUN:
-                if (DestinationReached()) movementPhase = MovementPhase.ATTACK;               
+            case MovementPhase.RUN:               
+                if (DestinationReached()) movementPhase = MovementPhase.ATTACK;                                        
                 break;
 
             case MovementPhase.ROTATE:
@@ -75,7 +89,16 @@ public class EnemyMovement : MonoBehaviour
                 break;
 
             case MovementPhase.ATTACK:
+                agent.stoppingDistance = attackDistance;
+
                 if(tm.TimeCount(AI.ShootCooldown)) AI.HitScanner.Active = true;
+
+                if(PlayerInAttackRange()) RotateTowards("Enemy", AI.Player.transform.position);
+
+                if (!PlayerInAttackRange())
+                {
+                    SetRunTarget(AI.Player.transform.position);                    
+                }                
                 break;
 
             case MovementPhase.NEUTRAL:
@@ -130,9 +153,17 @@ public class EnemyMovement : MonoBehaviour
     #region RUN
     public void SetRunTarget(Vector3 target)
     {
-        runTarget = target;
-        agent.speed = runSpeed;
-        agent.stoppingDistance = surveyDistance;
+        if (!alerted) alerted = true;
+        if (movementPhase != MovementPhase.ATTACK)
+        {
+            runTarget = target;
+            agent.speed = runSpeed;
+            agent.stoppingDistance = attackDistance;
+        }
+
+        if (!AI.PlayerTracker.LineOfSight.enabled) agent.stoppingDistance = surveyDistance;
+
+        
         agent.SetDestination(target); // Set the walk target as our NavMesh Agent's target, this will have the agent moving of its own accord.
         movementPhase = MovementPhase.RUN;
         if (Neutral) Neutral = false;
@@ -148,6 +179,7 @@ public class EnemyMovement : MonoBehaviour
         if (tm.TimeCount(3)) movementPhase = MovementPhase.NEUTRAL;
     }
 
+
     private bool DestinationReached() // Check if the agent has reached their destination.
     {
         // https://answers.unity.com/questions/324589/how-can-i-tell-when-a-navmesh-has-reached-its-dest.html?childToView=746157#answer-746157 Answer #2 from here used as a reference. 
@@ -162,5 +194,21 @@ public class EnemyMovement : MonoBehaviour
             else return false;
         }
         else return false;
+    }    
+
+    private bool PlayerInAttackRange()
+    {
+        if (Vector3.Distance(transform.position, AI.Player.transform.position) >= agent.stoppingDistance) return false;
+        else return true;
+    }
+
+    IEnumerator CallOffSearch()
+    {
+        yield return new WaitForSeconds(alertDuration);
+        if(alerted && !AI.PlayerTracker.LineOfSight.enabled)
+        {
+            coroutineStarted = false;
+            movementPhase = MovementPhase.NEUTRAL;            
+        }        
     }
 }
