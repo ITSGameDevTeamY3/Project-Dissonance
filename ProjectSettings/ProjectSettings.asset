@@ -583,7 +583,8 @@ PlayerSettings:
     27: UNITY_POST_PROCESSING_STACK_V2
   platformArchitecture: {}
   scriptingBackend:
-    Metro: 2
+    Metro: 1
+    Standalone: 1
   il2cppCompilerConfiguration: {}
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 1
@@ -594,11 +595,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: Template3D
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: C:\Users\RIG-PC\Documents\Coursework\Project 300\Project-Dissonance\Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: Killing Spraoi
+  metroCertificateIssuer: Killing Spraoi
+  metroCertificateNotAfter: 804b67a07df0d501
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: Project Dissonance
