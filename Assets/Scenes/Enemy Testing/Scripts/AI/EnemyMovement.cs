@@ -91,7 +91,7 @@ public class EnemyMovement : MonoBehaviour
             case MovementPhase.ATTACK:
                 agent.stoppingDistance = attackDistance;
 
-                if(tm.TimeCount(AI.ShootCooldown)) AI.HitScanner.Active = true;
+                if (tm.TimeCount(AI.ShootCooldown)) AI.Shoot();
 
                 if(PlayerInAttackRange()) RotateTowards("Enemy", AI.Player.transform.position);
 

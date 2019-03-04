@@ -100,6 +100,7 @@ public class EnemyController : MonoBehaviour
         {
             movement.enabled = false;
         }
+        else print("What the fuck?");
 
         #region Set the enemy's patrol route, if we haven't given them one, assign them a post.
         // Set the enemy's patrol route if we have given them one in the editor.
@@ -127,7 +128,7 @@ public class EnemyController : MonoBehaviour
     }
 
     void Update()
-    {
+    {      
         PhaseCheck();
         NeutralMovementCheck();
         // The enemy will always check for disturbances regardless of its current phase. (Unless it knows where the player is).
@@ -257,16 +258,20 @@ public class EnemyController : MonoBehaviour
         // Turn towards the direction of the disturbance.
         movement.SetRotationTarget(Player.transform.position);
 
-        HitScanner.Active = true;
+        Shoot();
 
         // Wait for the specified halt time before investigating.
         yield return new WaitForSeconds(HaltTime / 2);
-
-        print("The enemy will likely shoot at this point!"); // For Adrian - It'll have to wait until I have the enemy shooting the player, but definitely load up some shoot sounds into the project. :)
-        movement.SetRunTarget(Player.transform.position);
-        //SceneManager.LoadScene("MissionFailed");
+       
+        movement.SetRunTarget(Player.transform.position);        
     }    
     #endregion
+
+    public void Shoot()
+    {
+        // A shoot sound can go here Adrian. :) 
+        HitScanner.Active = true;
+    }
 
     private void PhaseCheck() // Check if current phase and previous phase are in sync. If not, update enemy behaviour.
     {
