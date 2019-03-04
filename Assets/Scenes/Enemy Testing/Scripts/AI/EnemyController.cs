@@ -1,4 +1,6 @@
 ﻿using Assets.Scripts.Managers;
+using FMOD.Studio;
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,7 +41,8 @@ public class EnemyController : MonoBehaviour
 
     // Bools.
     private bool alerted = false;
-    private bool vigil; 
+    private bool vigil;
+    private EventInstance gunShotEvnt;
 
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
@@ -52,6 +55,7 @@ public class EnemyController : MonoBehaviour
     
     // MusicManager controller
     private MusicManager _musicManager;
+    private EnemySounds enemySounds;
     //Footsteps footSteps; For Adrian - SFX variable for enemy can be added here.
     #endregion
 
@@ -158,16 +162,19 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case Phase.INVESTIGATE:
+                _musicManager.Condition = MusicManager.Conditions.Alerted;
                 StopCoroutine("Halt");                
                 movement.SetWalkTarget(disturbanceZone);
                 break;
 
             case Phase.ALERT:
+                _musicManager.Condition = MusicManager.Conditions.Spotted;
                 if (NuclearMode) SceneManager.LoadScene("MissionFailed");
                 else StartCoroutine("Alert");
                 break;
 
             case Phase.PURSUIT:
+                _musicManager.Condition = MusicManager.Conditions.Spotted;
                 StopCoroutine("Alert");
                 movement.SetRunTarget(Player.transform.position);
                 break;
@@ -270,6 +277,7 @@ public class EnemyController : MonoBehaviour
     public void Shoot()
     {
         // A shoot sound can go here Adrian. :) 
+        enemySounds.PlayRifleShots();
         HitScanner.Active = true;
     }
 

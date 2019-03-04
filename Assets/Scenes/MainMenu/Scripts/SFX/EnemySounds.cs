@@ -30,12 +30,11 @@ public class EnemySounds : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         enemyController = GetComponent<EnemyController>();
         InvokeRepeating("GetFootSteps", 0, moveSpeed);
-      
     }
     void Update()
     {
         GetFootSteps();
-        GetRifleShots();
+        PlayRifleShots();
     }
 
     void GetFootSteps()
@@ -46,7 +45,7 @@ public class EnemySounds : MonoBehaviour
         }
     }
 
-    void GetRifleShots()
+    public void PlayRifleShots()
     {
         gunShotEvnt.start();
     }
