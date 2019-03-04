@@ -8,8 +8,8 @@ using FMODUnity;
 [RequireComponent(typeof(EnemyController))]
 public class EnemySounds : MonoBehaviour
 {
-    [EventRef]   
-    public string inputSound;
+    [EventRef]
+    public string footsteps = "event:/Master/SFX_Events/FootSteps/footsteps3D";
 
     [EventRef]
     public string gunShotSound = "event:/Master/SFX_Events/Gunshot/GunshotRifle";
@@ -41,7 +41,7 @@ public class EnemySounds : MonoBehaviour
     {
         if (enemyController.enemyPhase != EnemyController.Phase.HALT && !agent.isStopped)
         {
-            FMODUnity.RuntimeManager.PlayOneShot(inputSound, transform.position);
+            FMODUnity.RuntimeManager.PlayOneShot(footsteps, transform.position);
         }
     }
 
