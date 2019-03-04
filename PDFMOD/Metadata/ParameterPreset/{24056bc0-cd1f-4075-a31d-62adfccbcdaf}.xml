@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{24056bc0-cd1f-4075-a31d-62adfccbcdaf}">
+        <property name="name">
+            <value>SnowFootStep</value>
+        </property>
+        <relationship name="folder">
+            <destination>{5b9bb7d0-0256-427d-8437-1507426ecbf2}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{bb9d4fe5-65ab-4c2d-9d96-ccdbf583705f}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{bb9d4fe5-65ab-4c2d-9d96-ccdbf583705f}">
+        <property name="initialValue">
+            <value>0</value>
+        </property>
+    </object>
+</objects>

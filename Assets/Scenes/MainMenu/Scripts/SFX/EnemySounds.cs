@@ -9,7 +9,7 @@ using FMODUnity;
 public class EnemySounds : MonoBehaviour
 {
     [EventRef]
-    public string footsteps = "event:/Master/SFX_Events/FootSteps/footsteps3D";
+    public string footsteps = "event:/Master/SFX_Events/FootSteps/SnowFootSteps";
 
     [EventRef]
     public string gunShotSound = "event:/Master/SFX_Events/Gunshot/GunshotRifle";
@@ -47,7 +47,7 @@ public class EnemySounds : MonoBehaviour
 
     public void PlayRifleShots()
     {
-        gunShotEvnt.start();
+        RuntimeManager.PlayOneShot(gunShotSound, transform.position);
     }
 
 
