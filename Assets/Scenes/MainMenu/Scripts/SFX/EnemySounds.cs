@@ -8,32 +8,34 @@ using FMODUnity;
 [RequireComponent(typeof(EnemyController))]
 public class EnemySounds : MonoBehaviour
 {
-    [EventRef]
-
+    [EventRef]   
     public string inputSound;
+
     [EventRef]
-    public string AlertTheme;
+    public string gunShotSound = "event:/Master/SFX_Events/Gunshot/GunshotRifle";
+
+    EventInstance gunShotEvnt;
+
     bool isMoving;
     public float moveSpeed;
 
     NavMeshAgent agent;
     EnemyController enemyController;
-    public bool alerted = false;
+
+ 
 
     void Start()
     {
+        gunShotEvnt = RuntimeManager.CreateInstance(gunShotSound);
         agent = GetComponent<NavMeshAgent>();
         enemyController = GetComponent<EnemyController>();
         InvokeRepeating("GetFootSteps", 0, moveSpeed);
-
-        //if (enemyController.enemyPhase == EnemyController.Phase.ALERT)
-        //{
-        //    GetAttackingTheme();
-        //}
+      
     }
     void Update()
     {
-        //GetFootSteps();
+        GetFootSteps();
+        GetRifleShots();
     }
 
     void GetFootSteps()
@@ -44,29 +46,11 @@ public class EnemySounds : MonoBehaviour
         }
     }
 
-    //void GetAttackingTheme()
-    //{
-    //   RuntimeManager.PlayOneShot(AlertTheme);
-    //}
+    void GetRifleShots()
+    {
+        gunShotEvnt.start();
+    }
 
-    //public void GetPatrolingTheme()
-    //{
-    //    if (!alerted)
-    //    {
-    //        RuntimeManager.PlayOneShot(AlertTheme);
-    //        alerted = true;
-    //    }        
-    //}
-
-    //public void StopPatrolingTheme()
-    //{
-    //    if (alerted)
-    //    {
-    //        // Destroys ALL sounds, we want it to destroy only one.
-    //      //  RuntimeManager.Destroy();
-    //      //  alerted = false;
-    //    }
-    //}
 
     void OnDisable()
     {

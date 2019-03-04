@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{5f9e85ec-b7cb-4700-9767-3c46f2e55601}">
+        <property name="assetPath">
+            <value>GunshotRifle_BW.57899.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>96</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>2.7679999999999998</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{83b02e40-5e69-430d-beb8-e8d2379b1716}</destination>
+        </relationship>
+    </object>
+</objects>
