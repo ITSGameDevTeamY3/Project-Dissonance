@@ -47,7 +47,7 @@ public class EnemyMovement : MonoBehaviour
         turningSpeed = AI.TurningSpeed;
         agent = GetComponent<NavMeshAgent>(); // Get our NavMesh Agent script and the variables we need.
         walkSpeed = agent.speed;
-        runSpeed = walkSpeed * 1.2f;
+        runSpeed = walkSpeed;
         stoppingDistance = agent.stoppingDistance;
         surveyDistance = stoppingDistance + VIEW_DISTANCE;
         attackDistance = AI.AlertDistance;
@@ -134,7 +134,7 @@ public class EnemyMovement : MonoBehaviour
         rotater.rotation = Quaternion.Slerp(
             rotater.rotation,
             lookRotation,
-            Time.deltaTime * turningSpeed);
+            turningSpeed * Time.deltaTime);
     }
     #endregion
 

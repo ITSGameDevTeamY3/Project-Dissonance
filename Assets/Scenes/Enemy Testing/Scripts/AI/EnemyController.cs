@@ -50,7 +50,8 @@ public class EnemyController : MonoBehaviour
     Camera POV;     
     float defaultStoppingDistance;
     
-
+    // MusicManager controller
+    private MusicManager _musicManager;
     //Footsteps footSteps; For Adrian - SFX variable for enemy can be added here.
     #endregion
 
@@ -77,6 +78,7 @@ public class EnemyController : MonoBehaviour
         Player = GameObject.Find("Player"); // The player is found in the scene automatically and set here.
         disturbanceCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the main camera and set it here. NOTE: This will be removed soon.
         //footSteps = GetComponent<Footsteps>();
+        _musicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
 
         // Get access to the enemy object's children.
         foreach (Transform child in transform)
@@ -141,7 +143,8 @@ public class EnemyController : MonoBehaviour
 
         switch (enemyPhase)
         {
-            case Phase.PATROL: // TO FIX: Enemy speed issue here. Movement speed above 4 causes enemy to stop. Tweak REST_DISTANCE on the Patrol script.                             
+            case Phase.PATROL: // TO FIX: Enemy speed issue here. Movement speed above 4 causes enemy to stop. Tweak REST_DISTANCE on the Patrol script.  
+                _musicManager.Condition = MusicManager.Conditions.Normal;
                 AlterFlashlightColourDebug(Color.white); 
                 patrolRoute.StartPatrol();
                 break;
@@ -227,8 +230,9 @@ public class EnemyController : MonoBehaviour
 
     #region COROUTINES
     IEnumerator Halt()
-    {
-        // For Adrian - A "Hm? What was that?" sound effect or something like that could be played here.
+    {        
+        _musicManager.Condition = MusicManager.Conditions.Spotted;
+
         AlterFlashlightColourDebug(Color.yellow);
         
         StorePatrolEnableMovement();
@@ -243,8 +247,9 @@ public class EnemyController : MonoBehaviour
     }
 
     IEnumerator Alert()
-    {
-        // For Adrian - A "Who's that?" or something similar could be played here.
+    {        
+        _musicManager.Condition = MusicManager.Conditions.Alerted;
+
         AlterFlashlightColourDebug(Color.red);
 
         StorePatrolEnableMovement();

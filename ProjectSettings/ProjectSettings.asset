@@ -595,7 +595,7 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: Template3D
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: C:\Users\RIG-PC\Documents\Coursework\Project 300\Project-Dissonance\Assets\WSATestCertificate.pfx
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Killing Spraoi
   metroCertificateIssuer: Killing Spraoi

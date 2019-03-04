@@ -37,31 +37,36 @@ public class SightJackView : MonoBehaviour
     public bool IsDebug = false;
     public bool Scale = false;
 
+    private MusicManager _musicManager;
+    private MusicManager.Conditions _previousCondition;
+
     [EventRef]
     private string _noiseEventPath = "event:/Master/SFX_Events/SightJacking/WhiteNoise";
-    private EventInstance _noiseEvent;
+    private EventInstance _noiseEvent;    
 
     private void Start()
     {
-        _enemies = new List<GameObject>();
+        _mainCamera = GameObject.FindWithTag("MainCamera");
+        _uiCamera = GameObject.FindWithTag("UICamera").GetComponent<Camera>();
+        _canvas = GameObject.FindWithTag("Canvas");
+        _musicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
 
-        try
-        {
-            _mainCamera = GameObject.FindWithTag("MainCamera");
-            _uiCamera = GameObject.FindWithTag("UICamera").GetComponent<Camera>();
-            _canvas = GameObject.FindWithTag("Canvas");
-        }
-        catch (NullReferenceException exception)
+        if (_mainCamera == null || _uiCamera == null || _canvas == null || _musicManager == null)
         {
             Debug.LogError("SIGHT-JACK ERROR: Could not find required objects.");
             GetComponentInParent<SightJackController>().Deactivate();
         }
-        
+
+        _enemies = new List<GameObject>();
+
         CreateView(GetComponent<Camera>());
 
         // Get white noise from canvas
         _noise = _canvas.transform.Find("Noise").gameObject;
         _noise.SetActive(true);
+
+        _previousCondition = _musicManager.Condition;
+        _musicManager.Condition = MusicManager.Conditions.SightJack;
 
         _noiseEvent = RuntimeManager.CreateInstance(_noiseEventPath);
         _noiseEvent.set3DAttributes(gameObject.transform.To3DAttributes());
@@ -170,6 +175,8 @@ public class SightJackView : MonoBehaviour
         _noiseEvent.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         _noiseEvent.release();
 
+        _musicManager.Condition = _previousCondition;
+
         _meshRenderer.enabled = false;
 
         transform.localScale = new Vector3(1, 1, 1);
@@ -237,10 +244,12 @@ public class SightJackView : MonoBehaviour
 
     private void ToggleCamera(GameObject camera)
     {
-        if (camera != null && camera.activeInHierarchy)
+        var cameraComponent = camera.GetComponent<Camera>();
+
+        if (camera != null && cameraComponent.enabled)
         {
             camera.GetComponent<StudioListener>().enabled = false;
-            camera.SetActive(false);
+            cameraComponent.enabled = false;
         }
         else if (!camera.activeInHierarchy && camera == null)
         {
@@ -248,8 +257,8 @@ public class SightJackView : MonoBehaviour
             GetComponentInParent<SightJackController>().Deactivate();
         }
         else
-        {            
-            camera.SetActive(true);
+        {
+            cameraComponent.enabled = true;
             camera.GetComponent<StudioListener>().enabled = true;
         }
     }
@@ -263,14 +272,14 @@ public class SightJackView : MonoBehaviour
             // Multiple enemies = _targetEnemy
             float enemyDistance = CalculateClosestPosition(_targetEnemy.transform.position);
 
-            SetNoise(0 + enemyDistance * 80, 0 + enemyDistance * 4);
+            SetNoise(0 + enemyDistance * 80, enemyDistance);
         }
         else if (_currentEnemy != null)
         {
             // Single enemy = _currentEnemy
             float enemyDistance = CalculateClosestPosition(_currentEnemy.transform.position);
 
-            SetNoise(0 + enemyDistance * 80, 0 + enemyDistance * 4);
+            SetNoise(0 + enemyDistance * 80, enemyDistance);
         }
         else
         {

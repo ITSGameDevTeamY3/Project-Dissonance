@@ -12,6 +12,8 @@ TagManager:
   - EnemyPOV
   - EnemyCamera
   - UICamera
+  - HitScanner
+  - MusicManager
   layers:
   - Default
   - TransparentFX
