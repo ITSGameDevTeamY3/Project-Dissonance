@@ -8,11 +8,13 @@ public class MainMenu : MonoBehaviour
 {
     public EventSystem EventSystem;
     public GameObject OptionsMenu;
+    
 
     public void PlayGame()
     {
         SceneManager.LoadScene("SightJackTest");
     }
+
 
     public void Options()
     {
