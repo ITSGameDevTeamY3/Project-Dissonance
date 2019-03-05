@@ -18,7 +18,7 @@ public class HitScanner : MonoBehaviour
 
     // Private properties set automatically.
     Transform trackablePlayerTransform; // This transform will be obtained from the enemy controller script.   
-    ThirdPersonCharacter player;
+    ThirdPersonCharacter player;     
     public LineRenderer HitLine;
     #endregion
 
@@ -27,7 +27,7 @@ public class HitScanner : MonoBehaviour
         if (AI != null)
         {
             trackablePlayerTransform = AI.Player.transform;
-            player = AI.Player.GetComponent<ThirdPersonCharacter>();
+            player = AI.Player.GetComponent<ThirdPersonCharacter>();            
         }
         HitLine = GetComponent<LineRenderer>();
     }

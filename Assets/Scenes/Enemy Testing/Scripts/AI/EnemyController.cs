@@ -11,21 +11,15 @@ using UnityEngine.SceneManagement;
 public class EnemyController : MonoBehaviour
 {
     // https://forum.unity.com/threads/rigidbody-keeps-sliding.32965/ Something to keep an eye on.
-
-    //3. Get enemy shooting player.
-    //4. Test out interaction between two enemies. - MISSING: Player & Patrol Points.
-    //5. Get enemy to chase player.
-    //6. Tweak enemy suspicion distance and alert distance.
-
-
-    #region Enemy Properties
+   
+    #region Enemy Properties           
     // Properties that can be altered in the Unity inspector. Some of these might be moved to other scripts for the sake of cleanliness.
     public bool NuclearMode = true;
     public bool DebugMode = false;
     public int Health;
     public float ShootCooldown, WalkSpeed, TurningSpeed, HaltTime, SuspicionDistance, AlertDistance, AlertDuration;
     public Light Flashlight;
-    // The following public properties are visible in the Inspector but they are set automatically.
+    // The following public properties are visible in the Inspector but they are set automatically. We can make these private later on when debugging is over.
     public GameObject Player;
     public GameObject POV_GO;
     public List<Transform> surveyPoints = new List<Transform>();
@@ -79,7 +73,8 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = WalkSpeed;
         defaultStoppingDistance = agent.stoppingDistance;
-        Player = GameObject.Find("Player"); // The player is found in the scene automatically and set here.
+        enemySounds = GetComponent<EnemySounds>();
+        Player = GameObject.FindGameObjectWithTag("Player"); // The player is found in the scene automatically and set here.
         disturbanceCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the main camera and set it here. NOTE: This will be removed soon.
         //footSteps = GetComponent<Footsteps>();
         _musicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
@@ -96,15 +91,14 @@ public class EnemyController : MonoBehaviour
         POV = POV_GO.GetComponent<Camera>();
         if (Player != null)
         {
-            playerRenderer = Player.GetComponent<Renderer>();
+           playerRenderer = Player.transform.Find("Protagonist/Mesh").GetComponent<Renderer>();          
         }
 
         movement = GetComponent<EnemyMovement>();
         if (movement != null)
         {
             movement.enabled = false;
-        }
-        else print("What the fuck?");
+        }       
 
         #region Set the enemy's patrol route, if we haven't given them one, assign them a post.
         // Set the enemy's patrol route if we have given them one in the editor.

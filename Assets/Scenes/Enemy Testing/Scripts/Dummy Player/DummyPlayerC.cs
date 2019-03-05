@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DummyPlayerC : MonoBehaviour {
-
-    public int Health;
+public class DummyPlayerC : MonoBehaviour {    
     public int moveSpeed;
-
-    // Use this for initialization
+   
     void Start () {
 		
 	}
-	
-	// Update is called once per frame
+		
 	void Update () {
         HandleMovement();
 	}
