@@ -7,14 +7,8 @@ using UnityEngine.UI;
 public class settingMenu : MonoBehaviour
 {
 
-    public AudioMixer audioMixer;
     public Resolution[] resolutions;
     public Dropdown resDropDown;
-
-    public void SetVolume(float volume)
-    {
-        audioMixer.SetFloat("musicVolume", volume);
-    }
 
     public void SetQulity(int qualityIndex)
     {

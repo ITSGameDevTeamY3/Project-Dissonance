@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{d8f4fea3-ae46-4ae9-b2e5-ee2b267dc594}">
+        <property name="assetPath">
+            <value>ESM_Designed_Game_Gun_Shot_47_Gun_Military_Pistol_Shot_Machine_Rifle_Organic_Mechanism_Ricochet_Impact_Hit.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>96</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>1.7420833333333334</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{83b02e40-5e69-430d-beb8-e8d2379b1716}</destination>
+        </relationship>
+    </object>
+</objects>

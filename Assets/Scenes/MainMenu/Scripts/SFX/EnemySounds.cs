@@ -9,64 +9,47 @@ using FMODUnity;
 public class EnemySounds : MonoBehaviour
 {
     [EventRef]
+    public string footsteps = "event:/Master/SFX_Events/FootSteps/SnowFootSteps";
 
-    public string inputSound;
     [EventRef]
-    public string AlertTheme;
+    public string gunShotSound = "event:/Master/SFX_Events/Gunshot/GunshotRifle";
+
+    EventInstance gunShotEvnt;
+
     bool isMoving;
     public float moveSpeed;
 
     NavMeshAgent agent;
     EnemyController enemyController;
-    public bool alerted = false;
+
+ 
 
     void Start()
     {
+        gunShotEvnt = RuntimeManager.CreateInstance(gunShotSound);
         agent = GetComponent<NavMeshAgent>();
         enemyController = GetComponent<EnemyController>();
         InvokeRepeating("GetFootSteps", 0, moveSpeed);
-
-        //if (enemyController.enemyPhase == EnemyController.Phase.ALERT)
-        //{
-        //    GetAttackingTheme();
-        //}
     }
     void Update()
     {
-        //GetFootSteps();
+        GetFootSteps();
+        PlayRifleShots();
     }
 
     void GetFootSteps()
     {
         if (enemyController.enemyPhase != EnemyController.Phase.HALT && !agent.isStopped)
         {
-            FMODUnity.RuntimeManager.PlayOneShot(inputSound, transform.position);
+            FMODUnity.RuntimeManager.PlayOneShot(footsteps, transform.position);
         }
     }
 
-    //void GetAttackingTheme()
-    //{
-    //   RuntimeManager.PlayOneShot(AlertTheme);
-    //}
+    public void PlayRifleShots()
+    {
+        RuntimeManager.PlayOneShot(gunShotSound, transform.position);
+    }
 
-    //public void GetPatrolingTheme()
-    //{
-    //    if (!alerted)
-    //    {
-    //        RuntimeManager.PlayOneShot(AlertTheme);
-    //        alerted = true;
-    //    }        
-    //}
-
-    //public void StopPatrolingTheme()
-    //{
-    //    if (alerted)
-    //    {
-    //        // Destroys ALL sounds, we want it to destroy only one.
-    //      //  RuntimeManager.Destroy();
-    //      //  alerted = false;
-    //    }
-    //}
 
     void OnDisable()
     {
