@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
@@ -29,6 +30,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		Vector3 m_CapsuleCenter;
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
+        GameObject startPoint; // Added by myself.
 
 		void Start()
 		{
@@ -40,11 +42,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			m_OrigGroundCheckDistance = m_GroundCheckDistance;
+
+            // Additional operations - You're free to move them somewhere else if need be.
+            startPoint = GameObject.FindGameObjectWithTag("Respawn");
+            if (startPoint != null) transform.position = startPoint.transform.position;
 		}
 
 		public void Move(Vector3 move, bool crouch, bool jump)
 		{
-
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
@@ -214,5 +219,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				m_Animator.applyRootMotion = false;
 			}
 		}
-	}
+
+        // Additional Methods
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.tag == "Finish") SceneManager.LoadScene("MissionComplete");
+        }
+    }
 }

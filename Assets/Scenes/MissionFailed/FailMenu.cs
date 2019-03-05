@@ -17,5 +17,5 @@ public class FailMenu : MonoBehaviour {
     {
         Debug.Log("Quit Game");
         Application.Quit();
-    }
+    }   
 }
