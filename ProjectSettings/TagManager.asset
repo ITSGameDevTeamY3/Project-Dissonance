@@ -10,10 +10,11 @@ TagManager:
   - PlayerTracker
   - Canvas
   - EnemyPOV
-  - EnemyCamera
   - UICamera
   - HitScanner
   - MusicManager
+  - Hook
+  - Hookable
   layers:
   - Default
   - TransparentFX
