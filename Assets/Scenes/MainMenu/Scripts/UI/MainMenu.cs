@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -8,13 +10,13 @@ public class MainMenu : MonoBehaviour
 {
     public EventSystem EventSystem;
     public GameObject OptionsMenu;
-    
+    public GameObject MainCamera;
 
     public void PlayGame()
     {
-        SceneManager.LoadScene("SightJackTest");
+        Destroy(MainCamera);        
+        SceneManager.LoadScene("MountainBridge", LoadSceneMode.Single);
     }
-
 
     public void Options()
     {

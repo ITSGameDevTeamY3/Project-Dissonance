@@ -22,10 +22,11 @@ public class MusicManager : MonoBehaviour
     void Update()
     {
         CheckMusicCondition();
+
         if (PauseMenuManager.PausedGame)
-        {
             _musicEvent.setPaused(true);
-        }
+        else
+            _musicEvent.setPaused(false);
     }
 
     private void CheckMusicCondition()

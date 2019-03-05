@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.CrossPlatformInput;
@@ -8,13 +9,10 @@ public class PauseMenuManager : MonoBehaviour {
 
     public static bool PausedGame = false;
     public GameObject UI;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    public GameObject PersistentObjects;
+
+	void Update ()
+    {
         if (Input.GetKeyDown(KeyCode.Escape) || CrossPlatformInputManager.GetButtonDown("CONTROLLER_RIGHT_MENU"))
         {
             if (PausedGame)
@@ -44,7 +42,8 @@ public class PauseMenuManager : MonoBehaviour {
 
     public void QuitToMenu()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("Adrian Menu");
+        Time.timeScale = 1f;       
+        Destroy(PersistentObjects);
+        SceneManager.LoadScene("MainMenu");
     }
 }

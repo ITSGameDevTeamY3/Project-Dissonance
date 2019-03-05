@@ -22,8 +22,6 @@ public class EnemySounds : MonoBehaviour
     NavMeshAgent agent;
     EnemyController enemyController;
 
- 
-
     void Start()
     {
         gunShotEvnt = RuntimeManager.CreateInstance(gunShotSound);

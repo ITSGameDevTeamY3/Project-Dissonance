@@ -1,18 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.Experimental.XR;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class InputTracking : MonoBehaviour {
-
-	// Use this for initialization
+public class InputTracking : MonoBehaviour
+{
 	void Start ()
 	{
-	    UnityEngine.XR.InputTracking.disablePositionalTracking = false;
+	    UnityEngine.XR.InputTracking.disablePositionalTracking = true;
 	}
 	
-	// Update is called once per frame
 	void Update ()
 	{
 	    if (Input.GetKeyDown(KeyCode.Tab) || CrossPlatformInputManager.GetButtonDown("CONTROLLER_LEFT_STICK_CLICK"))
