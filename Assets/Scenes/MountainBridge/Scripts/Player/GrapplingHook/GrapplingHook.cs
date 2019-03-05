@@ -70,7 +70,8 @@ public class GrapplingHook : MonoBehaviour
         {
             Hook.transform.parent = HookedObj.transform;
 
-            transform.position = Vector3.MoveTowards(transform.position, Hook.transform.position, Time.deltaTime * PlayerTravelSpeed);
+            transform.position = Vector3.MoveTowards(transform.position, Hook.transform.position,
+                Time.deltaTime * PlayerTravelSpeed);
             float distanceToHook = Vector3.Distance(transform.position, Hook.transform.position);
 
             this.GetComponent<Rigidbody>().useGravity = false;
@@ -78,11 +79,17 @@ public class GrapplingHook : MonoBehaviour
             if (distanceToHook < 1)
             {
                 if (!_isGrounded)
-                {                    
+                {
                     this.GetComponent<Rigidbody>().AddForce(0, SpringForce, 0, ForceMode.Impulse); // Spring
                 }
 
                 StartCoroutine("Climb");
+            }
+
+            if (Input.GetMouseButtonDown(1) ||
+                CrossPlatformInputManager.GetButtonDown("XBOX_RIGHT_BUMPER") && IsFired)
+            {
+                ReturnHook();
             }
         }
         else

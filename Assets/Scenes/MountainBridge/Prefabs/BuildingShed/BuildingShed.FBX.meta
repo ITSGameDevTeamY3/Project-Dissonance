@@ -12,8 +12,19 @@ labels:
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
     4300000: BuildingShed
-  externalObjects: {}
+    6400000: //RootNode
+    11100000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BuildingShed
+    second: {fileID: 2100000, guid: 0d9f6768dd13b4e44bdf59a9f2cb570e, type: 2}
   materials:
     importMaterials: 1
     materialName: 3
