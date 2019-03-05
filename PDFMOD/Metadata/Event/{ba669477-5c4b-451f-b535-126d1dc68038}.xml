@@ -434,6 +434,7 @@
         </property>
         <relationship name="automationCurves">
             <destination>{aa459562-2863-43de-b28f-17f4e1bd4d89}</destination>
+            <destination>{916c0317-c05e-4b35-a21c-0a4fdce1ef2f}</destination>
         </relationship>
     </object>
     <object class="MixerBusEffectChain" id="{6763b7ee-7073-47e2-bcdd-b27fbcc57809}">
@@ -508,6 +509,15 @@
         <relationship name="automationPoints">
             <destination>{133791ff-d43c-4fd5-88c2-6b00c5570ccf}</destination>
             <destination>{b0157349-2357-4fc0-9144-41be6c822b9c}</destination>
+        </relationship>
+    </object>
+    <object class="AutomationCurve" id="{916c0317-c05e-4b35-a21c-0a4fdce1ef2f}">
+        <relationship name="parameter">
+            <destination>{cc721c52-c4f0-4eaf-a1ac-5b5ec80f3647}</destination>
+        </relationship>
+        <relationship name="automationPoints">
+            <destination>{c81d8b78-5efd-48d4-87e7-56148440a937}</destination>
+            <destination>{38dad820-ee64-4f8f-beb5-fea46e111b5a}</destination>
         </relationship>
     </object>
     <object class="MixerBusFader" id="{d3244e65-170a-41e3-9773-5c1d5a4d78fb}"/>
@@ -619,6 +629,22 @@
     <object class="AutomationPoint" id="{b0157349-2357-4fc0-9144-41be6c822b9c}">
         <property name="position">
             <value>0.95080016065080675</value>
+        </property>
+        <property name="value">
+            <value>-80</value>
+        </property>
+    </object>
+    <object class="AutomationPoint" id="{c81d8b78-5efd-48d4-87e7-56148440a937}">
+        <property name="position">
+            <value>0.90155865463494678</value>
+        </property>
+        <property name="value">
+            <value>-3.20000458</value>
+        </property>
+    </object>
+    <object class="AutomationPoint" id="{38dad820-ee64-4f8f-beb5-fea46e111b5a}">
+        <property name="position">
+            <value>0.90157948796828014</value>
         </property>
         <property name="value">
             <value>-80</value>
