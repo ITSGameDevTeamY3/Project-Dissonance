@@ -11,32 +11,22 @@ using UnityEngine.SceneManagement;
 public class EnemyController : MonoBehaviour
 {
     // https://forum.unity.com/threads/rigidbody-keeps-sliding.32965/ Something to keep an eye on.
-   
+
     #region Enemy Properties           
     // Properties that can be altered in the Unity inspector. Some of these might be moved to other scripts for the sake of cleanliness.
     public bool NuclearMode = true;
     public bool DebugMode = false;
     public int Health;
-    public float ShootCooldown, WalkSpeed, TurningSpeed, HaltTime, SuspicionDistance, AlertDistance, AlertDuration;
+    public float ShootCooldown, WalkSpeed, TurningSpeed, HaltTime, SurveyTime, SuspicionDistance, AlertDistance, AlertDuration;
     public Light Flashlight;
-    // The following public properties are visible in the Inspector but they are set automatically. We can make these private later on when debugging is over.
+    // The following public properties are visible in the Inspector but they are set automatically. We can make these private later on when debugging is over. (And add them to the ones directly below.)
     public GameObject Player;
     public GameObject POV_GO;
     public List<Transform> surveyPoints = new List<Transform>();
     public PlayerTracker PlayerTracker;
     public HitScanner HitScanner;
     public Renderer playerRenderer;
-    public bool PlayerInSights = false;
-
-    // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing is over.
-    public Camera disturbanceCam;
-    public RaycastHit hit; // This variable will keep track of the object that you clicked.
-    private Vector3 originalDestination; // This variable stores where the agent was originally headed.   
-
-    // Bools.
-    private bool alerted = false;
-    private bool vigil;
-    private EventInstance gunShotEvnt;
+    public bool Alerted = false;
 
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
@@ -44,13 +34,21 @@ public class EnemyController : MonoBehaviour
     Vector3 post, disturbanceZone;
     EnemyMovement movement;
     TimeManager tm = new TimeManager();
-    Camera POV;     
+    Camera POV;
     float defaultStoppingDistance;
-    
+
+    // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing is over.
+    public Camera disturbanceCam;
+    public RaycastHit hit; // This variable will keep track of the object that you clicked.
+    private Vector3 originalDestination; // This variable stores where the agent was originally headed.   
+
+    // Bools.    
+    private bool vigil;
+    private EventInstance gunShotEvnt;
+
     // MusicManager controller
     private MusicManager _musicManager;
     private EnemySounds enemySounds;
-    //Footsteps footSteps; For Adrian - SFX variable for enemy can be added here.
     #endregion
 
     #region Phases
@@ -64,7 +62,6 @@ public class EnemyController : MonoBehaviour
         PURSUIT,
         DECEASED
     }
-    //[SerializeField]
     public Phase enemyPhase, previousPhase;
     #endregion
 
@@ -75,8 +72,7 @@ public class EnemyController : MonoBehaviour
         defaultStoppingDistance = agent.stoppingDistance;
         enemySounds = GetComponent<EnemySounds>();
         Player = GameObject.FindGameObjectWithTag("Player"); // The player is found in the scene automatically and set here.
-        disturbanceCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the main camera and set it here. NOTE: This will be removed soon.
-        //footSteps = GetComponent<Footsteps>();
+        disturbanceCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the main camera and set it here. NOTE: This will be removed soon.        
         _musicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
 
         // Get access to the enemy object's children.
@@ -91,21 +87,17 @@ public class EnemyController : MonoBehaviour
         POV = POV_GO.GetComponent<Camera>();
         if (Player != null)
         {
-           playerRenderer = Player.transform.Find("Protagonist/Mesh").GetComponent<Renderer>();          
+            playerRenderer = Player.transform.Find("Protagonist/Mesh").GetComponent<Renderer>();
         }
 
         movement = GetComponent<EnemyMovement>();
         if (movement != null)
         {
             movement.enabled = false;
-        }       
+        }
 
-        #region Set the enemy's patrol route, if we haven't given them one, assign them a post.
-        // Set the enemy's patrol route if we have given them one in the editor.
-
-        // The following commented if statement is an alternate choice to checking if the component is there. The uncommented one is what we'll use.
-        // if (GetComponent<Patrol>().enabled != false)
-        if (GetComponent<Patrol>() != null)
+        #region Set the enemy's patrol route, if we haven't given them one, assign them a post.           
+        if (GetComponent<Patrol>() != null) // Set the enemy's patrol route if we have given them one in the editor.    
         {
             patrolRoute = GetComponent<Patrol>();
             // NOTE: We can only set enemy phase directly (Like the line below.) in this Start method. Everywhere else, we should use the SetPhase(newPhase) method.
@@ -126,14 +118,15 @@ public class EnemyController : MonoBehaviour
     }
 
     void Update()
-    {      
+    {
         PhaseCheck();
         NeutralMovementCheck();
         // The enemy will always check for disturbances regardless of its current phase. (Unless it knows where the player is).
         if (enemyPhase != Phase.ALERT || enemyPhase == Phase.ALERT && !PlayerTracker.PlayerWithinView) CheckForDisturbances();
         // The enemy will of course constantly look for the player regardless of its phase.
         CheckForIntruder();
-        if(movement.enabled) PursueGlimpsedPlayer();        
+        if (movement.enabled) PursueGlimpsedPlayer();
+        HandleAlertCooldown();
     }
 
     void UpdateBehaviour()
@@ -144,7 +137,7 @@ public class EnemyController : MonoBehaviour
         {
             case Phase.PATROL: // TO FIX: Enemy speed issue here. Movement speed above 4 causes enemy to stop. Tweak REST_DISTANCE on the Patrol script.  
                 _musicManager.Condition = MusicManager.Conditions.Normal;
-                AlterFlashlightColourDebug(Color.white); 
+                AlterFlashlightColourDebug(Color.white);
                 patrolRoute.StartPatrol();
                 break;
 
@@ -155,35 +148,26 @@ public class EnemyController : MonoBehaviour
                 StartCoroutine("Halt");
                 break;
 
-            case Phase.INVESTIGATE:
-                _musicManager.Condition = MusicManager.Conditions.Alerted;
-                StopCoroutine("Halt");                
+            case Phase.INVESTIGATE:               
+                StopCoroutine("Halt");
                 movement.SetWalkTarget(disturbanceZone);
                 break;
 
-            case Phase.ALERT:
-                _musicManager.Condition = MusicManager.Conditions.Spotted;
+            case Phase.ALERT:                
                 if (NuclearMode) SceneManager.LoadScene("MissionFailed");
                 else StartCoroutine("Alert");
-                break;
-
-            case Phase.PURSUIT:
-                _musicManager.Condition = MusicManager.Conditions.Spotted;
-                StopCoroutine("Alert");
-                movement.SetRunTarget(Player.transform.position);
-                break;
-
+                break;            
             case Phase.DECEASED:
                 // For Adrian - I still have to implement the enemy's death, but a "death" sound would be used somewhere here.
 
                 Flashlight.enabled = false; // For Adrian - Whenever the enemy's flashlight is switched on or off, we could play a little "click" sound.
                 break;
         }
-    }   
+    }
 
     private void CheckForDisturbances()
-    {             
-        if (Input.GetMouseButtonDown(0) && disturbanceCam != null) // If a disturbance was heard...
+    {
+        if (Input.GetMouseButtonDown(0) && disturbanceCam != null && DebugMode) // If a disturbance was heard...
         {
             // Send out a ray to the position where you clicked.
             Ray ray = disturbanceCam.ScreenPointToRay(Input.mousePosition);
@@ -199,7 +183,7 @@ public class EnemyController : MonoBehaviour
         else if (PlayerTracker.PlayerGlimpsed && enemyPhase != Phase.INVESTIGATE) // If a disturbance was seen...
         {
             disturbanceZone = PlayerTracker.PlayerGlimpsedPosition;
-            SetPhase(Phase.HALT); 
+            SetPhase(Phase.HALT);
         }
     }
 
@@ -230,13 +214,34 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void HandleAlertCooldown() // Gotta keep an eye on this one too.
+    {
+        if (Alerted)
+        {
+            if (!PlayerTracker.LineOfSight.enabled)
+            {
+                if (tm.AlertTimeCount(AlertDuration))
+                {
+                    movement.movementPhase = EnemyMovement.MovementPhase.NEUTRAL;
+                    StopCoroutine("PursueTarget");
+                }
+            }
+            else tm.ResetAlertClock(); // Reset the clock!
+        }
+    }
+
+    private void CallForBackup()
+    {
+
+    }
+
     #region COROUTINES
     IEnumerator Halt()
-    {        
-        _musicManager.Condition = MusicManager.Conditions.Spotted;
+    {
+        _musicManager.Condition = MusicManager.Conditions.Suspicious;
 
         AlterFlashlightColourDebug(Color.yellow);
-        
+
         StorePatrolEnableMovement();
 
         // Turn towards the direction of the disturbance.        
@@ -244,13 +249,14 @@ public class EnemyController : MonoBehaviour
 
         // Wait for the specified halt time before investigating.       
         yield return new WaitForSeconds(HaltTime);
-       
+
         SetPhase(Phase.INVESTIGATE);
     }
 
     IEnumerator Alert()
-    {        
-        _musicManager.Condition = MusicManager.Conditions.Alerted;
+    {
+        _musicManager.Condition = MusicManager.Conditions.Alerted; // Play the alert track.
+        Alerted = true;
 
         AlterFlashlightColourDebug(Color.red);
 
@@ -263,15 +269,34 @@ public class EnemyController : MonoBehaviour
 
         // Wait for the specified halt time before investigating.
         yield return new WaitForSeconds(HaltTime / 2);
-       
-        movement.SetRunTarget(Player.transform.position);        
-    }    
+
+        movement.SetRunTarget(Player.transform.position);
+        StartCoroutine("PursueTarget", Player.transform);
+    }
+
+    IEnumerator PursueTarget(Transform target) 
+    {
+        // https://answers.unity.com/questions/1032018/how-to-follow-moving-destibation-with-navmeshagent.html The following coroutine was found at this link,
+        // It enables the NavMeshAgent to chase a moving target.
+        Vector3 previousTargetPosition = new Vector3(float.PositiveInfinity, float.PositiveInfinity);
+        while (Vector3.SqrMagnitude(transform.position - target.position) > 0.1f)
+        {
+            // did target move more than at least a minimum amount since last destination set?
+            if (Vector3.SqrMagnitude(previousTargetPosition - target.position) > 0.1f)
+            {
+                agent.SetDestination(target.position);
+                previousTargetPosition = target.position;
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+        yield return null;
+    }
+
     #endregion
 
     public void Shoot()
     {
-        // A shoot sound can go here Adrian. :) 
-        enemySounds.PlayRifleShots();
+        enemySounds.PlayRifleShots(); // Doesn't seem to work yet.
         HitScanner.Active = true;
     }
 
@@ -313,7 +338,7 @@ public class EnemyController : MonoBehaviour
             movement.enabled = false;
             agent.destination = originalDestination;
             agent.stoppingDistance = defaultStoppingDistance; // Reset stopping distance.
-            if (PlayerTracker.PlayerFound) PlayerTracker.PlayerFound = false;
+            if (PlayerTracker.PlayerFound) PlayerTracker.PlayerFound = false; // I''ll keep an eye on this line.
             if (!vigil) SetPhase(Phase.PATROL); // Set the enemy back to their PATROL/VIGIL phase.
             else SetPhase(Phase.VIGIL);
         }

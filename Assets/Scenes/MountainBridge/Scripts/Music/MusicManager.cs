@@ -6,7 +6,7 @@ using FMODUnity;
 
 public class MusicManager : MonoBehaviour
 {
-    public enum Conditions { Normal, Alerted, Spotted, SightJack }
+    public enum Conditions { Normal, Suspicious, Alerted, SightJack }
     public Conditions Condition = Conditions.Normal;
 
     [EventRef]
@@ -38,12 +38,12 @@ public class MusicManager : MonoBehaviour
                 _musicEvent.setParameterValue("SpottedDrumLoop", 0);
                 _musicEvent.setParameterValue("MusicWhenSightJacking", 0);
                 break;
-            case Conditions.Alerted:
+            case Conditions.Suspicious:
                 _musicEvent.setParameterValue("DrumsAlert", 1);
                 _musicEvent.setParameterValue("SpottedDrumLoop", 0);
                 _musicEvent.setParameterValue("MusicWhenSightJacking", 0);
                 break;
-            case Conditions.Spotted:
+            case Conditions.Alerted:
                 _musicEvent.setParameterValue("DrumsAlert", 0);
                 _musicEvent.setParameterValue("SpottedDrumLoop", 1);
                 _musicEvent.setParameterValue("MusicWhenSightJacking", 0);

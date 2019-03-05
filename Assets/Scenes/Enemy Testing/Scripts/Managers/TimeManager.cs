@@ -11,6 +11,7 @@ namespace Assets.Scripts.Managers
     {        
         // Private field for time count, it should always start at 0, since we use it to count up in seconds.
         private float timeCount = 0;
+        private float alertTimeCount = 0;
 
         // A simple boolean method that returns true when the desired number of seconds has passed. 
         public bool TimeCount(float seconds)
@@ -24,6 +25,24 @@ namespace Assets.Scripts.Managers
             }
 
             else return false;
+        }
+
+        public bool AlertTimeCount(float seconds)
+        {
+            alertTimeCount += Time.deltaTime;
+
+            if (alertTimeCount >= seconds)
+            {
+                alertTimeCount = 0;
+                return true;
+            }
+
+            else return false;
+        }
+
+        public void ResetAlertClock()
+        {
+            alertTimeCount = 0;
         }
     }
 }

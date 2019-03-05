@@ -4603,7 +4603,7 @@ NavMeshAgent:
   m_AngularSpeed: 120
   m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 1
@@ -4659,9 +4659,10 @@ MonoBehaviour:
   WalkSpeed: 5
   TurningSpeed: 2
   HaltTime: 3
+  SurveyTime: 3
   SuspicionDistance: 12
   AlertDistance: 6
-  AlertDuration: 20
+  AlertDuration: 10
   Flashlight: {fileID: 1417749704}
   Player: {fileID: 1311956955}
   POV_GO: {fileID: 0}
@@ -4669,7 +4670,7 @@ MonoBehaviour:
   PlayerTracker: {fileID: 0}
   HitScanner: {fileID: 0}
   playerRenderer: {fileID: 0}
-  PlayerInSights: 0
+  Alerted: 0
   disturbanceCam: {fileID: 0}
   enemyPhase: 0
   previousPhase: 0

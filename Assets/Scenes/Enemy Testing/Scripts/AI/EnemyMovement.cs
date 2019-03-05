@@ -13,7 +13,7 @@ public class EnemyMovement : MonoBehaviour
     public bool Neutral; // Whether or not the enemy's movement is neutral (i.e. not moving outside of their assigned patrol/post).
 
     // These 4 properties are obtained from the enemy controller script. They are set in the Inspector window.
-    private float walkSpeed, runSpeed, turningSpeed, stoppingDistance, surveyDistance, attackDistance, alertDuration;
+    private float walkSpeed, runSpeed, turningSpeed, surveyTime, stoppingDistance, surveyDistance, attackDistance, alertDuration;
     const float VIEW_DISTANCE = 1; 
 
     private EnemyController AI;
@@ -21,8 +21,7 @@ public class EnemyMovement : MonoBehaviour
     private Transform rotater;
     private GameObject POV_GO;
     private List<Transform> surveyPoints;
-    private Vector3 walkTarget, runTarget, rotateTarget;
-    private bool alerted, coroutineStarted;
+    private Vector3 walkTarget, runTarget, rotateTarget;    
 
     public enum MovementPhase
     {
@@ -45,14 +44,13 @@ public class EnemyMovement : MonoBehaviour
         POV_GO = AI.POV_GO;        
         surveyPoints = AI.surveyPoints;
         turningSpeed = AI.TurningSpeed;
+        surveyTime = AI.SurveyTime;
         agent = GetComponent<NavMeshAgent>(); // Get our NavMesh Agent script and the variables we need.
         walkSpeed = agent.speed;
-        runSpeed = walkSpeed;
+        runSpeed = walkSpeed * 1.5f;
         stoppingDistance = agent.stoppingDistance;
         surveyDistance = stoppingDistance + VIEW_DISTANCE;
-        attackDistance = AI.AlertDistance;
-        alertDuration = AI.AlertDuration;
-        alerted = false;
+        attackDistance = AI.AlertDistance;       
         #endregion
 
         movementPhase = MovementPhase.NEUTRAL; // Enemies will initially have no independent movement outside their patrol/post.       
@@ -60,15 +58,15 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        if (alerted && !AI.PlayerTracker.LineOfSight.enabled && !coroutineStarted)
-        {
-            StartCoroutine("CallOffSearch");
-        }
+        //if (alerted && !AI.PlayerTracker.LineOfSight.enabled && !coroutineStarted)
+        //{
+        //    StartCoroutine("CallOffSearch");
+        //}
 
-        else if (alerted && coroutineStarted)
-        {
-            StopCoroutine("CallOffSearch");
-        }
+        //else if (alerted && coroutineStarted)
+        //{
+        //    StopCoroutine("CallOffSearch");
+        //}
 
         switch (movementPhase)
         {
@@ -90,7 +88,6 @@ public class EnemyMovement : MonoBehaviour
 
             case MovementPhase.ATTACK:
                 agent.stoppingDistance = attackDistance;
-
                 if (tm.TimeCount(AI.ShootCooldown)) AI.Shoot();
 
                 if(PlayerInAttackRange()) RotateTowards("Enemy", AI.Player.transform.position);
@@ -103,6 +100,7 @@ public class EnemyMovement : MonoBehaviour
 
             case MovementPhase.NEUTRAL:
                 if (!Neutral) Neutral = true;
+                if (AI.Alerted) AI.Alerted = false;
                 break;
         }
     }
@@ -122,8 +120,7 @@ public class EnemyMovement : MonoBehaviour
 
         // Get the difference in position between the agent and the disturbance.
         Vector3 direction =
-            (target - rotater.position).normalized;
-        // Target.position or target.point? Interesting...
+            (target - rotater.position).normalized;        
 
         // Get the rotation the agent needs to have in order to be facing the disturbance.
         Quaternion lookRotation = Quaternion.LookRotation(
@@ -153,7 +150,7 @@ public class EnemyMovement : MonoBehaviour
     #region RUN
     public void SetRunTarget(Vector3 target)
     {
-        if (!alerted) alerted = true;
+        //if (!alerted) alerted = true;
         if (movementPhase != MovementPhase.ATTACK)
         {
             runTarget = target;
@@ -164,7 +161,7 @@ public class EnemyMovement : MonoBehaviour
         if (!AI.PlayerTracker.LineOfSight.enabled) agent.stoppingDistance = surveyDistance;
 
         
-        agent.SetDestination(target); // Set the walk target as our NavMesh Agent's target, this will have the agent moving of its own accord.
+        //agent.SetDestination(target); // Set the walk target as our NavMesh Agent's target, this will have the agent moving of its own accord.
         movementPhase = MovementPhase.RUN;
         if (Neutral) Neutral = false;
     }
@@ -178,7 +175,6 @@ public class EnemyMovement : MonoBehaviour
         // If the enemy sees nothing of interest in the disturbance zone, his movement will return to neutral after 3 seconds.
         if (tm.TimeCount(3)) movementPhase = MovementPhase.NEUTRAL;
     }
-
 
     private bool DestinationReached() // Check if the agent has reached their destination.
     {
@@ -202,13 +198,13 @@ public class EnemyMovement : MonoBehaviour
         else return true;
     }
 
-    IEnumerator CallOffSearch()
-    {
-        yield return new WaitForSeconds(alertDuration);
-        if(alerted && !AI.PlayerTracker.LineOfSight.enabled)
-        {
-            coroutineStarted = false;
-            movementPhase = MovementPhase.NEUTRAL;            
-        }        
-    }
+    //IEnumerator CallOffSearch()
+    //{
+    //    yield return new WaitForSeconds(alertDuration);
+    //    if(alerted && !AI.PlayerTracker.LineOfSight.enabled)
+    //    {
+    //        coroutineStarted = false;
+    //        movementPhase = MovementPhase.NEUTRAL;            
+    //    }        
+    //}
 }
