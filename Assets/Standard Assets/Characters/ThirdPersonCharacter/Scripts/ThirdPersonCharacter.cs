@@ -15,7 +15,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		[SerializeField] float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
 		[SerializeField] float m_MoveSpeedMultiplier = 1f;
 		[SerializeField] float m_AnimSpeedMultiplier = 1f;
-		[SerializeField] float m_GroundCheckDistance = 0.1f;
+		[SerializeField] float m_GroundCheckDistance = 1f;
         public float Health = 5;
 
 		Rigidbody m_Rigidbody;
@@ -163,7 +163,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             Vector3 extraGravityForce = (Physics.gravity * m_GravityMultiplier) - Physics.gravity;
 			m_Rigidbody.AddForce(extraGravityForce);
           
-            m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.01f;
+            m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 1f;
 		}
 
 		void HandleGroundedMovement(bool crouch, bool jump)
@@ -175,7 +175,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
 				m_IsGrounded = false;
 
-				m_GroundCheckDistance = 0.1f;
+				m_GroundCheckDistance = 1f;
 			}
 		}
 
