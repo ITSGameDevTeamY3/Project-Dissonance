@@ -24,12 +24,12 @@ public class EnemyController : MonoBehaviour
     public PlayerTracker PlayerTracker;
     public bool Alerted = false;
     // The following public properties were visible in the Inspector but they are set automatically. Make these public if any of them give trouble and you need to debug.
-    Light Flashlight;    
-    GameObject POV_GO;
-    SphereCollider BackupCallZone;
-    List<Transform> surveyPoints = new List<Transform>();   
-    HitScanner HitScanner;
-    Renderer playerRenderer;   
+    public Light Flashlight;
+    public GameObject POV_GO;
+    public SphereCollider BackupCallZone;
+    List<Transform> surveyPoints = new List<Transform>();
+    public HitScanner HitScanner;
+    public Renderer playerRenderer;   
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
     Patrol patrolRoute;
