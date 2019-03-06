@@ -14,20 +14,22 @@ public class EnemyController : MonoBehaviour
 
     #region Enemy Properties           
     // Properties that can be altered in the Unity inspector. Some of these might be moved to other scripts for the sake of cleanliness.
-    public bool NuclearMode = true;
+    public bool NuclearMode;
     public bool DebugMode = false;
     public int Health;
-    public float ShootCooldown, WalkSpeed, TurningSpeed, HaltTime, SurveyTime, SuspicionDistance, AlertDistance, AlertDuration;
-    public Light Flashlight;
-    // The following public properties are visible in the Inspector but they are set automatically. We can make these private later on when debugging is over. (And add them to the ones directly below.)
     public GameObject Player;
-    public GameObject POV_GO;
-    public List<Transform> surveyPoints = new List<Transform>();
+    public float ShootCooldown, WalkSpeed, RunMultiplier, TurningSpeed, HaltTime, SurveyTime, SuspicionDistance, AlertDistance, AlertDuration;
+    // GravMultiplier, PlayerTracker and Alerted are public but they are set automatically.
+    public float GravMultiplier = 0.2f;
     public PlayerTracker PlayerTracker;
-    public HitScanner HitScanner;
-    public Renderer playerRenderer;
     public bool Alerted = false;
-
+    // The following public properties were visible in the Inspector but they are set automatically. Make these public if any of them give trouble and you need to debug.
+    Light Flashlight;    
+    GameObject POV_GO;
+    SphereCollider BackupCallZone;
+    List<Transform> surveyPoints = new List<Transform>();   
+    HitScanner HitScanner;
+    Renderer playerRenderer;   
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
     Patrol patrolRoute;
@@ -67,6 +69,11 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        #region Use the GravMultiplier to adjust enemy speeds accordingly.
+        WalkSpeed = WalkSpeed * GravMultiplier;
+        TurningSpeed = TurningSpeed * GravMultiplier;
+        #endregion
+
         agent = GetComponent<NavMeshAgent>();
         agent.speed = WalkSpeed;
         defaultStoppingDistance = agent.stoppingDistance;
@@ -79,6 +86,7 @@ public class EnemyController : MonoBehaviour
         foreach (Transform child in transform)
         {
             if (child.tag == "EnemyPOV" && POV_GO == null) POV_GO = child.gameObject; // Get access to the enemy's POV.
+            if (child.tag == "BackupCall" && BackupCallZone == null) BackupCallZone = child.gameObject.GetComponent<SphereCollider>();
             if (child.tag == "SurveyPoint") surveyPoints.Add(child); // Get the enemy's survey points.
             if (child.tag == "PlayerTracker" && PlayerTracker == null) PlayerTracker = child.GetComponent<PlayerTracker>(); // Get the enemy's player tracker script.
             if (child.tag == "HitScanner") HitScanner = child.GetComponent<HitScanner>();
@@ -95,6 +103,11 @@ public class EnemyController : MonoBehaviour
         {
             movement.enabled = false;
         }
+
+        // Get Enemy Flashlight.
+        Flashlight = transform.Find("PAC-AUG/Flashlight Attachment").GetComponent<Light>();
+
+        BackupCallZone.enabled = false; // Disable the backup call zone since it should only be active when the enemy is alerted.
 
         #region Set the enemy's patrol route, if we haven't given them one, assign them a post.           
         if (GetComponent<Patrol>() != null) // Set the enemy's patrol route if we have given them one in the editor.    
@@ -119,6 +132,10 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        // These two should be in sync with the enemy movement speeds.
+        Debug.Log("Controller Walk speed:" + WalkSpeed);
+        Debug.Log("Controller run speed:" + WalkSpeed * RunMultiplier);
+
         PhaseCheck();
         NeutralMovementCheck();
         // The enemy will always check for disturbances regardless of its current phase. (Unless it knows where the player is).
@@ -222,19 +239,13 @@ public class EnemyController : MonoBehaviour
             {
                 if (tm.AlertTimeCount(AlertDuration))
                 {
-                    movement.movementPhase = EnemyMovement.MovementPhase.NEUTRAL;
-                    StopCoroutine("PursueTarget");
+                    CallOffSearch();
                 }
             }
             else tm.ResetAlertClock(); // Reset the clock!
         }
     }
-
-    private void CallForBackup()
-    {
-
-    }
-
+   
     #region COROUTINES
     IEnumerator Halt()
     {
@@ -257,6 +268,7 @@ public class EnemyController : MonoBehaviour
     {
         _musicManager.Condition = MusicManager.Conditions.Alerted; // Play the alert track.
         Alerted = true;
+        EnableBackupCall(true);
 
         AlterFlashlightColourDebug(Color.red);
 
@@ -291,13 +303,41 @@ public class EnemyController : MonoBehaviour
         }
         yield return null;
     }
-
     #endregion
 
     public void Shoot()
     {
         enemySounds.PlayRifleShots(); // Doesn't seem to work yet.
         HitScanner.Active = true;
+    }
+
+    public void EnableBackupCall(bool option)
+    {
+        if (option == true) BackupCallZone.enabled = true;
+        else BackupCallZone.enabled = false;
+    }
+
+    public void CallOffSearch()
+    {
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            var enemy = go.GetComponent<EnemyController>();
+            enemy.EndSearch();
+        }
+    }
+
+    public void EndSearch()
+    {
+        movement.movementPhase = EnemyMovement.MovementPhase.NEUTRAL;
+        StopCoroutine("PursueTarget");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "BackupCall")
+        {
+            SetPhase(Phase.ALERT);            
+        }
     }
 
     private void PhaseCheck() // Check if current phase and previous phase are in sync. If not, update enemy behaviour.

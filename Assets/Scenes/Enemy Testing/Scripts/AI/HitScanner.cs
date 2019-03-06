@@ -24,6 +24,8 @@ public class HitScanner : MonoBehaviour
 
     void Start()
     {
+        AI = transform.parent.GetComponent<EnemyController>();
+
         if (AI != null)
         {
             trackablePlayerTransform = AI.Player.transform;
