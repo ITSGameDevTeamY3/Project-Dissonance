@@ -15,6 +15,7 @@ TagManager:
   - MusicManager
   - Hook
   - Hookable
+  - BackupCall
   layers:
   - Default
   - TransparentFX

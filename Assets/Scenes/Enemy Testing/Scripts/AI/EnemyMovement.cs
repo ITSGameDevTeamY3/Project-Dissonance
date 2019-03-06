@@ -10,17 +10,18 @@ using UnityEngine.AI;
 public class EnemyMovement : MonoBehaviour
 {
     #region Movement Properties
-    public bool Neutral; // Whether or not the enemy's movement is neutral (i.e. not moving outside of their assigned patrol/post).
+    public bool Neutral; // Whether or not the enemy's movement is neutral (i.e. not moving outside of their assigned patrol/post).    
 
     // These 4 properties are obtained from the enemy controller script. They are set in the Inspector window.
     private float walkSpeed, runSpeed, turningSpeed, surveyTime, stoppingDistance, surveyDistance, attackDistance, alertDuration;
-    const float VIEW_DISTANCE = 1; 
+    const float VIEW_DISTANCE = 3; 
 
     private EnemyController AI;
     private NavMeshAgent agent;
     private Transform rotater;
-    private GameObject POV_GO;
-    private List<Transform> surveyPoints;
+    // I'm gonna leave POV_GO and survey points 'til after the Games Fleadh.
+    //private GameObject POV_GO;
+    //private List<Transform> surveyPoints;
     private Vector3 walkTarget, runTarget, rotateTarget;    
 
     public enum MovementPhase
@@ -41,13 +42,13 @@ public class EnemyMovement : MonoBehaviour
     {
         #region Obtain variables from the scripts we require.
         AI = GetComponent<EnemyController>(); // Get our EC script and the variables we need.
-        POV_GO = AI.POV_GO;        
-        surveyPoints = AI.surveyPoints;
+        //POV_GO = AI.POV_GO;        
+        //surveyPoints = AI.surveyPoints;
+        walkSpeed = AI.WalkSpeed * AI.GravMultiplier;
+        runSpeed = walkSpeed * AI.RunMultiplier;
         turningSpeed = AI.TurningSpeed;
         surveyTime = AI.SurveyTime;
-        agent = GetComponent<NavMeshAgent>(); // Get our NavMesh Agent script and the variables we need.
-        walkSpeed = agent.speed;
-        runSpeed = walkSpeed * 1.5f;
+        agent = GetComponent<NavMeshAgent>(); // Get our NavMesh Agent script and the variables we need.       
         stoppingDistance = agent.stoppingDistance;
         surveyDistance = stoppingDistance + VIEW_DISTANCE;
         attackDistance = AI.AlertDistance;       
@@ -58,16 +59,8 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        //if (alerted && !AI.PlayerTracker.LineOfSight.enabled && !coroutineStarted)
-        //{
-        //    StartCoroutine("CallOffSearch");
-        //}
-
-        //else if (alerted && coroutineStarted)
-        //{
-        //    StopCoroutine("CallOffSearch");
-        //}
-
+        Debug.Log("Movement walk speed:" + walkSpeed);
+        Debug.Log("Movement run speed:" + runSpeed);
         switch (movementPhase)
         {
             case MovementPhase.WALK:
@@ -100,7 +93,11 @@ public class EnemyMovement : MonoBehaviour
 
             case MovementPhase.NEUTRAL:
                 if (!Neutral) Neutral = true;
-                if (AI.Alerted) AI.Alerted = false;
+                if (AI.Alerted)
+                {
+                    AI.Alerted = false;
+                    AI.EnableBackupCall(false); // This should disable the enemy's backup call zone.
+                }
                 break;
         }
     }
@@ -116,7 +113,7 @@ public class EnemyMovement : MonoBehaviour
     private void RotateTowards(string observer, Vector3 target)
     {
         if (observer == "Enemy") rotater = transform;
-        else if (observer == "EnemyPOV") rotater = POV_GO.transform;
+        //else if (observer == "EnemyPOV") rotater = POV_GO.transform;
 
         // Get the difference in position between the agent and the disturbance.
         Vector3 direction =
@@ -196,15 +193,5 @@ public class EnemyMovement : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, AI.Player.transform.position) >= agent.stoppingDistance) return false;
         else return true;
-    }
-
-    //IEnumerator CallOffSearch()
-    //{
-    //    yield return new WaitForSeconds(alertDuration);
-    //    if(alerted && !AI.PlayerTracker.LineOfSight.enabled)
-    //    {
-    //        coroutineStarted = false;
-    //        movementPhase = MovementPhase.NEUTRAL;            
-    //    }        
-    //}
+    }    
 }

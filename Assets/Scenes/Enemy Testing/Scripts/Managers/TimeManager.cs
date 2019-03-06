@@ -11,7 +11,7 @@ namespace Assets.Scripts.Managers
     {        
         // Private field for time count, it should always start at 0, since we use it to count up in seconds.
         private float timeCount = 0;
-        private float alertTimeCount = 0;
+        private static float alertTimeCount = 0;
 
         // A simple boolean method that returns true when the desired number of seconds has passed. 
         public bool TimeCount(float seconds)
