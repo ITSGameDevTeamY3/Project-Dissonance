@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,6 +33,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
         GameObject startPoint; // Added by myself.
+	    public GameObject MainCamera;
 
 		void Start()
 		{
@@ -226,7 +228,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         // Additional Methods
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "Finish") SceneManager.LoadScene("MissionComplete");
+            if (other.tag == "Finish")
+            {
+                MainCamera.GetComponent<CinemachineBrain>().enabled = false;
+                SceneManager.LoadScene("MissionComplete");
+            }
         }
     }
 }

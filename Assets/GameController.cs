@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.Characters.ThirdPerson;
@@ -7,6 +8,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class GameController : MonoBehaviour {
 
     public static GameController instance;
+    public GameObject MainCamera;
     public GameObject Player;
     public ThirdPersonCharacter ThirdPersonScript;
 
@@ -28,19 +30,14 @@ public class GameController : MonoBehaviour {
         ThirdPersonScript = Player.GetComponent<ThirdPersonCharacter>();
     }
 
-    //void Start () {
-
-    //}
-
-    // Update is called once per frame
-    void Update () {
+    void Update ()
+    {
         if (ThirdPersonScript.Health <= 0) EndGame();
 	}
 
     public void EndGame()
     {
+        MainCamera.GetComponent<CinemachineBrain>().enabled = false;
         SceneManager.LoadScene("MissionFailed");
-
-        // Stop music and fade might be good here.
     }
 }
