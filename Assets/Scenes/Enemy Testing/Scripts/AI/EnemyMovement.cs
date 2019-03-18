@@ -14,7 +14,7 @@ public class EnemyMovement : MonoBehaviour
 
     // These 4 properties are obtained from the enemy controller script. They are set in the Inspector window.
     private float walkSpeed, runSpeed, turningSpeed, surveyTime, stoppingDistance, surveyDistance, attackDistance, alertDuration;
-    const float VIEW_DISTANCE = 3; 
+    const float VIEW_DISTANCE = 1; 
 
     private EnemyController AI;
     private NavMeshAgent agent;
@@ -59,8 +59,11 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Movement walk speed:" + walkSpeed);
-        Debug.Log("Movement run speed:" + runSpeed);
+        if (AI.DebugMode)
+        {
+            Debug.Log("Movement walk speed:" + walkSpeed);
+            Debug.Log("Movement run speed:" + runSpeed);
+        }
         switch (movementPhase)
         {
             case MovementPhase.WALK:

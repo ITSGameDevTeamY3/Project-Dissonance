@@ -24,12 +24,12 @@ public class EnemyController : MonoBehaviour
     public PlayerTracker PlayerTracker;
     public bool Alerted = false;
     // The following public properties were visible in the Inspector but they are set automatically. Make these public if any of them give trouble and you need to debug.
-    public Light Flashlight;
-    public GameObject POV_GO;
-    public SphereCollider BackupCallZone;
+    Light Flashlight;
+    GameObject POV_GO;
+    SphereCollider BackupCallZone;
     List<Transform> surveyPoints = new List<Transform>();
-    public HitScanner HitScanner;
-    public Renderer playerRenderer;   
+    HitScanner HitScanner;
+    Renderer playerRenderer;   
     // Properties that are automatically set when the object is created.
     NavMeshAgent agent;
     Patrol patrolRoute;
@@ -79,7 +79,7 @@ public class EnemyController : MonoBehaviour
         defaultStoppingDistance = agent.stoppingDistance;
         enemySounds = GetComponent<EnemySounds>();
         Player = GameObject.FindGameObjectWithTag("Player"); // The player is found in the scene automatically and set here.
-        disturbanceCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the main camera and set it here. NOTE: This will be removed soon.        
+        disturbanceCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the main camera and set it here. NOTE: This will be removed soon. Should only be found in my test scene.        
         _musicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
 
         // Get access to the enemy object's children.
@@ -133,8 +133,11 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         // These two should be in sync with the enemy movement speeds.
-        Debug.Log("Controller Walk speed:" + WalkSpeed);
-        Debug.Log("Controller run speed:" + WalkSpeed * RunMultiplier);
+        if (DebugMode)
+        {
+            Debug.Log("Controller Walk speed:" + WalkSpeed);
+            Debug.Log("Controller run speed:" + WalkSpeed * RunMultiplier);
+        }
 
         PhaseCheck();
         NeutralMovementCheck();

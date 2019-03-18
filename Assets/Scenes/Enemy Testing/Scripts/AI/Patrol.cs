@@ -14,7 +14,6 @@ public class Patrol : MonoBehaviour
     public Transform[] PatrolPoints;
     // How long the enemy waits before proceeding to the next point.
     public float RestTime;
-    //public float RestDistance;
 
     // This will keep track of which point the enemy is currently heading towards.
     private int destPoint = 0;
