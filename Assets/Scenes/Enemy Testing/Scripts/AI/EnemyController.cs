@@ -24,19 +24,19 @@ public class EnemyController : MonoBehaviour
     public PlayerTracker PlayerTracker;
     public bool Alerted = false;
     // The following public properties were visible in the Inspector but they are set automatically. Make these public if any of them give trouble and you need to debug.
-    Light Flashlight;
-    GameObject POV_GO;
-    SphereCollider BackupCallZone;
+    public Light Flashlight;
+    public GameObject POV_GO;
+    public SphereCollider BackupCallZone;
     List<Transform> surveyPoints = new List<Transform>();
-    HitScanner HitScanner;
-    Renderer playerRenderer;   
+    public HitScanner HitScanner;
+    public Renderer playerRenderer;
     // Properties that are automatically set when the object is created.
-    NavMeshAgent agent;
-    Patrol patrolRoute;
-    Vector3 post, disturbanceZone;
-    EnemyMovement movement;
+    public NavMeshAgent agent;
+    public Patrol patrolRoute;
+    public Vector3 post, disturbanceZone;
+    public EnemyMovement movement;
     TimeManager tm = new TimeManager();
-    Camera POV;
+    public Camera POV;
     float defaultStoppingDistance;
 
     // This camera is used to determine where the user has clicked on-screen. It'll be removed when disturbance investigation testing is over.

@@ -4410,6 +4410,17 @@ MonoBehaviour:
   GravMultiplier: 0.2
   PlayerTracker: {fileID: 0}
   Alerted: 0
+  Flashlight: {fileID: 0}
+  POV_GO: {fileID: 0}
+  BackupCallZone: {fileID: 0}
+  HitScanner: {fileID: 0}
+  playerRenderer: {fileID: 0}
+  agent: {fileID: 0}
+  patrolRoute: {fileID: 0}
+  post: {x: 0, y: 0, z: 0}
+  disturbanceZone: {x: 0, y: 0, z: 0}
+  movement: {fileID: 0}
+  POV: {fileID: 0}
   disturbanceCam: {fileID: 0}
   enemyPhase: 0
   previousPhase: 0
@@ -4500,7 +4511,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  RestTime: 2
+  RestTime: 5
 --- !u!120 &120327777035983756
 LineRenderer:
   m_ObjectHideFlags: 1
